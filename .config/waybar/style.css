@@ -1,0 +1,70 @@
+/* =================================================================
+        ФИНАЛЬНАЯ КОНФИГУРАЦИЯ СТИЛЕЙ WAYBAR (С ИСПРАВЛЕННОЙ ОШИБКОЙ)
+   ================================================================= */
+
+* {
+    font-family: "JetBrains Mono Nerd Font", FontAwesome, sans-serif;
+    font-size: 14px;
+}
+
+window#waybar {
+    background-color: transparent;
+    color: #cdd6f4;
+    border-radius: 15px;
+}
+
+/* Общий стиль для каждого модуля в виде "таблетки" */
+#workspaces,
+#window,
+#clock,
+#cpu,
+#memory,
+#network,
+#custom-language,  /* <-- ИСПРАВЛЕН СЕЛЕКТОР (был #custom/language) */
+#custom-dunst,
+#pulseaudio,
+#battery,
+#tray {
+    background-color: #24273a;
+    padding: 0 12px;
+    margin: 4px 3px;
+    border: 1px solid #494d64;
+    border-radius: 10px;
+}
+
+#workspaces button {
+    padding: 0 5px;
+    background-color: transparent;
+    color: #494d64;
+    border-radius: 10px;
+}
+
+#workspaces button:hover {
+    box-shadow: inherit;
+    text-shadow: inherit;
+    background-color: #494d64;
+}
+
+#workspaces button.focused {
+    color: #cba6f7;
+    background-color: #494d64;
+}
+
+#workspaces button.urgent { /* ИСПРАВЛЕНА ОПЕЧАТКА */
+    color: #f38ba8;
+}
+
+/* --- Персональная стилизация для модулей справа --- */
+
+#clock { color: #cba6f7; }
+#cpu { color: #f5c2e7; }
+#memory { color: #89b4fa; }
+#network { color: #f9e2af; }
+#custom-language { color: #a6e3a1; } /* <-- ИСПРАВЛЕН СЕЛЕКТОР */
+#custom-dunst { color: #fab387; }
+#pulseaudio { color: #e8a2af; }
+#pulseaudio.muted { color: #6c7086; }
+#battery { color: #a6e3a1; }
+#battery.charging, #battery.plugged { color: #a6e3a1; }
+#battery.warning { color: #f9e2af; }
+#battery.critical { color: #f38ba8; }

@@ -1,0 +1,44 @@
+* {
+    font-family: "JetBrains Mono Nerd Font", sans-serif;
+    font-size: 15px;
+}
+
+/* 1. БОЛЬШАЯ ТАБЛЕТКА-КОНТЕЙНЕР */
+window {
+    background-color: rgba(30, 30, 46, 0.85); /* Полупрозрачный фон, как у Waybar */
+    border: 1px solid #494d64; /* Такая же рамка */
+    border-radius: 10px;       /* Такое же скругление */
+}
+
+#outer-box {
+    padding: 10px; /* Добавляем "воздух" внутри большого контейнера */
+}
+
+/* 2. ПОЛЕ ВВОДА ТЕКСТА */
+#input {
+    background-color: #24273a;
+    color: #cdd6f4;
+    padding: 4px 12px;
+    border: 1px solid #494d64;
+    border-radius: 10px;
+    margin-bottom: 10px; /* Отступ между полем ввода и списком */
+}
+
+/* 3. СПИСОК РЕЗУЛЬТАТОВ */
+#scroll {
+    /* Пусто, чтобы не было лишних рамок */
+}
+
+/* 4. КАЖДАЯ СТРОКА-ЭЛЕМЕНТ ВНУТРИ */
+#entry {
+    padding: 10px;
+    border-radius: 8px; /* Чуть меньшее скругление для вложенности */
+    background-color: transparent; /* В обычном состоянии строки прозрачные */
+    color: #cdd6f4;
+}
+
+/* 5. ВЫБРАННАЯ СТРОКА */
+#entry:selected {
+    background-color: #cba6f7; /* Цвет Mauve при выборе */
+    color: #24273a; /* Текст становится темным */
+}

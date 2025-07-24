@@ -1,0 +1,107 @@
+// ============================
+//           WAYBAR
+// ============================
+{
+    "layer": "top",
+    "position": "top",
+    "height": 40,
+    "spacing": 4,
+
+    "modules-left": ["hyprland/workspaces", "hyprland/window"],
+    "modules-center": ["clock"],
+    "modules-right": ["cpu", "memory", "network", "custom/language", "custom/dunst", "pulseaudio", "battery", "tray"],
+    
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "on-click": "activate",
+        "format": "{icon}",
+        "format-icons": {
+            "1": "",
+            "2": "",
+            "3": "",
+            "4": "",
+            "5": "",
+            "urgent": "",
+            "default": ""
+        }
+    },
+
+    "hyprland/window": {
+        "format": "{}",
+        "max-length": 35
+    },
+
+    "clock": {
+        "format": " {:%H:%M}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "on-click": "yad --calendar --title='Calendar'"
+    },
+
+    "cpu": {
+        "format": " {usage}%",
+        "tooltip": true,
+        "interval": 1
+    },
+
+    "memory": {
+        "format": "󰍛 {used}GiB",
+        "interval": 1
+    },
+
+    "network": {
+        "format-wifi": "{essid}  ",
+        "format-ethernet": "{ifname} 󰈀",
+        "format-disconnected": "Disconnected ⚠",
+        "tooltip-format-wifi": "{ipaddr}/{cidr} @ {signalStrength}%",
+        "on-click": "nm-connection-editor"
+    },
+    
+    "custom/language": {
+        // Запускаем наш скрипт раз в секунду.
+        "exec": "~/.config/hypr/scripts/get_layout.sh",
+        "interval": 1,
+
+        // Отображаем то, что выдал скрипт, и иконку.
+        "format": "{} ",
+
+        // Переключение по клику оставляем. Оно у вас работало.
+        "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"
+    },
+
+    "custom/dunst": {
+        "format": " {}",
+        "exec": "dunstctl count waiting",
+        "exec-if": "dunstctl count waiting > 0",
+        "on-click": "~/.config/hypr/scripts/notif_history.sh",
+        "on-click-right": "dunstctl close-all"
+    },
+
+    "pulseaudio": {
+        "format": "{volume}% {icon} {format_source}",
+        "format-bluetooth": "{volume}% {icon} {format_source}",
+        "format-source": "{volume}% ",
+        "format-source-muted": "",
+        "format-muted": "",
+        "on-click": "pavucontrol",
+        "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+    },
+    
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{capacity}% {icon}",
+        "format-charging": "{capacity}% ",
+        "format-plugged": "{capacity}% ",
+        "format-alt": "{time} {icon}",
+        "format-icons": ["", "", "", "", "", "", "", "", "", ""]
+    },
+
+    "tray": {
+        "icon-size": 18,
+        "spacing": 10
+    }
+}
