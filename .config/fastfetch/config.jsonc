@@ -1,36 +1,92 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.jsonc",
+  // Настройка логотипа
   "logo": {
-    "source": "auto"
+    "source": "~/.config/fastfetch/arch-cat.png", // Путь к скачанному лого
+    "type": "kitty",
+    "width": 25,
+    "padding": {
+      "right": 4
+    }
   },
+  // Главная часть - модули с иконками и форматированием
   "modules": [
-    "os",
-    "kernel",
-    "uptime",
-    "packages",
-    "shell",
-    "wm",
-    "terminal",
-    "cpu",
-    "gpu",
+    // --- Раздел "Hardware" ---
+    {
+      "type": "title",
+      "format": " Hardware"
+    },
+    {
+      "type": "host",
+      "key": " PC",
+      "format": "{1}"
+    },
+    {
+      "type": "cpu",
+      "key": " CPU",
+      "format": "{} ({/1/}) @ {/2/}"
+    },
+    {
+      "type": "gpu",
+      "key": "󰍛 GPU",
+      "format": "{}{ ({})}"
+    },
     {
       "type": "memory",
-      "percent": {
-        "type": 2
-      }
+      "key": " Memory",
+      "format": "{} / {} ({})"
+    },
+    // --- Разделитель ---
+    "break",
+    // --- Раздел "Software" ---
+    {
+      "type": "title",
+      "format": " Software"
     },
     {
-      "type": "disk",
-      "percent": {
-        "type": 2
-      }
+      "type": "os",
+      "key": " OS",
+      "format": "{} {}"
     },
     {
-      "type": "battery",
-      "percent": {
-        "type": 2
-      }
+      "type": "kernel",
+      "key": "󰌽 Kernel",
+      "format": "{}"
     },
-    "colors"
+    {
+      "type": "packages",
+      "key": "󰏖 Packages"
+    },
+    {
+      "type": "shell",
+      "key": " Shell",
+      "format": "{}"
+    },
+    {
+        "type": "uptime",
+        "key": "󰔟 Uptime"
+    },
+    // --- Разделитель ---
+    "break",
+    // --- Другие модули ---
+    {
+      "type": "wm",
+      "key": "󰻠 WM"
+    },
+    {
+      "type": "terminal",
+      "key": " Terminal"
+    },
+    {
+        "type": "disk",
+        "key": " Disk",
+        "format": "{} / {} ({})",
+        "folder": "/"
+    },
+    "break",
+    {
+      "type": "colors",
+      "symbol": "circle"
+    }
   ]
 }
