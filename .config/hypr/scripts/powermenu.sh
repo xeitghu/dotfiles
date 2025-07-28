@@ -1,20 +1,16 @@
-#!/bin/bash
-
-options=" Logout\n Suspend\n Reboot\n Shutdown"
-
-choice=$(echo -e "$options" | wofi --dmenu --prompt "Power Menu" --width 280 --height 220 | awk '{print $2}' | tr -d "[:space:]")
+choice=$(echo -e "$options" | wofi --dmenu --prompt "Power Menu" --width 280 --height 220)
 
 case "$choice" in
-    Logout)
+    " Logout")
         hyprctl dispatch exit
         ;;
-    Suspend)
+    " Suspend")
         systemctl suspend
         ;;
-    Reboot)
+    " Reboot")
         systemctl reboot
         ;;
-    Shutdown)
+    " Shutdown")
         systemctl poweroff
         ;;
 esac

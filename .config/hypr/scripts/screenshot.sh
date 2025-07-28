@@ -1,32 +1,44 @@
 #!/bin/bash
 
+# Директория для сохранения
 SCREENSHOT_DIR="$HOME/Pictures/Screenshots"
 mkdir -p "$SCREENSHOT_DIR"
 
-options=" Area\n Window\n󰍹 Screen"
-choice=$(echo -e "$options" | wofi --dmenu --prompt "Take Screenshot" --width 250 --height 180)
+# Имя файла с датой
+FILE_NAME="$(date +'%Y-%m-%d_%H-%M-%S').png"
+FILE_PATH="$SCREENSHOT_DIR/$FILE_NAME"
 
-# Генерируем имя файла здесь, до case
-FILE_PATH="$SCREENSHOT_DIR/$(date +'%Y-%m-%d_%H-%M-%S')-menu.png"
+# --- Меню Wofi ---
+# Добавляем новую опцию "Edit" с иконкой кисти 
+options="󰆞 Area (Copy)\n󰹑 Window (Copy)\n󰍹 Screen (Copy)\n Edit (Select Area)"
 
-case ${choice} in
-    " Area")
-        grim -g "$(slurp)" "$FILE_PATH"
+choice=$(echo -e "$options" | wofi --dmenu --prompt "Screenshot" --width 250 --height 220)
+
+# --- Логика выбора ---
+case "$choice" in
+    "󰆞 Area (Copy)")
+        # Вызываем наш улучшенный скрипт для копирования области
+        ~/.config/hypr/scripts/screenshot_area.sh
         ;;
-    " Window")
-        GEOMETRY=$(hyprctl -j activewindow | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"')
-        grim -g "$GEOMETRY" "$FILE_PATH"
+
+    "󰹑 Window (Copy)")
+        # Вызываем наш улучшенный скрипт для копирования окна
+        ~/.config/hypr/scripts/screenshot_window.sh
         ;;
-    "󰍹 Screen")
-        grim "$FILE_PATH"
+
+    "󰍹 Screen (Copy)")
+        # Делаем скриншот всего экрана, копируем и уведомляем
+        grim "$FILE_PATH" && wl-copy < "$FILE_PATH"
+        notify-send "Screenshot Taken" "Fullscreen copied to clipboard." -i "$FILE_PATH"
+        ;;
+
+    " Edit (Select Area)")
+        # Старый, добрый способ: выделить область и СРАЗУ открыть в swappy
+        # Мы используем пайп, чтобы не создавать временный файл
+        grim -g "$(slurp)" - | swappy -f -
         ;;
     *)
-        # Если нажали Esc в wofi, то просто выходим, не создавая пустой файл
+        # Если нажали Esc, выходим
         exit 0
         ;;
 esac
-
-# Открываем только что созданный файл в swappy
-if [ -f "$FILE_PATH" ]; then
-    swappy -f "$FILE_PATH"
-fi

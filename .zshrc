@@ -14,36 +14,22 @@
 # -----------------------------------------------------------------------------
 # 1. ПЕРЕМЕННЫЕ СРЕДЫ И ПУТИ (ENVIRONMENT & PATH)
 # -----------------------------------------------------------------------------
-
-# Путь к установке Oh My Zsh
 export ZSH="$HOME/.oh-my-zsh"
-
-# Предпочитаемый текстовый редактор
 export EDITOR='nano'
-
-# Пути к исполняемым файлам
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$PATH:$HOME/.spicetify"
 export PATH="$PATH:$HOME/.lmstudio/bin"
-
-# --- Кастомные пути для навигации и скриптов ---
 export DOTS="$HOME/.config"
 export HYPR="$DOTS/hypr"
 
 # -----------------------------------------------------------------------------
 # 2. НАСТРОЙКИ ZSH И OH MY ZSH
 # -----------------------------------------------------------------------------
-
-# --- Тема ---
-ZSH_THEME="powerlevel10k/powerlevel10k"
-
-# --- История команд ---
+export ZSH_THEME="powerlevel10k/powerlevel10k"
 HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.zsh_history
 setopt HIST_IGNORE_DUPS HIST_IGNORE_SPACE
-
-# --- Обновление Oh My Zsh ---
 zstyle ':omz:update' mode reminder
 
 # -----------------------------------------------------------------------------
@@ -62,11 +48,11 @@ plugins=(
 
 # 4.1. Управление пакетами (Arch / yay)
 alias update='yay -Syu'
-alias install='yay -S' # <-- ОШИБКА ИСПРАВЛЕНА
+alias install='yay -S'
 alias remove='sudo pacman -Rns'
 alias search='yay -Ss'
 
-# 4.2. Замена стандартных утилит (PRO+ Версия)
+# 4.2. Замена стандартных утилит
 # ПРОСМОТР
 alias ls='eza --icons --group-directories-first'
 alias ll='eza -lh --icons --git --group-directories-first --header'
@@ -112,34 +98,55 @@ alias editwaybar='nano $DOTS/waybar/config'
 alias editwaybarstyle='nano $DOTS/waybar/style.css'
 alias editkitty='nano $DOTS/kitty/kitty.conf'
 alias editwofistyle='nano $DOTS/wofi/style.css'
+alias editff='nano $DOTS/fastfetch/config.jsonc'
+#Вывод
+alias catzsh='cat ~/.zshrc'
+alias cathypr='cat $HYPR/hyprland.conf'  
+alias catbinds='cat $HYPR/keybinds.conf'
+alias catlook='cat $HYPR/look.conf'
+alias catwaybar='cat $DOTS/waybar/config'
+alias catwaybarstyle='cat $DOTS/waybar/style.css'
+alias catkitty='cat $DOTS/kitty/kitty.conf'
+alias catwofistyle='cat $DOTS/wofi/style.css'
+alias catff='cat $DOTS/fastfetch/config.jsonc'
 
 # -----------------------------------------------------------------------------
-# 5. ФУНКЦИИ (FUNCTIONS) - НАПОМИНАНИЕ НА БУДУЩЕЕ
+# 5. ФУНКЦИИ (FUNCTIONS)
 # -----------------------------------------------------------------------------
+extract() {
+    if [ -f "$1" ]; then
+        case "$1" in
+            *.tar.bz2)  tar xjf "$1"    ;;
+            *.tar.gz)   tar xzf "$1"    ;;
+            *.bz2)      bunzip2 "$1"    ;;
+            *.rar)      unrar x "$1"    ;;
+            *.gz)       gunzip "$1"     ;;
+            *.tar)      tar xf "$1"     ;;
+            *.zip)      unzip "$1"      ;;
+            *.7z)       7z x "$1"       ;;
+            *)          echo "'$1' не может быть распакован" ;;
+        esac
+    else
+        echo "'$1' - не валидный файл"
+    fi
+}
 
-# Функции - это как "продвинутые" алиасы, которые могут выполнять
-# более сложные задачи. Когда будешь готов, можешь начать изучать их.
-# Пример: `mkcd my_folder` создаст папку и сразу перейдет в неё.
-# 
-# mkcd() {
-#     mkdir -p "$1" && cd "$1"
-# }
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
 
 # -----------------------------------------------------------------------------
 # 6. ИНИЦИАЛИЗАЦИЯ И ЗАПУСК
 # -----------------------------------------------------------------------------
-# Здесь мы загружаем фреймворки и скрипты. Порядок имеет значение.
-
 # Загрузка Oh My Zsh
 source $ZSH/oh-my-zsh.sh
 
 # Загрузка Powerlevel10k
-# Эта строка должна быть ПОСЛЕ `source $ZSH/oh-my-zsh.sh`
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Загрузка fzf (для Ctrl+R и Ctrl+T)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # --- Команды при старте терминала ---
-# Показать системную информацию при запуске нового окна.
 fastfetch
+alias dotgit='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'

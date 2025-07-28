@@ -1,6 +1,6 @@
-/* =================================================================
-        ФИНАЛЬНАЯ КОНФИГУРАЦИЯ СТИЛЕЙ WAYBAR (С ИСПРАВЛЕННОЙ ОШИБКОЙ)
-   ================================================================= */
+/* ==============================================
+        ФИНАЛЬНАЯ КОНФИГУРАЦИЯ СТИЛЕЙ WAYBAR
+   ============================================== */
 
 * {
     font-family: "JetBrains Mono Nerd Font", FontAwesome, sans-serif;
@@ -30,6 +30,7 @@ window#waybar {
     margin: 4px 3px;
     border: 1px solid #494d64;
     border-radius: 10px;
+    transition: color 0.3s ease, background-color 0.3s ease
 }
 
 #workspaces button {
@@ -68,3 +69,27 @@ window#waybar {
 #battery.charging, #battery.plugged { color: #a6e3a1; }
 #battery.warning { color: #f9e2af; }
 #battery.critical { color: #f38ba8; }
+@keyframes pulse {
+    0% { text-shadow: 0 0 4px #f38ba8; } /* #f38ba8 - Catppuccin Red */
+    50% { text-shadow: 0 0 12px #f38ba8; }
+    100% { text-shadow: 0 0 4px #f38ba8; }
+}
+
+#battery.critical, #workspaces button.urgent {
+    animation: pulse 2s infinite;
+}
+/* =================================================================
+        ИНДИВИДУАЛЬНЫЕ ЦВЕТА ДЛЯ ИКОНОК РАБОЧИХ СТОЛОВ
+   ================================================================= */
+
+#workspaces button.workspace-1 { color: #fab387; } /* Firefox - Peach */
+#workspaces button.workspace-2 { color: #cba6f7; } /* Obsidian - Mauve */
+#workspaces button.workspace-3 { color: #89b4fa; } /* Discord - Blue */
+#workspaces button.workspace-4 { color: #74c7ec; } /* Telegram - Sapphire */
+#workspaces button.workspace-5 { color: #a6e3a1; } /* Spotify - Green */
+
+/* Делаем иконку активного воркспейса ярче и добавляем тень */
+#workspaces button.focused {
+    color: #f5e0dc; /* Яркий цвет (Rosewater) */
+    text-shadow: 0 0 5px rgba(245, 224, 220, 0.7);
+}

@@ -16,12 +16,21 @@
         "all-outputs": true,
         "on-click": "activate",
         "format": "{icon}",
+        "persistent_workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": [],
+            "special": []
+        },
         "format-icons": {
-            "1": "",
-            "2": "",
-            "3": "",
-            "4": "",
-            "5": "",
+            "1": "",      // Firefox
+            "2": "",      // Obsidian
+            "3": "",      // Discord
+            "4": "",      // Telegram
+            "5": "",      // Spotify
+            "special": "", // Kitty
             "urgent": "",
             "default": ""
         }
@@ -30,6 +39,9 @@
     "hyprland/window": {
         "format": "{}",
         "max-length": 35
+        "rewrite": {
+            "": null
+        } 
     },
 
     "clock": {
