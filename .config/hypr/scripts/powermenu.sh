@@ -1,4 +1,8 @@
-choice=$(echo -e "$options" | wofi --dmenu --prompt "Power Menu" --width 280 --height 220)
+#!/bin/bash
+
+options=" Logout\n Suspend\n Reboot\n Shutdown"
+
+choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Power Menu" --width 280 --height 170)
 
 case "$choice" in
     " Logout")

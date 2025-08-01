@@ -1,6 +1,6 @@
-/* ==============================================
-        ФИНАЛЬНАЯ КОНФИГУРАЦИЯ СТИЛЕЙ WAYBAR
-   ============================================== */
+/* =================================================================
+        ОРИГИНАЛЬНЫЙ СТИЛЬ WAYBAR
+   ================================================================= */
 
 * {
     font-family: "JetBrains Mono Nerd Font", FontAwesome, sans-serif;
@@ -13,24 +13,13 @@ window#waybar {
     border-radius: 15px;
 }
 
-/* Общий стиль для каждого модуля в виде "таблетки" */
-#workspaces,
-#window,
-#clock,
-#cpu,
-#memory,
-#network,
-#custom-language,  /* <-- ИСПРАВЛЕН СЕЛЕКТОР (был #custom/language) */
-#custom-dunst,
-#pulseaudio,
-#battery,
-#tray {
+#workspaces, #window, #clock, #cpu, #memory, #network,
+#custom-language, #custom-dunst, #pulseaudio, #battery, #tray {
     background-color: #24273a;
     padding: 0 12px;
     margin: 4px 3px;
     border: 1px solid #494d64;
     border-radius: 10px;
-    transition: color 0.3s ease, background-color 0.3s ease
 }
 
 #workspaces button {
@@ -51,17 +40,15 @@ window#waybar {
     background-color: #494d64;
 }
 
-#workspaces button.urgent { /* ИСПРАВЛЕНА ОПЕЧАТКА */
+#workspaces button.urgent {
     color: #f38ba8;
 }
-
-/* --- Персональная стилизация для модулей справа --- */
 
 #clock { color: #cba6f7; }
 #cpu { color: #f5c2e7; }
 #memory { color: #89b4fa; }
 #network { color: #f9e2af; }
-#custom-language { color: #a6e3a1; } /* <-- ИСПРАВЛЕН СЕЛЕКТОР */
+#custom-language { color: #a6e3a1; }
 #custom-dunst { color: #fab387; }
 #pulseaudio { color: #e8a2af; }
 #pulseaudio.muted { color: #6c7086; }
@@ -69,27 +56,3 @@ window#waybar {
 #battery.charging, #battery.plugged { color: #a6e3a1; }
 #battery.warning { color: #f9e2af; }
 #battery.critical { color: #f38ba8; }
-@keyframes pulse {
-    0% { text-shadow: 0 0 4px #f38ba8; } /* #f38ba8 - Catppuccin Red */
-    50% { text-shadow: 0 0 12px #f38ba8; }
-    100% { text-shadow: 0 0 4px #f38ba8; }
-}
-
-#battery.critical, #workspaces button.urgent {
-    animation: pulse 2s infinite;
-}
-/* =================================================================
-        ИНДИВИДУАЛЬНЫЕ ЦВЕТА ДЛЯ ИКОНОК РАБОЧИХ СТОЛОВ
-   ================================================================= */
-
-#workspaces button.workspace-1 { color: #fab387; } /* Firefox - Peach */
-#workspaces button.workspace-2 { color: #cba6f7; } /* Obsidian - Mauve */
-#workspaces button.workspace-3 { color: #89b4fa; } /* Discord - Blue */
-#workspaces button.workspace-4 { color: #74c7ec; } /* Telegram - Sapphire */
-#workspaces button.workspace-5 { color: #a6e3a1; } /* Spotify - Green */
-
-/* Делаем иконку активного воркспейса ярче и добавляем тень */
-#workspaces button.focused {
-    color: #f5e0dc; /* Яркий цвет (Rosewater) */
-    text-shadow: 0 0 5px rgba(245, 224, 220, 0.7);
-}

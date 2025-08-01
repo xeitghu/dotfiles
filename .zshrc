@@ -99,6 +99,7 @@ alias editwaybarstyle='nano $DOTS/waybar/style.css'
 alias editkitty='nano $DOTS/kitty/kitty.conf'
 alias editwofistyle='nano $DOTS/wofi/style.css'
 alias editff='nano $DOTS/fastfetch/config.jsonc'
+alias editpower='nano ~/.config/hypr/scripts/powermenu.sh'
 #Вывод
 alias catzsh='cat ~/.zshrc'
 alias cathypr='cat $HYPR/hyprland.conf'  
