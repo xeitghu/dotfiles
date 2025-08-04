@@ -13,7 +13,7 @@
         "source": "~/.config/fastfetch/archpuccinn.png",
         "type": "kitty",
         "height": 16,
-        "width": 38,
+        "width": 36,
         "padding": {
             "top": 4,
            "left": 4

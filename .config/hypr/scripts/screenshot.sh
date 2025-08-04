@@ -1,44 +1,32 @@
 #!/bin/bash
 
-# Директория для сохранения
-SCREENSHOT_DIR="$HOME/Pictures/Screenshots"
-mkdir -p "$SCREENSHOT_DIR"
+# --- Опции для Wofi (теперь 6 вариантов) ---
+options=" Area (Copy)\n Area (Edit)\n Window (Copy)\n Window (Edit)\n󰍹 Screen (Copy)\n󰍹 Screen (Edit)"
 
-# Имя файла с датой
-FILE_NAME="$(date +'%Y-%m-%d_%H-%M-%S').png"
-FILE_PATH="$SCREENSHOT_DIR/$FILE_NAME"
+# --- Вызов Wofi (увеличим размер под 6 опций) ---
+choice=$(echo -e "$options" | wofi --dmenu --prompt "Screenshot" --width 300 --height 250)
 
-# --- Меню Wofi ---
-# Добавляем новую опцию "Edit" с иконкой кисти 
-options="󰆞 Area (Copy)\n󰹑 Window (Copy)\n󰍹 Screen (Copy)\n Edit (Select Area)"
-
-choice=$(echo -e "$options" | wofi --dmenu --prompt "Screenshot" --width 250 --height 220)
-
-# --- Логика выбора ---
+# --- Логика выбора (объединяем и улучшаем вашу логику) ---
 case "$choice" in
-    "󰆞 Area (Copy)")
-        # Вызываем наш улучшенный скрипт для копирования области
-        ~/.config/hypr/scripts/screenshot_area.sh
+    " Area (Copy)")
+        grim -g "$(slurp)" - | wl-copy
+        notify-send "Screenshot Copied" "Selected area copied to clipboard." -i "camera-photo"
         ;;
-
-    "󰹑 Window (Copy)")
-        # Вызываем наш улучшенный скрипт для копирования окна
-        ~/.config/hypr/scripts/screenshot_window.sh
-        ;;
-
-    "󰍹 Screen (Copy)")
-        # Делаем скриншот всего экрана, копируем и уведомляем
-        grim "$FILE_PATH" && wl-copy < "$FILE_PATH"
-        notify-send "Screenshot Taken" "Fullscreen copied to clipboard." -i "$FILE_PATH"
-        ;;
-
-    " Edit (Select Area)")
-        # Старый, добрый способ: выделить область и СРАЗУ открыть в swappy
-        # Мы используем пайп, чтобы не создавать временный файл
+    " Area (Edit)")
         grim -g "$(slurp)" - | swappy -f -
         ;;
-    *)
-        # Если нажали Esc, выходим
-        exit 0
+    " Window (Copy)")
+        grim -g "$(hyprctl -j activewindow | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"')" - | wl-copy
+        notify-send "Screenshot Copied" "Active window copied to clipboard." -i "camera-photo"
+        ;;
+    " Window (Edit)")
+        grim -g "$(hyprctl -j activewindow | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"')" - | swappy -f -
+        ;;
+    "󰍹 Screen (Copy)")
+        grim - | wl-copy
+        notify-send "Screenshot Copied" "Fullscreen copied to clipboard." -i "camera-photo"
+        ;;
+    "󰍹 Screen (Edit)")
+        grim - | swappy -f -
         ;;
 esac

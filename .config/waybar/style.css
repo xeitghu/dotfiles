@@ -1,6 +1,9 @@
-/* =================================================================
-        ОРИГИНАЛЬНЫЙ СТИЛЬ WAYBAR
-   ================================================================= */
+/* ========================================================
+                            WAYBAR
+   ======================================================== */
+
+/* --- Импорт централизованных переменных цвета --- */
+@import "colors.css";
 
 * {
     font-family: "JetBrains Mono Nerd Font", FontAwesome, sans-serif;
@@ -9,50 +12,53 @@
 
 window#waybar {
     background-color: transparent;
-    color: #cdd6f4;
+    color: @text; /* Был #cdd6f4 */
     border-radius: 15px;
 }
 
+/* --- Стиль для всех модулей --- */
 #workspaces, #window, #clock, #cpu, #memory, #network,
 #custom-language, #custom-dunst, #pulseaudio, #battery, #tray {
-    background-color: #24273a;
+    background-color: @base; /* Был #24273a (Macchiato Base) */
     padding: 0 12px;
     margin: 4px 3px;
-    border: 1px solid #494d64;
+    border: 1px solid @surface1; /* Был #494d64 (Macchiato Surface1) */
     border-radius: 10px;
 }
 
+/* --- Рабочие столы --- */
 #workspaces button {
     padding: 0 5px;
     background-color: transparent;
-    color: #494d64;
+    color: @surface1; /* Был #494d64 */
     border-radius: 10px;
 }
 
 #workspaces button:hover {
     box-shadow: inherit;
     text-shadow: inherit;
-    background-color: #494d64;
+    background-color: @surface1; /* Был #494d64 */
 }
 
 #workspaces button.focused {
-    color: #cba6f7;
-    background-color: #494d64;
+    color: @mauve; /* Был #cba6f7 */
+    background-color: @surface1; /* Был #494d64 */
 }
 
 #workspaces button.urgent {
-    color: #f38ba8;
+    color: @red; /* Был #f38ba8 */
 }
 
-#clock { color: #cba6f7; }
-#cpu { color: #f5c2e7; }
-#memory { color: #89b4fa; }
-#network { color: #f9e2af; }
-#custom-language { color: #a6e3a1; }
-#custom-dunst { color: #fab387; }
-#pulseaudio { color: #e8a2af; }
-#pulseaudio.muted { color: #6c7086; }
-#battery { color: #a6e3a1; }
-#battery.charging, #battery.plugged { color: #a6e3a1; }
-#battery.warning { color: #f9e2af; }
-#battery.critical { color: #f38ba8; }
+/* --- Цвета иконок для модулей --- */
+#clock { color: @mauve; }
+#cpu { color: @pink; }
+#memory { color: @blue; }
+#network { color: @yellow; }
+#custom-language { color: @green; }
+#custom-dunst { color: @peach; }
+#pulseaudio { color: @maroon; } /* Был #e8a2af */
+#pulseaudio.muted { color: @overlay0; } /* Был #6c7086 */
+#battery { color: @green; }
+#battery.charging, #battery.plugged { color: @green; }
+#battery.warning { color: @yellow; } /* Был #f9e2af */
+#battery.critical { color: @red; } /* Был #f38ba8 */

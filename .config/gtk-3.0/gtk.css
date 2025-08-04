@@ -1,0 +1,12 @@
+/*
+ * Исправляем слишком яркое выделение для тем Catppuccin.
+ * Это правило имеет более высокий приоритет, чем стандартное *:selected.
+*/
+.thunar .view:selected,
+treeview.view:selected,
+treeview.view row:selected,
+iconview:selected,
+*:selected {
+    background-color: #313244;  /* Темный фон для выделения */
+    color: #CDD6F4;             /* Светлый текст на темном фоне */
+}
