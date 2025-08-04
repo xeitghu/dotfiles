@@ -3,7 +3,7 @@
    ============================================ */
 
 /* --- Импорт централизованных переменных из конфига Waybar --- */
-@import "../waybar/colors.css";
+@import "/home/x8u/.config/wofi/colors.css";
 
 * {
     font-family: "JetBrains Mono Nerd Font", sans-serif;

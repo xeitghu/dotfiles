@@ -76,40 +76,56 @@ alias ...='cd ../..'
 alias c='clear'
 alias h='history'
 
-# 4.4. Быстрый доступ к конфигам ("Метро")
+# 4.4. Metro
 # Переходы
 alias goconf='cd $DOTS'
+alias godunst='cd $DOTS/dunst'
 alias gohome='cd ~'
 alias gohypr='cd $HYPR'
-alias gowaybar='cd $DOTS/waybar'
 alias gokitty='cd $DOTS/kitty'
-alias gowofi='cd $DOTS/wofi'
-alias godunst='cd $DOTS/dunst'
 alias goscripts='cd $HYPR/scripts'
+alias gowaybar='cd $DOTS/waybar'
+alias gowofi='cd $DOTS/wofi'
+
 # Редактирование
-alias editzsh='nano ~/.zshrc'
-alias editp10k='p10k configure'
-alias edithypr='nano $HYPR/hyprland.conf'
 alias editbinds='nano $HYPR/keybinds.conf'
-alias editrules='nano $HYPR/window_rules.conf'
-alias editlook='nano $HYPR/look.conf'
-alias editpaper='nano $HYPR/hyprpaper.conf'
-alias editwaybar='nano $DOTS/waybar/config'
-alias editwaybarstyle='nano $DOTS/waybar/style.css'
-alias editkitty='nano $DOTS/kitty/kitty.conf'
-alias editwofistyle='nano $DOTS/wofi/style.css'
+alias editcolors='nano $HYPR/colors.conf'
+alias editdunst='nano $DOTS/dunst/dunstrc'
 alias editff='nano $DOTS/fastfetch/config.jsonc'
-alias editpower='nano ~/.config/hypr/scripts/powermenu.sh'
-#Вывод
-alias catzsh='cat ~/.zshrc'
-alias cathypr='cat $HYPR/hyprland.conf'  
+alias editgitig='nano ~/.gitignore'
+alias edithypr='nano $HYPR/hyprland.conf'
+alias editkitty='nano $DOTS/kitty/kitty.conf'
+alias editkittytheme='nano $DOTS/kitty/theme.conf'
+alias editlook='nano $HYPR/look.conf'
+alias editp10k='p10k configure'
+alias editpaper='nano $HYPR/hyprpaper.conf'
+alias editpower='nano $HYPR/scripts/powermenu.sh'
+alias editpyre='nano ~/.local/bin/pyre'
+alias editrules='nano $HYPR/window_rules.conf'
+alias editwaybar='nano $DOTS/waybar/config'
+alias editwaybarcolors='nano $DOTS/waybar/colors.css'
+alias editwaybarstyle='nano $DOTS/waybar/style.css'
+alias editwofistyle='nano $DOTS/wofi/style.css'
+alias editzsh='nano ~/.zshrc'
+
+# Вывод
 alias catbinds='cat $HYPR/keybinds.conf'
-alias catlook='cat $HYPR/look.conf'
-alias catwaybar='cat $DOTS/waybar/config'
-alias catwaybarstyle='cat $DOTS/waybar/style.css'
-alias catkitty='cat $DOTS/kitty/kitty.conf'
-alias catwofistyle='cat $DOTS/wofi/style.css'
+alias catcolors='cat $HYPR/colors.conf'
+alias catdunst='cat $DOTS/dunst/dunstrc'
 alias catff='cat $DOTS/fastfetch/config.jsonc'
+alias catgitig='cat ~/.gitignore'
+alias cathypr='cat $HYPR/hyprland.conf'
+alias catkitty='cat $DOTS/kitty/kitty.conf'
+alias catkittytheme='cat $DOTS/kitty/theme.conf'
+alias catlook='cat $HYPR/look.conf'
+alias catpaper='cat $HYPR/hyprpaper.conf'
+alias catpyre='cat ~/.local/bin/pyre'
+alias catrules='cat $HYPR/window_rules.conf'
+alias catwaybar='cat $DOTS/waybar/config'
+alias catwaybarcolors='cat $DOTS/waybar/colors.css'
+alias catwaybarstyle='cat $DOTS/waybar/style.css'
+alias catwofistyle='cat $DOTS/wofi/style.css'
+alias catzsh='cat ~/.zshrc'
 
 # 4.5. Проект "Феникс" (Project "Phoenix")
 # -----------------------------------------------------------------------------
@@ -143,6 +159,28 @@ dfindnew() {
         echo "✅ Все конфигурационные файлы отслеживаются. Система в порядке."
     fi
 }
+
+# 4.5.3. Интеграция PHOENGINE
+# -----------------------------------------------------------------------------
+# Определяем имя и горячую клавишу для вызова нашего движка.
+export PHOENGINE="pyre"
+
+# Функция-виджет, теперь с консистентным именем.
+phoengine_widget() {
+    local cli_path="$HOME/.local/bin/$PHOENGINE"
+    
+    if [ -x "$cli_path" ]; then
+        $cli_path
+        zle redisplay
+    else
+        zle -M "Движок '$PHOENGINE' не найден в $HOME/.local/bin/ или не является исполняемым."
+    fi
+}
+# Регистрируем функцию как виджет Zsh с тем же именем.
+zle -N phoengine_widget
+
+# Привязка виджета к комбинации Alt+H
+bindkey '^ ' phoengine_widget
 
 # -----------------------------------------------------------------------------
 # 5. ФУНКЦИИ (FUNCTIONS)

@@ -7,16 +7,30 @@
     "height": 40,
     "spacing": 4,
 
-    "modules-left": ["hyprland/workspaces", "hyprland/window"],
-    "modules-center": ["clock"],
-    "modules-right": ["cpu", "memory", "network", "custom/language", "custom/dunst", "pulseaudio", "battery", "tray"],
+    "modules-left": [
+        "hyprland/workspaces",
+        "hyprland/window"
+    ],
+    "modules-center": [
+        "clock"
+    ],
+    "modules-right": [
+        "cpu",
+        "memory",
+        "network",
+        "custom/language",
+        "custom/dunst",
+        "pulseaudio",
+        "battery",
+        "tray"
+    ],
     
     "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": true,
         "on-click": "activate",
         "format": "{icon}",
-        
+        "swap-icon-label": false,
         "format-icons": {
             "1": "",
             "2": "",
@@ -32,7 +46,6 @@
             "urgent": "",
             "default": ""
         },
-
         "persistent_workspaces": {
             "1": [],
             "2": [],
@@ -81,14 +94,9 @@
     },
     
     "custom/language": {
-        // Запускаем наш скрипт раз в секунду.
         "exec": "~/.config/hypr/scripts/get_layout.sh",
         "interval": 1,
-
-        // Отображаем то, что выдал скрипт, и иконку.
         "format": "{} ",
-
-        // Переключение по клику оставляем. Оно у вас работало.
         "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"
     },
 
@@ -101,14 +109,20 @@
     },
 
     "pulseaudio": {
-        "format": "{volume}% {icon} {format_source}",
-        "format-bluetooth": "{volume}% {icon} {format_source}",
-        "format-source": "{volume}% ",
-        "format-source-muted": "",
-        "format-muted": "",
-        "on-click": "pavucontrol",
-        "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+",
-        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+        "scroll-step": 5,
+        "format": "{volume}% {icon}",
+        "format-muted": " Muted",
+        "format-icons": {
+            "default": ["", "", ""],
+            "headphone": "",
+            "headset": "",
+            "hands-free": "",
+            "phone": "",
+            "portable": "",
+            "car": ""
+        },
+        "tooltip": false,
+        "on-click": "pavucontrol"
     },
     
     "battery": {
@@ -117,10 +131,12 @@
             "critical": 15
         },
         "format": "{capacity}% {icon}",
-        "format-charging": "{capacity}% ",
-        "format-plugged": "{capacity}% ",
+        "format-charging": "{capacity}% {icon} ",
+        "format-plugged": "{capacity}% {icon} ",
         "format-alt": "{time} {icon}",
-        "format-icons": ["", "", "", "", "", "", "", "", "", ""]
+        "format-icons": [
+            "", "", "", "", "", "", "", "", "", ""
+        ]
     },
 
     "tray": {
