@@ -1,9 +1,9 @@
-/* ========================================================
-                            WAYBAR
-   ======================================================== */
+/* =============================================================
+              WAYBAR STYLE (АДАПТИРОВАН ДЛЯ PYWAL)
+   ============================================================= */
 
 /* --- Импорт централизованных переменных цвета --- */
-@import "colors.css";
+@import "/home/x8u/.cache/wal/colors-waybar.css";
 
 * {
     font-family: "JetBrains Mono Nerd Font", FontAwesome, sans-serif;
@@ -12,17 +12,17 @@
 
 window#waybar {
     background-color: transparent;
-    color: @text; /* Был #cdd6f4 */
+    color: @foreground; /* БЫЛО: @text */
     border-radius: 15px;
 }
 
 /* --- Стиль для всех модулей --- */
 #workspaces, #window, #clock, #cpu, #memory, #network,
 #custom-language, #custom-dunst, #pulseaudio, #battery, #tray {
-    background-color: @base; /* Был #24273a (Macchiato Base) */
+    background-color: @background; /* БЫЛО: @base */
     padding: 0 12px;
     margin: 4px 3px;
-    border: 1px solid @surface1; /* Был #494d64 (Macchiato Surface1) */
+    border: 1px solid @color8; /* БЫЛО: @surface1. @color8 - обычно серый */
     border-radius: 10px;
 }
 
@@ -30,35 +30,35 @@ window#waybar {
 #workspaces button {
     padding: 0 5px;
     background-color: transparent;
-    color: @surface1; /* Был #494d64 */
+    color: @color7; /* БЫЛО: @surface1. @color7 - обычно светло-серый */
     border-radius: 10px;
 }
 
 #workspaces button:hover {
     box-shadow: inherit;
     text-shadow: inherit;
-    background-color: @surface1; /* Был #494d64 */
+    background-color: @color8; /* БЫЛО: @surface1 */
 }
 
 #workspaces button.focused {
-    color: @mauve; /* Был #cba6f7 */
-    background-color: @surface1; /* Был #494d64 */
+    color: @color5; /* БЫЛО: @mauve. @color5 - обычно фиолетовый/пурпурный */
+    background-color: @color8; /* БЫЛО: @surface1 */
 }
 
 #workspaces button.urgent {
-    color: @red; /* Был #f38ba8 */
+    color: @color1; /* БЫЛО: @red. @color1 - это красный в pywal */
 }
 
-/* --- Цвета иконок для модулей --- */
-#clock { color: @mauve; }
-#cpu { color: @pink; }
-#memory { color: @blue; }
-#network { color: @yellow; }
-#custom-language { color: @green; }
-#custom-dunst { color: @peach; }
-#pulseaudio { color: @maroon; } /* Был #e8a2af */
-#pulseaudio.muted { color: @overlay0; } /* Был #6c7086 */
-#battery { color: @green; }
-#battery.charging, #battery.plugged { color: @green; }
-#battery.warning { color: @yellow; } /* Был #f9e2af */
-#battery.critical { color: @red; } /* Был #f38ba8 */
+/* --- Цвета иконок для модулей (сопоставлены с палитрой pywal) --- */
+#clock { color: @color5; }         /* БЫЛО: @mauve */
+#cpu { color: @color6; }           /* БЫЛО: @pink */
+#memory { color: @color4; }        /* БЫЛО: @blue */
+#network { color: @color3; }       /* БЫЛО: @yellow */
+#custom-language { color: @color2; } /* БЫЛО: @green */
+#custom-dunst { color: @color3; }    /* БЫЛО: @peach */
+#pulseaudio { color: @color1; }      /* БЫЛО: @maroon */
+#pulseaudio.muted { color: @color8; } /* БЫЛО: @overlay0 */
+#battery { color: @color2; }         /* БЫЛО: @green */
+#battery.charging, #battery.plugged { color: @color2; }
+#battery.warning { color: @color3; } /* БЫЛО: @yellow */
+#battery.critical { color: @color1; } /* БЫЛО: @red */

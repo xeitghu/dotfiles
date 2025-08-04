@@ -1,26 +1,22 @@
-@define-color base #eff1f5;
-@define-color mantle #e6e9ef;
-@define-color crust #dce0e8;
-@define-color text #4c4f69;
-@define-color subtext0 #6c6f85;
-@define-color subtext1 #5c5f77;
-@define-color surface0 #ccd0da;
-@define-color surface1 #bcc0cc;
-@define-color surface2 #acb0be;
-@define-color overlay0 #9ca0b0;
-@define-color overlay1 #8c8fa1;
-@define-color overlay2 #7c7f93;
-@define-color blue #1e66f5;
-@define-color lavender #7287fd;
-@define-color sapphire #209fb5;
-@define-color sky #04a5e5;
-@define-color teal #179299;
-@define-color green #40a02b;
-@define-color yellow #df8e1d;
-@define-color peach #fe640b;
-@define-color maroon #e64553;
-@define-color red #d20f39;
-@define-color mauve #8839ef;
-@define-color pink #ea76cb;
-@define-color flamingo #dd7878;
-@define-color rosewater #dc8a78;
+/* ===============================================================
+         CATPPUCCIN LATTE (ПЕРЕВЕДЕНО ДЛЯ PYWAL)
+   =============================================================== */
+@define-color background #eff1f5;
+@define-color foreground #4c4f69;
+
+@define-color color0 #ccd0da;  /* Surface0 */
+@define-color color1 #d20f39;  /* Red */
+@define-color color2 #40a02b;  /* Green */
+@define-color color3 #df8e1d;  /* Yellow */
+@define-color color4 #1e66f5;  /* Blue */
+@define-color color5 #8839ef;  /* Mauve */
+@define-color color6 #179299;  /* Teal */
+@define-color color7 #7c7f93;  /* Overlay2 */
+@define-color color8 #bcc0cc;  /* Surface1 */
+@define-color color9 #d20f39;  /* Red */
+@define-color color10 #40a02b; /* Green */
+@define-color color11 #df8e1d; /* Yellow */
+@define-color color12 #1e66f5; /* Blue */
+@define-color color13 #8839ef; /* Mauve */
+@define-color color14 #179299; /* Teal */
+@define-color color15 #6c6f85; /* Subtext0 */

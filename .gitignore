@@ -64,3 +64,12 @@
 .config/xsettingsd/xsettingsd.conf
 .config/kde.org/
 .config/vidcutter/
+# Игнорировать файлы состояния и кэша
+.config/pyre/state
+.config/wal/
+.config/matugen/
+
+# Можно также добавить стандартные файлы, которые создает система
+*.swp
+*~
+.DS_Store

@@ -1,12 +1,13 @@
-// ============================
-//           WAYBAR
-// ============================
+// ==================================================
+//                     WAYBAR
+// ==================================================
 {
     "layer": "top",
     "position": "top",
     "height": 40,
     "spacing": 4,
 
+    // Оригинальный порядок модулей
     "modules-left": [
         "hyprland/workspaces",
         "hyprland/window"
@@ -24,14 +25,18 @@
         "battery",
         "tray"
     ],
-    
+
     "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": true,
         "on-click": "activate",
         "format": "{icon}",
-        "swap-icon-label": false,
+        // Правило для защиты от сбоя при инициализации
+        "rewrite": {
+            "": "default"
+        },
         "format-icons": {
+            "default": "",
             "1": "",
             "2": "",
             "3": "",
@@ -43,48 +48,31 @@
             "9": "",
             "10": "",
             "special": "",
-            "urgent": "",
-            "default": ""
-        },
-        "persistent_workspaces": {
-            "1": [],
-            "2": [],
-            "3": [],
-            "4": [],
-            "5": [],
-            "6": [],
-            "7": [],
-            "8": [],
-            "9": [],
-            "10": []
+            "urgent": ""
         }
     },
 
     "hyprland/window": {
         "format": "{}",
-        "max-length": 35,
+        "max-length": 100,
         "rewrite": {
             "": null
-        } 
+        }
     },
-
     "clock": {
         "format": " {:%H:%M}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "on-click": "yad --calendar --title='Calendar'"
     },
-
     "cpu": {
         "format": " {usage}%",
         "tooltip": true,
         "interval": 1
     },
-
     "memory": {
         "format": "󰍛 {used}GiB",
         "interval": 1
     },
-
     "network": {
         "format-wifi": "{essid}  ",
         "format-ethernet": "{ifname} 󰈀",
@@ -92,14 +80,12 @@
         "tooltip-format-wifi": "{ipaddr}/{cidr} @ {signalStrength}%",
         "on-click": "nm-connection-editor"
     },
-    
     "custom/language": {
         "exec": "~/.config/hypr/scripts/get_layout.sh",
         "interval": 1,
         "format": "{} ",
         "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"
     },
-
     "custom/dunst": {
         "format": " {}",
         "exec": "dunstctl count waiting",
@@ -107,7 +93,6 @@
         "on-click": "~/.config/hypr/scripts/notif_history.sh",
         "on-click-right": "dunstctl close-all"
     },
-
     "pulseaudio": {
         "scroll-step": 5,
         "format": "{volume}% {icon}",
@@ -124,7 +109,6 @@
         "tooltip": false,
         "on-click": "pavucontrol"
     },
-    
     "battery": {
         "states": {
             "warning": 30,
@@ -133,12 +117,13 @@
         "format": "{capacity}% {icon}",
         "format-charging": "{capacity}% {icon} ",
         "format-plugged": "{capacity}% {icon} ",
+        "format-full": "{capacity}% {icon}",
+        "format-unknown": " Unknown",
         "format-alt": "{time} {icon}",
         "format-icons": [
             "", "", "", "", "", "", "", "", "", ""
         ]
     },
-
     "tray": {
         "icon-size": 18,
         "spacing": 10
