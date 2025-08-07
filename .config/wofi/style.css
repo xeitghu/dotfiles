@@ -1,8 +1,8 @@
 /* ============================================
-                       WOFI
+            WOFI (v2.0 - "Ренессанс")
    ============================================ */
 
-/* --- Импорт централизованных переменных из конфига Waybar --- */
+/* --- Импорт централизованных переменных --- */
 @import "/home/x8u/.config/wofi/colors.css";
 
 * {
@@ -12,9 +12,8 @@
 
 /* 1. БОЛЬШАЯ ТАБЛЕТКА-КОНТЕЙНЕР */
 window {
-    /* Ваша полупрозрачность сохранена, но с базовым цветом Mocha */
-    background-color: rgba(30, 30, 46, 0.85); /* base */
-    border: 1px solid @surface1; /* Был #494d64 (Macchiato) */
+    background-color: rgba(30, 30, 46, 0.85);
+    border: 1px solid @surface1;
     border-radius: 10px;
 }
 
@@ -24,10 +23,10 @@ window {
 
 /* 2. ПОЛЕ ВВОДА ТЕКСТА */
 #input {
-    background-color: @base; /* Был #24273a (Macchiato) */
-    color: @text; /* Был #cdd6f4 */
+    background-color: @base;
+    color: @text;
     padding: 4px 12px;
-    border: 1px solid @surface1; /* Был #494d64 (Macchiato) */
+    border: 1px solid @surface1;
     border-radius: 10px;
     margin-bottom: 10px;
 }
@@ -37,16 +36,22 @@ window {
     /* Пусто */
 }
 
-/* 4. КАЖДАЯ СТРОКА-ЭЛЕМЕНТ ВНУТРИ */
+/* 4. КАЖДАЯ СТРОКА-ЭЛЕМЕНТ ВНУТРИ (ИЗМЕНЕНО) */
 #entry {
     padding: 10px;
     border-radius: 8px;
     background-color: transparent;
-    color: @text; /* Был #cdd6f4 */
+    color: @text;
+}
+
+/* 4.1. ИКОНКА ВНУТРИ СТРОКИ (НОВОЕ) */
+#entry image {
+    margin-right: 10px; /* Отступ между иконкой и текстом */
+    font-size: 20px;    /* Размер самой иконки */
 }
 
 /* 5. ВЫБРАННАЯ СТРОКА */
 #entry:selected {
-    background-color: @mauve; /* Был #cba6f7 */
-    color: @base; /* Был #24273a (Macchiato) */
+    background-color: @mauve;
+    color: @base;
 }

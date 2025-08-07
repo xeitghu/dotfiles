@@ -44,15 +44,15 @@
             "keyColor": "green"
         },
         {
-            "type": "memory",
-            "key": "│ ├󰍛 Memory",
+            "type": "disk",
+            "key": "│ ├ Disk",
+            "format": "{} / {} ({})",
+            "folder": "/",
             "keyColor": "green"
         },
         {
-            "type": "disk",
-            "key": "└ └ Disk",
-            "format": "{} / {} ({})",
-            "folder": "/",
+            "type": "memory",
+            "key": "└ └󰍛 Memory",
             "keyColor": "green"
         },
         {
@@ -102,10 +102,21 @@
             "key": "└ └ Uptime",
             "keyColor": "yellow"
         },
+        {
+            "type": "custom",
+            "format": "└────────────────────────────────────────────────────────────────────────┘",
+            "outputColor": "red"
+        },
         "break",
         {
-            "type": "de",
-            "key": " DE",
+            "type": "custom",
+            "format": "┌──────────────────────────────── Display ───────────────────────────────┐",
+            "outputColor": "red"
+        },
+        {
+            "type": "gpu",
+            "key": "│ ├󰍛 GPU Driver",
+            "format": "{1} ({3})",
             "keyColor": "blue"
         },
         {
@@ -115,21 +126,9 @@
         },
         {
             "type": "wm",
-            "key": "│ ├ WM",
+            "key": "└ └ WM",
             "keyColor": "blue"
         },
-        {
-            "type": "gpu",
-            "key": "│ ├󰍛 GPU Driver",
-            "format": "{3}",
-            "keyColor": "blue"
-        },
-        {
-            "type": "wmtheme",
-            "key": "└ └󰉼 Theme",
-            "keyColor": "blue"
-        },
-
         {
             "type": "custom",
             "format": "└────────────────────────────────────────────────────────────────────────┘",

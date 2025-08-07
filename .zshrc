@@ -26,8 +26,8 @@ export HYPR="$DOTS/hypr"
 # 2. НАСТРОЙКИ ZSH И OH MY ZSH
 # -----------------------------------------------------------------------------
 export ZSH_THEME="powerlevel10k/powerlevel10k"
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=100000
+SAVEHIST=100000
 HISTFILE=~/.zsh_history
 setopt HIST_IGNORE_DUPS HIST_IGNORE_SPACE
 zstyle ':omz:update' mode reminder
@@ -94,7 +94,8 @@ alias editdunst='nano $DOTS/dunst/dunstrc'
 alias editff='nano $DOTS/fastfetch/config.jsonc'
 alias editgitig='nano ~/.gitignore'
 alias edithypr='nano $HYPR/hyprland.conf'
-alias editkitty='nano $DOTS/kitty/kitty.conf'
+alias editkittyload='nano $DOTS/kitty/kitty.conf'
+alias editkitty='nano $DOTS/kitty/pyre.conf'
 alias editkittytheme='nano $DOTS/kitty/theme.conf'
 alias editlook='nano $HYPR/look.conf'
 alias editp10k='p10k configure'
@@ -107,6 +108,7 @@ alias editwaybarcolors='nano $DOTS/waybar/colors.css'
 alias editwaybarstyle='nano $DOTS/waybar/style.css'
 alias editwofistyle='nano $DOTS/wofi/style.css'
 alias editzsh='nano ~/.zshrc'
+alias edithw='nano ~/.config/hypr/hollywood.conf'
 
 # Вывод
 alias catbinds='cat $HYPR/keybinds.conf'
@@ -159,28 +161,6 @@ dfindnew() {
         echo "✅ Все конфигурационные файлы отслеживаются. Система в порядке."
     fi
 }
-
-# 4.5.3. Интеграция PHOENGINE
-# -----------------------------------------------------------------------------
-# Определяем имя и горячую клавишу для вызова нашего движка.
-export PHOENGINE="pyre"
-
-# Функция-виджет, теперь с консистентным именем.
-phoengine_widget() {
-    local cli_path="$HOME/.local/bin/$PHOENGINE"
-    
-    if [ -x "$cli_path" ]; then
-        $cli_path
-        zle redisplay
-    else
-        zle -M "Движок '$PHOENGINE' не найден в $HOME/.local/bin/ или не является исполняемым."
-    fi
-}
-# Регистрируем функцию как виджет Zsh с тем же именем.
-zle -N phoengine_widget
-
-# Привязка виджета к комбинации Alt+H
-bindkey '^ ' phoengine_widget
 
 # -----------------------------------------------------------------------------
 # 5. ФУНКЦИИ (FUNCTIONS)

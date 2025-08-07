@@ -11,42 +11,44 @@
 }
 
 window#waybar {
-    background-color: transparent;
+    background-color: rgba(30, 30, 46, 0.4);
     color: @foreground; /* БЫЛО: @text */
     border-radius: 15px;
 }
 
-/* --- Стиль для всех модулей --- */
+/* --- Стиль для всех модулей (УВЕЛИЧЕНЫ "БАБЛЫ") --- */
 #workspaces, #window, #clock, #cpu, #memory, #network,
 #custom-language, #custom-dunst, #pulseaudio, #battery, #tray {
-    background-color: @background; /* БЫЛО: @base */
-    padding: 0 12px;
-    margin: 4px 3px;
-    border: 1px solid @color8; /* БЫЛО: @surface1. @color8 - обычно серый */
-    border-radius: 10px;
+    background-color: @background;
+    padding: 2px 15px; /* УВЕЛИЧЕНЫ ГОРИЗОНТАЛЬНЫЕ ОТСТУПЫ */
+    margin: 5px 4px;   /* УВЕЛИЧЕНЫ ВЕРТИКАЛЬНЫЕ ОТСТУПЫ */
+    border: 1px solid @color8;
+    border-radius: 12px;
 }
 
 /* --- Рабочие столы --- */
 #workspaces button {
-    padding: 0 5px;
+    padding: 0 8px;
     background-color: transparent;
-    color: @color7; /* БЫЛО: @surface1. @color7 - обычно светло-серый */
+    color: @color7;
     border-radius: 10px;
+    transition: all 0.3s ease;
 }
 
 #workspaces button:hover {
     box-shadow: inherit;
     text-shadow: inherit;
-    background-color: @color8; /* БЫЛО: @surface1 */
+    background-color: @color8;
 }
 
-#workspaces button.focused {
-    color: @color5; /* БЫЛО: @mauve. @color5 - обычно фиолетовый/пурпурный */
-    background-color: @color8; /* БЫЛО: @surface1 */
+#workspaces button.focused,
+#workspaces button.active {
+    background-color: @color5;
+    color: @background;
 }
 
 #workspaces button.urgent {
-    color: @color1; /* БЫЛО: @red. @color1 - это красный в pywal */
+    color: @color1;
 }
 
 /* --- Цвета иконок для модулей (сопоставлены с палитрой pywal) --- */
