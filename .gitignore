@@ -17,17 +17,20 @@
 
 # --- Cache ---
 .config/discord/
+.config/go/
 .config/LM Studio/
 .config/LosslessCut/
 .config/millennium/
 .config/Olympus/
 .config/obs-studio/
 .config/obsidian/
+.config/obsidian_backup/
 .config/Pinta/
 .config/Proton/
 .config/spotify/
 .config/torbrowser/
 .config/VSCodium/
+.config/wal/
 .config/Vencord/
 .config/yazi/
 
@@ -64,28 +67,6 @@
 .config/xsettingsd/xsettingsd.conf
 .config/kde.org/
 .config/vidcutter/
-# Игнорировать файлы состояния и кэша
+
+# --- Custom Scripts ---
 .config/pyre/state
-.config/wal/
-.config/matugen/
-
-# Можно также добавить стандартные файлы, которые создает система
-*.swp
-*~
-.DS_Store
-# Игнорировать файлы состояния и кэша
-.config/pyre/state
-.config/wal/
-.config/matugen/
-
-# НОВЫЕ ПРАВИЛА:
-# Игнорировать весь кэш и бэкапы Obsidian
-.config/obsidian_backup/
-
-# Игнорировать телеметрию и кэш языка Go
-.config/go/
-
-# Можно также добавить стандартные файлы, которые создает система
-*.swp
-*~
-.DS_Store
