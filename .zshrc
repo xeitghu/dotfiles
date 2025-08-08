@@ -163,9 +163,9 @@ metro_aliases[filemanager]="filemanager.conf"
 metro_aliases[kitty]="pyre.conf"
 metro_aliases[kittytheme]="theme.conf"
 metro_aliases[waybar]="config"
-metro_aliases[waybarstyle]="waybar/style.css"
-metro_aliases[waybarcolors]="colors.css"
-metro_aliases[wofistyle]="wofi/style.css"
+metro_aliases[waybarstyle]="$DOTS/waybar/style.css"
+metro_aliases[waybarcolors]="$DOTS/waybar/colors.css"
+metro_aliases[wofistyle]="$DOTS/wofi/style.css"
 metro_aliases[dunst]="dunstrc"
 metro_aliases[ff]="config.jsonc"
 metro_aliases[pyre]="pyre"
@@ -174,27 +174,24 @@ metro_aliases[gitig]=".gitignore"
 
 _metro_find_config() {
     local target_file=$1
-    local found_path
-
-    found_path=$(fd --type f --hidden --absolute-path "${target_file}$" "$DOTS" "$HOME/.local/bin" "$HOME" --max-depth 5 | head -n 1)
-
-    if [[ -n "$found_path" ]]; then
-        echo "$found_path"
-        return 0
-    else
-        return 1
-    fi
+    fd --type f --hidden --absolute-path "^${target_file}$" "$DOTS" "$HOME/.local/bin" "$HOME" --max-depth 5 | head -n 1
 }
 
 _metro_resolve_path() {
     local input=$1
-    local target_file
+    local target_path
+
     if [[ -v "metro_aliases[$input]" ]]; then
-        target_file=${metro_aliases[$input]}
+        target_path=${metro_aliases[$input]}
     else
-        target_file=$input
+        target_path=$input
     fi
-    _metro_find_config "$target_file"
+
+    if [[ "$target_path" == \/* || "$target_path" == \~* ]]; then
+        echo "$target_path"
+    else
+        _metro_find_config "$target_path"
+    fi
 }
 
 edit() {
