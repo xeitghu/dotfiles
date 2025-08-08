@@ -4,11 +4,11 @@
 # ║                           PYRE ENGINE                                   ║
 # ║                                                                         ║
 # ╚═════════════════════════════════════════════════════════════════════════╝
-# Refactored with a dedicated Layouts submenu for modularity.
 
 # ┌──────────────────────────────────────────────────┐
 # │                 PATHS & SETTINGS                 │
 # └──────────────────────────────────────────────────┘
+#  Core paths used by the engine
 WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
 STATE_FILE="$HOME/.config/pyre/state"
 SCRIPTS_DIR="$HOME/.config/hypr/scripts"
@@ -18,16 +18,15 @@ WAL_CACHE_DIR="$HOME/.cache/wal"
 # =================================================================
 #                         CORE FUNCTIONS
 # =================================================================
-
 # --- Dependency Check ---
 check_dependencies() {
     local missing=0
-    #  Check for required commands
+    #  Check for all required commands
     for cmd in wofi swww wal kitty notify-send; do
         if ! command -v "$cmd" &> /dev/null; then
             notify-send "Pyre Error" "Required command not found: $cmd" -i "dialog-error"; missing=1; fi
     done
-    #  Check for required directories
+    #  Check for all required directories
     for dir in "$WALLPAPER_DIR" "$ENGINE_THEMES_DIR" "$SCRIPTS_DIR"; do
         if [ ! -d "$dir" ]; then
             notify-send "Pyre Error" "Required directory not found: $dir" -i "dialog-error"; missing=1; fi
@@ -46,14 +45,14 @@ reload_services() {
 # =================================================================
 #                        LAYOUT LAUNCHERS
 # =================================================================
-
 # --- Showcase Layout ---
 launch_showcase_layout() {
+    #  Load temporary window layout configuration
     hyprctl keyword source ~/.config/hypr/showcase.conf
-    sleep 0.2; kitty --title "hollywood-clock" tty-clock -c -C 2 &
-    sleep 0.2; kitty --title "hollywood-cava" cava &
-    sleep 0.2; kitty --title "hollywood-matrix" unimatrix &
-    sleep 0.2; kitty --title "hollywood-pipes" pipes.sh &
+    sleep 0.2; kitty -o font_size=10.0 --title "hollywood-clock" tty-clock -c -C 2 &
+    sleep 0.2; kitty -o font_size=10.0 --title "hollywood-cava" cava &
+    sleep 0.2; kitty -o font_size=10.0 --title "hollywood-matrix" unimatrix &
+    sleep 0.2; kitty -o font_size=10.0 --title "hollywood-pipes" pipes.sh &
 }
 
 # --- F0urth Layout ---
@@ -71,9 +70,11 @@ launch_f0urth_layout_simple() {
 
 # --- Fastfetch Layout ---
 launch_fastfetch_layout() {
+    #  Load temporary window layout configuration
     hyprctl keyword source ~/.config/hypr/pyre_layouts.conf
     sleep 0.1
     kitty --title "pyre-fastfetch" \
+          -o font_size=10.0 \
           -o window_padding_width=0 \
           -o scrollback_lines=0 \
           sh -c "tput civis; fastfetch; sleep infinity" &
@@ -81,10 +82,11 @@ launch_fastfetch_layout() {
 
 # --- Dual Pane Layout ---
 launch_dual_pane_layout() {
+    #  Load and clear temporary configurations
     hyprctl keyword source ~/.config/hypr/filemanager.conf
     thunar &
     sleep 0.5
-    kitty --title "fm-yazi" yazi &
+    kitty -o font_size=10.0 --title "fm-yazi" yazi &
     sleep 1
     hyprctl keyword source ~/.config/hypr/filemanager_clear.conf
 }
@@ -92,8 +94,7 @@ launch_dual_pane_layout() {
 # =================================================================
 #                   ENGINE: THEME & WALLPAPER
 # =================================================================
-
-# --- Apply Theme ---
+# --- Apply Static Theme ---
 apply_theme() {
     local theme_name_lower=$1
     local theme_name_capitalized; theme_name_capitalized=$(echo "$theme_name_lower" | awk '{print toupper(substr($0,1,1))substr($0,2)}')
@@ -114,8 +115,9 @@ apply_theme() {
     notify-send "🎨 Pyre: Theme Changed" "Palette activated: $theme_name_capitalized" -i "preferences-desktop-theme"
 }
 
-# --- Set Random Wallpaper ---
+# --- Set Random Wallpaper & Generate Theme ---
 set_random_wallpaper() {
+    #  Check if swww-daemon is running to avoid errors
     if ! pgrep -x "swww-daemon" > /dev/null; then
         notify-send "Pyre Error" "swww-daemon is not running!" -i "dialog-error"; return; fi
         
@@ -134,42 +136,68 @@ set_random_wallpaper() {
 # =================================================================
 #                       MENUS & DISPATCHER
 # =================================================================
+# --- Theme Collection Menu ---
+show_theme_collections_menu() {
+    #  More collections can be added here in the future
+    local options="󰄛 Catppuccin"
+    local choice; choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Select Theme Collection:" --width 300 --height 100)
+    case "$choice" in
+        "󰄛 Catppuccin") show_catppuccin_theme_menu ;;
+    esac
+}
 
-# --- Show Theme Menu ---
-show_theme_menu() {
+# --- Catppuccin Theme Selection Menu ---
+show_catppuccin_theme_menu() {
     local options=" Latte\n Mocha\n Frappe\n Macchiato"
-    local choice; choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Select Theme:" --width 300 --height 170)
+    local choice; choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Select Catppuccin Theme:" --width 300 --height 170)
     if [ -n "$choice" ]; then
         local theme_name; theme_name=$(echo "$choice" | sed -e 's/ //' -e 's/ //' -e 's/ //' -e 's/ //' | tr '[:upper:]' '[:lower:]')
         apply_theme "$theme_name"
     fi
 }
 
-# --- Show Layout Menu ---
+# --- Layout Selection Menu ---
 show_layout_menu() {
     local options=("󰄛 Showcase" " F0urth" " Fastfetch" " Dual Pane")
     local choice; choice=$(printf "%s\n" "${options[@]}" | wofi --dmenu --prompt "Select Layout:" --width 300 --height 170)
-        case "$choice" in
-            "󰄛 Showcase")  (launch_showcase_layout) & ;;
-            " F0urth")     (launch_f0urth_layout_simple) & ;;
-            " Fastfetch")  (launch_fastfetch_layout) & ;;
-            " Dual Pane")  (launch_dual_pane_layout) & ;;
-        esac
+    case "$choice" in
+        "󰄛 Showcase")  (launch_showcase_layout) & ;;
+        " F0urth")     (launch_f0urth_layout_simple) & ;;
+        " Fastfetch")  (launch_fastfetch_layout) & ;;
+        " Dual Pane")  (launch_dual_pane_layout) & ;;
+    esac
 }
 
-# --- Show Main Menu ---
-show_main_menu() {
-    local options=(" Theme" " Wallpaper" " Layouts" " Power" " Screenshot" " Clipboard" " Lock")
-    local choice; choice=$(printf "%s\n" "${options[@]}" | wofi --dmenu --prompt "Pyre Mission Control:" --width 300 --height 290)
+# --- Session Menu (Power + Lock) ---
+show_session_menu() {
+    local options=" Power\n Lock"
+    local choice; choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Session Control:" --width 300 --height 100)
     case "$choice" in
-        " Theme")      show_theme_menu ;;
-        " Wallpaper")  set_random_wallpaper ;;
-        " Layouts")    show_layout_menu ;;
-        " Files")      launch_file_layout ;;
-        " Power")      "$SCRIPTS_DIR/powermenu.sh" ;;
+        " Power") "$SCRIPTS_DIR/powermenu.sh" ;;
+        " Lock") "$SCRIPTS_DIR/lockscreen.sh" ;;
+    esac
+}
+
+# --- Tools Menu (Screenshot + Clipboard) ---
+show_tools_menu() {
+    local options=" Screenshot\n Clipboard"
+    local choice; choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Tools:" --width 300 --height 100)
+    case "$choice" in
         " Screenshot") "$SCRIPTS_DIR/screenshot.sh" ;;
-        " Clipboard")  "$SCRIPTS_DIR/clipboard_history.sh" ;;
-        " Lock")       "$SCRIPTS_DIR/lockscreen.sh" ;;
+        " Clipboard") "$SCRIPTS_DIR/clipboard_history.sh" ;;
+    esac
+}
+
+# --- Main Menu ---
+show_main_menu() {
+    local options=(" Themes" " Dynamic Theme" " Layouts" " Tools" "󰒃 Session")
+    local choice; choice=$(printf "%s\n" "${options[@]}" | wofi --dmenu --prompt "Pyre Mission Control:" --width 300 --height 210)
+    case "$choice" in
+        " Themes")         show_theme_collections_menu ;;
+        " Dynamic Theme")  set_random_wallpaper ;;
+        " Layouts")        show_layout_menu ;;
+        " Tools")          show_tools_menu ;;
+        "󰒃 Session")        show_session_menu ;;
     esac
 }
 
@@ -179,12 +207,8 @@ show_main_menu() {
 check_dependencies
 
 case "$1" in
-    theme)      show_theme_menu ;;
+    theme)      show_theme_collections_menu ;;
     wallpaper)  set_random_wallpaper ;;
     layout)     show_layout_menu ;;
-    power)      "$SCRIPTS_DIR/powermenu.sh" ;;
-    screenshot) "$SCRIPTS_DIR/screenshot.sh" ;;
-    clipboard)  "$SCRIPTS_DIR/clipboard_history.sh" ;;
-    lock)       "$SCRIPTS_DIR/lockscreen.sh" ;;
     *)          show_main_menu ;;
 esac
