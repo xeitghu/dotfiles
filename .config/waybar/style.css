@@ -3,7 +3,7 @@
    ============================================================= */
 
 /* --- Импорт централизованных переменных цвета --- */
-@import "${HOME}/.cache/wal/colors-waybar.css";
+@import "/home/x8u/.config/wofi/colors.css";
 
 * {
     font-family: "JetBrains Mono Nerd Font", FontAwesome, sans-serif;

@@ -1,0 +1,22 @@
+/* ===============================================================
+         CATPPUCCIN FRAPPE (ПЕРЕВЕДЕНО ДЛЯ PYWAL)
+   =============================================================== */
+@define-color background #303446;
+@define-color foreground #c6d0f5;
+
+@define-color color0 #51576d;  /* Surface1 */
+@define-color color1 #e78284;  /* Red */
+@define-color color2 #a6d189;  /* Green */
+@define-color color3 #e5c890;  /* Yellow */
+@define-color color4 #8caaee;  /* Blue */
+@define-color color5 #ca9ee6;  /* Mauve */
+@define-color color6 #81c8be;  /* Teal */
+@define-color color7 #a5adce;  /* Subtext0 */
+@define-color color8 #626880;  /* Surface2 */
+@define-color color9 #e78284;  /* Red */
+@define-color color10 #a6d189; /* Green */
+@define-color color11 #e5c890; /* Yellow */
+@define-color color12 #8caaee; /* Blue */
+@define-color color13 #ca9ee6; /* Mauve */
+@define-color color14 #81c8be; /* Teal */
+@define-color color15 #b5bfe2; /* Subtext1 */

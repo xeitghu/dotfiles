@@ -103,6 +103,7 @@ apply_theme() {
     cp "$ENGINE_THEMES_DIR/waybar/$theme_name_lower.css"  "$WAL_CACHE_DIR/colors-waybar.css"
     cp "$ENGINE_THEMES_DIR/kitty/$theme_name_lower.conf"  "$WAL_CACHE_DIR/colors-kitty.conf"
     cp "$ENGINE_THEMES_DIR/dunst/$theme_name_lower.dunstrc" "$WAL_CACHE_DIR/colors-dunst"
+    cp "$ENGINE_THEMES_DIR/wofi/$theme_name_lower.css"    "$WAL_CACHE_DIR/colors-wofi.css"
     
     local theme_wallpaper_dir="$WALLPAPER_DIR/$theme_name_lower"
     if [ -d "$theme_wallpaper_dir" ]; then
