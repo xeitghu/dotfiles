@@ -22,7 +22,7 @@ WAL_CACHE_DIR="$HOME/.cache/wal"
 check_dependencies() {
     local missing=0
     #  Check for all required commands
-    for cmd in wofi swww wal kitty notify-send; do
+        for cmd in wofi swww kitty notify-send; do
         if ! command -v "$cmd" &> /dev/null; then
             notify-send "Pyre Error" "Required command not found: $cmd" -i "dialog-error"; missing=1; fi
     done
@@ -39,7 +39,7 @@ reload_services() {
     hyprctl reload
     pkill -SIGUSR2 waybar
     pkill dunst && dunst &
-    kitty @ set-colors --all --configured "$WAL_CACHE_DIR/colors-kitty.conf"
+    kitty @ set-colors --all "$WAL_CACHE_DIR/colors-kitty.conf"
 }
 
 # =================================================================
@@ -94,7 +94,7 @@ launch_dual_pane_layout() {
 # =================================================================
 #                   ENGINE: THEME & WALLPAPER
 # =================================================================
-# --- Apply Static Theme ---
+# --- Apply Mocha Theme ---
 apply_theme() {
     local theme_name_lower=$1
     local theme_name_capitalized; theme_name_capitalized=$(echo "$theme_name_lower" | awk '{print toupper(substr($0,1,1))substr($0,2)}')
@@ -116,43 +116,15 @@ apply_theme() {
     notify-send "🎨 Pyre: Theme Changed" "Palette activated: $theme_name_capitalized" -i "preferences-desktop-theme"
 }
 
-# --- Set Random Wallpaper & Generate Theme ---
-set_random_wallpaper() {
-    #  Check if swww-daemon is running to avoid errors
-    if ! pgrep -x "swww-daemon" > /dev/null; then
-        notify-send "Pyre Error" "swww-daemon is not running!" -i "dialog-error"; return; fi
-        
-    local wallpaper; wallpaper=$(find "$WALLPAPER_DIR" -type f -not -path "*/hypr/*" | shuf -n 1)
-    if [ -z "$wallpaper" ]; then
-        notify-send "Pyre Error" "No wallpapers found in $WALLPAPER_DIR" -i "dialog-error"; return; fi
-        
-    swww img "$wallpaper" --transition-type wipe --transition-angle 30 --transition-step 90
-    wal -i "$wallpaper" -q -n -s
-    
-    reload_services
-    echo "random" > "$STATE_FILE"
-    notify-send " Pyre: Wallpaper Changed" "Palette generated from:\n$(basename "$wallpaper")" -i "preferences-desktop-wallpaper"
-}
-
 # =================================================================
 #                       MENUS & DISPATCHER
 # =================================================================
-# --- Theme Collection Menu ---
-show_theme_collections_menu() {
-    #  More collections can be added here in the future
-    local options="󰄛 Catppuccin"
-    local choice; choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Select Theme Collection:" --width 300 --height 100)
-    case "$choice" in
-        "󰄛 Catppuccin") show_catppuccin_theme_menu ;;
-    esac
-}
-
-# --- Catppuccin Theme Selection Menu ---
-show_catppuccin_theme_menu() {
-    local options=" Latte\n Mocha\n Frappe\n Macchiato"
-    local choice; choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Select Catppuccin Theme:" --width 300 --height 170)
+# --- Theme Menu ---
+show_theme_menu() {
+    local options=" Mocha"
+    local choice; choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Select Theme:" --width 300 --height 100)
     if [ -n "$choice" ]; then
-        local theme_name; theme_name=$(echo "$choice" | sed -e 's/ //' -e 's/ //' -e 's/ //' -e 's/ //' | tr '[:upper:]' '[:lower:]')
+        local theme_name; theme_name=$(echo "$choice" | sed -e 's/ //' | tr '[:upper:]' '[:lower:]')
         apply_theme "$theme_name"
     fi
 }
@@ -191,15 +163,28 @@ show_tools_menu() {
 
 # --- Main Menu ---
 show_main_menu() {
-    local options=(" Themes" " Dynamic Theme" " Layouts" " Tools" "󰒃 Session")
-    local choice; choice=$(printf "%s\n" "${options[@]}" | wofi --dmenu --prompt "Pyre Mission Control:" --width 300 --height 210)
-    case "$choice" in
-        " Themes")         show_theme_collections_menu ;;
-        " Dynamic Theme")  set_random_wallpaper ;;
-        " Layouts")        show_layout_menu ;;
-        " Tools")          show_tools_menu ;;
-        "󰒃 Session")        show_session_menu ;;
-    esac
+    local state_file="$HOME/.config/pyre/main_menu_last_choice"
+    local options=(" Themes" " Layouts" " Tools" "󰒃 Session")
+    local menu_string
+
+    if [ -f "$state_file" ] && last_choice=$(<"$state_file"); then
+        local other_options=$(printf "%s\n" "${options[@]}" | grep -vF -- "$last_choice")
+        menu_string="$last_choice\n$other_options"
+    else
+        menu_string=$(printf "%s\n" "${options[@]}")
+    fi
+
+    local choice=$(echo -e "$menu_string" | wofi --dmenu --prompt "Pyre Mission Control:" --width 300 --height 170)
+
+    if [ -n "$choice" ]; then
+        echo "$choice" > "$state_file"
+        case "$choice" in
+            " Themes")         show_theme_menu ;;
+            " Layouts")        show_layout_menu ;;
+            " Tools")          show_tools_menu ;;
+            "󰒃 Session")        show_session_menu ;;
+        esac
+    fi
 }
 
 # ┌──────────────────────────────────────────────────┐
@@ -208,8 +193,7 @@ show_main_menu() {
 check_dependencies
 
 case "$1" in
-    theme)      show_theme_collections_menu ;;
-    wallpaper)  set_random_wallpaper ;;
+    theme)      show_theme_menu ;;
     layout)     show_layout_menu ;;
     *)          show_main_menu ;;
 esac

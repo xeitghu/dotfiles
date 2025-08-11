@@ -1,5 +1,5 @@
 /* =============================================================
-              WAYBAR STYLE (АДАПТИРОВАН ДЛЯ PYWAL)
+          WAYBAR STYLE (ИСПРАВЛЕН ДЛЯ РАБОТЫ С ТЕМАМИ)
    ============================================================= */
 
 /* --- Импорт централизованных переменных цвета --- */
@@ -11,18 +11,18 @@
 }
 
 window#waybar {
-    background-color: rgba(30, 30, 46, 0.4);
-    color: @foreground; /* БЫЛО: @text */
+    background-color: rgba(30, 30, 46, 0.4); /* Этот фон можно оставить или заменить на alpha(@base, 0.4) */
+    color: @text; /* ИСПРАВЛЕНО */
     border-radius: 15px;
 }
 
-/* --- Стиль для всех модулей (УВЕЛИЧЕНЫ "БАБЛЫ") --- */
+/* --- Стиль для всех модулей --- */
 #workspaces, #window, #clock, #cpu, #memory, #network,
 #custom-language, #custom-dunst, #pulseaudio, #battery, #tray {
-    background-color: @background;
-    padding: 2px 15px; /* УВЕЛИЧЕНЫ ГОРИЗОНТАЛЬНЫЕ ОТСТУПЫ */
-    margin: 5px 4px;   /* УВЕЛИЧЕНЫ ВЕРТИКАЛЬНЫЕ ОТСТУПЫ */
-    border: 1px solid @color8;
+    background-color: @base; /* ИСПРАВЛЕНО */
+    padding: 2px 15px;
+    margin: 5px 4px;
+    border: 1px solid @overlay0; /* ИСПРАВЛЕНО */
     border-radius: 12px;
 }
 
@@ -30,7 +30,7 @@ window#waybar {
 #workspaces button {
     padding: 0 8px;
     background-color: transparent;
-    color: @color7;
+    color: @subtext1; /* ИСПРАВЛЕНО */
     border-radius: 10px;
     transition: all 0.3s ease;
 }
@@ -38,29 +38,29 @@ window#waybar {
 #workspaces button:hover {
     box-shadow: inherit;
     text-shadow: inherit;
-    background-color: @color8;
+    background-color: @overlay0; /* ИСПРАВЛЕНО */
 }
 
 #workspaces button.focused,
 #workspaces button.active {
-    background-color: @color5;
-    color: @background;
+    background-color: @mauve; /* ИСПРАВЛЕНО */
+    color: @base; /* ИСПРАВЛЕНО */
 }
 
 #workspaces button.urgent {
-    color: @color1;
+    color: @red; /* ИСПРАВЛЕНО */
 }
 
-/* --- Цвета иконок для модулей (сопоставлены с палитрой pywal) --- */
-#clock { color: @color5; }         /* БЫЛО: @mauve */
-#cpu { color: @color6; }           /* БЫЛО: @pink */
-#memory { color: @color4; }        /* БЫЛО: @blue */
-#network { color: @color3; }       /* БЫЛО: @yellow */
-#custom-language { color: @color2; } /* БЫЛО: @green */
-#custom-dunst { color: @color3; }    /* БЫЛО: @peach */
-#pulseaudio { color: @color1; }      /* БЫЛО: @maroon */
-#pulseaudio.muted { color: @color8; } /* БЫЛО: @overlay0 */
-#battery { color: @color2; }         /* БЫЛО: @green */
-#battery.charging, #battery.plugged { color: @color2; }
-#battery.warning { color: @color3; } /* БЫЛО: @yellow */
-#battery.critical { color: @color1; } /* БЫЛО: @red */
+/* --- Цвета иконок для модулей --- */
+#clock { color: @mauve; }
+#cpu { color: @teal; }
+#memory { color: @blue; }
+#network { color: @yellow; }
+#custom-language { color: @green; }
+#custom-dunst { color: @peach; }
+#pulseaudio { color: @maroon; }
+#pulseaudio.muted { color: @overlay0; }
+#battery { color: @green; }
+#battery.charging, #battery.plugged { color: @green; }
+#battery.warning { color: @yellow; }
+#battery.critical { color: @red; }

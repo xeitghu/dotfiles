@@ -33,6 +33,8 @@
 .config/wal/
 .config/Vencord/
 .config/yazi/
+.config/gwe/
+.config/ryzen-controller/
 
 # --- Theme  ---
 .config/Kvantum/
@@ -70,3 +72,8 @@
 
 # --- Custom Scripts ---
 .config/pyre/state
+# Игнорируем временные файлы состояния Pyre
+.config/pyre/
+
+# Игнорируем системные симлинки systemd
+.config/systemd/
