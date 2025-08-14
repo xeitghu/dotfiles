@@ -1,0 +1,8 @@
+#!/bin/bash
+# Это "обертка", которая передает правильные пути для bare-репозитория.
+
+# Находим настоящий lazygit
+REAL_LAZYGIT=$(which -a lazygit | tail -n 1)
+
+# Запускаем его с нашими параметрами
+exec "$REAL_LAZYGIT" --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" "$@"

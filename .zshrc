@@ -19,7 +19,7 @@ path=(
 export PATH
 
 export ZSH="$HOME/.oh-my-zsh"
-export EDITOR='nano'                                   #  Set the default text editor
+export EDITOR='nvim'                                   #  Set the default text editor
 
 #  Custom environment variables for the "Metro" system
 export DOTS="$HOME/.config"
@@ -111,6 +111,8 @@ alias dsee='dotgit ls-files | eza --tree --icons'
 alias dcomm='dotgit commit -m'
 alias dpush='dotgit push'
 alias dlog='dotgit log --oneline --graph --decorate'
+alias lg='lazygit --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias lzd='lazydocker'
 
 # ┌──────────────────────────────────────────────────┐
 # │                    5. Functions                  │

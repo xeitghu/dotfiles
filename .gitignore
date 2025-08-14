@@ -77,3 +77,4 @@
 
 # Игнорируем системные симлинки systemd
 .config/systemd/
+.cargo/
