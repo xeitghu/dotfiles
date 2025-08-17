@@ -1,0 +1,29 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║                                                              ║
+# ║           DUNST THEME - CATPPUCCIN MOCHA COLORS              ║
+# ║                                                              ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+# Этот файл содержит ТОЛЬКО цвета.
+# Вся структура (форма, шрифт, отступы) находится в главном dunstrc.
+
+[urgency_low]
+    # Маловажные уведомления (например, громкость)
+    background = "#181825"  # Mantle
+    foreground = "#CDD6F4"  # Text
+    frame_color = "#89B4FA" # Blue
+    timeout = 5
+
+[urgency_normal]
+    # Стандартные уведомления
+    background = "#181825"  # Mantle
+    foreground = "#CDD6F4"  # Text
+    frame_color = "#CBA6F7" # Mauve
+    timeout = 10
+
+[urgency_critical]
+    # Критические уведомления
+    background = "#181825"  # Mantle
+    foreground = "#CDD6F4"  # Text
+    frame_color = "#F38BA8" # Red
+    timeout = 0

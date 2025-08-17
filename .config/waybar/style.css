@@ -1,66 +1,89 @@
-/* =============================================================
-          WAYBAR STYLE (ИСПРАВЛЕН ДЛЯ РАБОТЫ С ТЕМАМИ)
-   ============================================================= */
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║                                                              ║
+   ║              WAYBAR - CATPPUCCIN MOCHA (PILL STYLE)          ║
+   ║                                                              ║
+   ╚══════════════════════════════════════════════════════════════╝
+*/
 
-/* --- Импорт централизованных переменных цвета --- */
-@import "/home/x8u/.config/wofi/colors.css";
+/*  Загружаем централизованную палитру цветов */
+@import "theme.css"; /* Убедитесь, что файл theme.css существует */
 
+/* ┌──────────────────────────────────────────────────┐
+   │                  Глобальные Стили                  │
+   └──────────────────────────────────────────────────┘*/
 * {
     font-family: "JetBrains Mono Nerd Font", FontAwesome, sans-serif;
     font-size: 14px;
+    border: none;
+    border-radius: 0;
 }
 
+/* ┌──────────────────────────────────────────────────┐
+   │                 Основное Окно Панели               │
+   └──────────────────────────────────────────────────┘*/
 window#waybar {
-    background-color: rgba(30, 30, 46, 0.4); /* Этот фон можно оставить или заменить на alpha(@base, 0.4) */
-    color: @text; /* ИСПРАВЛЕНО */
+    /*  Используем полупрозрачный фон для эффекта "плавающей" панели */
+    background-color: alpha(@base, 0.4);
+    color: @text;
     border-radius: 15px;
 }
 
-/* --- Стиль для всех модулей --- */
-#workspaces, #window, #clock, #cpu, #memory, #network,
-#custom-language, #custom-dunst, #pulseaudio, #battery, #tray {
-    background-color: @base; /* ИСПРАВЛЕНО */
+/* ┌──────────────────────────────────────────────────┐
+   │              Общий Стиль для Всех Модулей          │
+   └──────────────────────────────────────────────────┘*/
+#workspaces,
+#window,
+#clock,
+#cpu,
+#memory,
+#network,
+#custom-language,
+#custom-dunst,
+#pulseaudio,
+#battery,
+#tray {
+    background-color: @base;
     padding: 2px 15px;
     margin: 5px 4px;
-    border: 1px solid @overlay0; /* ИСПРАВЛЕНО */
+    border: 1px solid @overlay0;
     border-radius: 12px;
 }
 
-/* --- Рабочие столы --- */
+/* ┌──────────────────────────────────────────────────┐
+   │                     Воркспейсы                     │
+   └──────────────────────────────────────────────────┘*/
 #workspaces button {
     padding: 0 8px;
     background-color: transparent;
-    color: @subtext1; /* ИСПРАВЛЕНО */
+    color: @subtext1;
     border-radius: 10px;
     transition: all 0.3s ease;
 }
 
 #workspaces button:hover {
-    box-shadow: inherit;
-    text-shadow: inherit;
-    background-color: @overlay0; /* ИСПРАВЛЕНО */
+    background-color: @overlay0;
 }
 
-#workspaces button.focused,
 #workspaces button.active {
-    background-color: @mauve; /* ИСПРАВЛЕНО */
-    color: @base; /* ИСПРАВЛЕНО */
+    /*  ИЗМЕНЕНО: Заменил яркий @mauve на более спокойный @sapphire. */
+    background-color: @mauve;
+    color: @base;
 }
 
 #workspaces button.urgent {
-    color: @red; /* ИСПРАВЛЕНО */
+    color: @red;
 }
 
-/* --- Цвета иконок для модулей --- */
-#clock { color: @mauve; }
-#cpu { color: @teal; }
-#memory { color: @blue; }
-#network { color: @yellow; }
-#custom-language { color: @green; }
-#custom-dunst { color: @peach; }
-#pulseaudio { color: @maroon; }
-#pulseaudio.muted { color: @overlay0; }
-#battery { color: @green; }
-#battery.charging, #battery.plugged { color: @green; }
-#battery.warning { color: @yellow; }
-#battery.critical { color: @red; }
+/* ┌──────────────────────────────────────────────────┐
+   │               Цвета Иконок для Модулей             │
+   └──────────────────────────────────────────────────┘*/
+#clock           { color: @mauve;   }
+#cpu             { color: @teal;    }
+#memory          { color: @blue;    }
+#network         { color: @yellow;  }
+#custom-language { color: @green;   }
+#custom-dunst    { color: @peach;   }
+#pulseaudio      { color: @maroon;  }
+#pulseaudio.muted{ color: @overlay0;}
+#battery         { color: @green;   }
+#battery.critical{ color: @red;     }
