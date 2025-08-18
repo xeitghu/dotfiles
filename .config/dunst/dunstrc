@@ -1,13 +1,46 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║                                                              ║
+# ║              DUNST CONFIG - CATPPUCCIN MOCHA (UNIFIED)       ║
+# ║                                                              ║
+# ╚══════════════════════════════════════════════════════════════╝
 [global]
-    frame_color = "#b4befe"
-    separator_color = "frame"
+    # --- Расположение и геометрия ---
+    origin = top-right
+    offset = (30, 90)
+    width = 350
+
+    # --- Внешний вид ---
+    frame_width = 2
+    frame_color = "#B4BEFE" # lavender
+    separator_color = frame
+    font = JetBrains Mono Nerd Font 10
+    corner_radius = 18
+    background = "#1E1E2E" # base
+    foreground = "#CDD6F4" # text
+
+    # --- Поведение ---
+    sort = yes
+    alignment = left
+    word_wrap = yes
+    icon_position = left
+    max_icon_size = 48
+    padding = 12
+    horizontal_padding = 12
+
 [urgency_low]
-    background = "#1e1e2e"
-    foreground = "#cdd6f4"
+    background = "#1E1E2E" # base
+    foreground = "#A6ADC8" # subtext1
+    frame_color = "#585B70" # overlay0
+    timeout = 5
+
 [urgency_normal]
-    background = "#1e1e2e"
-    foreground = "#cdd6f4"
+    background = "#1E1E2E" # base
+    foreground = "#CDD6F4" # text
+    frame_color = "#B4BEFE" # lavender
+    timeout = 10
+
 [urgency_critical]
-    background = "#1e1e2e"
-    foreground = "#f38ba8"
-    frame_color = "#f38ba8"
+    background = "#1E1E2E" # base
+    foreground = "#F38BA8" # red
+    frame_color = "#F38BA8" # red
+    timeout = 0

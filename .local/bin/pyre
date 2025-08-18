@@ -20,26 +20,29 @@ WAL_CACHE_DIR="$HOME/.cache/wal"
 # =================================================================
 # --- Dependency Check ---
 check_dependencies() {
-    local missing=0
-    #  Check for all required commands
-        for cmd in wofi swww kitty notify-send; do
-        if ! command -v "$cmd" &> /dev/null; then
-            notify-send "Pyre Error" "Required command not found: $cmd" -i "dialog-error"; missing=1; fi
-    done
-    #  Check for all required directories
-    for dir in "$WALLPAPER_DIR" "$ENGINE_THEMES_DIR" "$SCRIPTS_DIR"; do
-        if [ ! -d "$dir" ]; then
-            notify-send "Pyre Error" "Required directory not found: $dir" -i "dialog-error"; missing=1; fi
-    done
-    [ "$missing" -eq 1 ] && exit 1
+  local missing=0
+  #  Check for all required commands
+  for cmd in wofi swww kitty notify-send; do
+    if ! command -v "$cmd" &>/dev/null; then
+      notify-send "Pyre Error" "Required command not found: $cmd" -i "dialog-error"
+      missing=1
+    fi
+  done
+  #  Check for all required directories
+  for dir in "$WALLPAPER_DIR" "$ENGINE_THEMES_DIR" "$SCRIPTS_DIR"; do
+    if [ ! -d "$dir" ]; then
+      notify-send "Pyre Error" "Required directory not found: $dir" -i "dialog-error"
+      missing=1
+    fi
+  done
+  [ "$missing" -eq 1 ] && exit 1
 }
 
 # --- Reload Services ---
 reload_services() {
-    hyprctl reload
-    pkill -SIGUSR2 waybar
-    pkill dunst && dunst &
-    kitty @ set-colors --all "$WAL_CACHE_DIR/colors-kitty.conf"
+  hyprctl reload
+  pkill -SIGUSR2 waybar
+  pkill dunst && dunst &
 }
 
 # =================================================================
@@ -47,48 +50,52 @@ reload_services() {
 # =================================================================
 # --- Showcase Layout ---
 launch_showcase_layout() {
-    #  Load temporary window layout configuration
-    hyprctl keyword source ~/.config/hypr/showcase.conf
-    sleep 0.2; kitty -o font_size=10.0 --title "hollywood-clock" tty-clock -c -C 2 &
-    sleep 0.2; kitty -o font_size=10.0 --title "hollywood-cava" cava &
-    sleep 0.2; kitty -o font_size=10.0 --title "hollywood-matrix" unimatrix &
-    sleep 0.2; kitty -o font_size=10.0 --title "hollywood-pipes" pipes.sh &
+  #  Load temporary window layout configuration
+  hyprctl keyword source ~/.config/hypr/showcase.conf
+  sleep 0.2
+  kitty -o font_size=10.0 --title "hollywood-clock" tty-clock -c -C 2 &
+  sleep 0.2
+  kitty -o font_size=10.0 --title "hollywood-cava" cava &
+  sleep 0.2
+  kitty -o font_size=10.0 --title "hollywood-matrix" unimatrix &
+  sleep 0.2
+  kitty -o font_size=10.0 --title "hollywood-pipes" pipes.sh &
 }
 
 # --- F0urth Layout ---
 launch_f0urth_layout_simple() {
-    local small_font_size=8
+  local small_font_size=8
+  kitty -o font_size=$small_font_size &
+  sleep 0.3
+  local directions=("r" "d" "l")
+  for dir in "${directions[@]}"; do
+    hyprctl dispatch movefocus "$dir"
     kitty -o font_size=$small_font_size &
     sleep 0.3
-    local directions=("r" "d" "l")
-    for dir in "${directions[@]}"; do
-        hyprctl dispatch movefocus "$dir"
-        kitty -o font_size=$small_font_size &
-        sleep 0.3
-    done
+  done
 }
 
 # --- Fastfetch Layout ---
 launch_fastfetch_layout() {
-    #  Load temporary window layout configuration
-    hyprctl keyword source ~/.config/hypr/pyre_layouts.conf
-    sleep 0.1
-    kitty --title "pyre-fastfetch" \
-          -o font_size=10.0 \
-          -o window_padding_width=0 \
-          -o scrollback_lines=0 \
-          sh -c "tput civis; fastfetch; sleep infinity" &
+  #  Load temporary window layout configuration
+  hyprctl keyword source ~/.config/hypr/pyre_layouts.conf
+  sleep 0.1
+  kitty --title "pyre-fastfetch" \
+    -o font_size=10.0 \
+    -o window_padding_width=0 \
+    -o scrollback_lines=0 \
+    sh -c "tput civis; fastfetch; sleep infinity" &
 }
 
 # --- Dual Pane Layout ---
 launch_dual_pane_layout() {
-    #  Load and clear temporary configurations
-    hyprctl keyword source ~/.config/hypr/filemanager.conf
-    thunar &
-    sleep 0.5
-    kitty -o font_size=10.0 --title "fm-yazi" yazi &
-    sleep 1
-    hyprctl keyword source ~/.config/hypr/filemanager_clear.conf
+  #  Load and clear temporary configurations
+  hyprctl keyword source ~/.config/hypr/filemanager.conf
+  thunar &
+  sleep 0.5
+  kitty -o font_size=10.0 --title "fm-yazi" yazi &
+  sleep 1
+  hyprctl keyword source ~/.config/hypr/filemanager_clear.conf
 }
 
 # =================================================================
@@ -96,24 +103,25 @@ launch_dual_pane_layout() {
 # =================================================================
 # --- Apply Mocha Theme ---
 apply_theme() {
-    local theme_name_lower=$1
-    local theme_name_capitalized; theme_name_capitalized=$(echo "$theme_name_lower" | awk '{print toupper(substr($0,1,1))substr($0,2)}')
-    
-    cp "$ENGINE_THEMES_DIR/hypr/$theme_name_lower.conf"   "$WAL_CACHE_DIR/colors-hyprland.conf"
-    cp "$ENGINE_THEMES_DIR/waybar/$theme_name_lower.css"  "$WAL_CACHE_DIR/colors-waybar.css"
-    cp "$ENGINE_THEMES_DIR/kitty/$theme_name_lower.conf"  "$WAL_CACHE_DIR/colors-kitty.conf"
-    cp "$ENGINE_THEMES_DIR/dunst/$theme_name_lower.dunstrc" "$WAL_CACHE_DIR/colors-dunst"
-    cp "$ENGINE_THEMES_DIR/wofi/$theme_name_lower.css"    "$WAL_CACHE_DIR/colors-wofi.css"
-    
-    local theme_wallpaper_dir="$WALLPAPER_DIR/$theme_name_lower"
-    if [ -d "$theme_wallpaper_dir" ]; then
-        local wallpaper; wallpaper=$(find "$theme_wallpaper_dir" -type f | shuf -n 1)
-        [ -n "$wallpaper" ] && swww img "$wallpaper" --transition-type wipe --transition-angle 30 --transition-step 90
-    fi
-    
-    reload_services
-    echo "$theme_name_capitalized" > "$STATE_FILE"
-    notify-send "🎨 Pyre: Theme Changed" "Palette activated: $theme_name_capitalized" -i "preferences-desktop-theme"
+  local theme_name_lower=$1
+  local theme_name_capitalized
+  theme_name_capitalized=$(echo "$theme_name_lower" | awk '{print toupper(substr($0,1,1))substr($0,2)}')
+
+  #  Копируем мастер-файлы тем в локальные папки приложений.
+  cp "$ENGINE_THEMES_DIR/hypr/$theme_name_lower.conf" "$HOME/.config/hypr/theme.conf"
+  cp "$ENGINE_THEMES_DIR/waybar/$theme_name_lower.css" "$HOME/.config/waybar/theme.css"
+  cp "$ENGINE_THEMES_DIR/wofi/$theme_name_lower.css" "$HOME/.config/wofi/theme.css"
+
+  #  Устанавливаем случайные обои из папки темы.
+  local theme_wallpaper_dir="$WALLPAPER_DIR/$theme_name_lower"
+  if [ -d "$theme_wallpaper_dir" ]; then
+    local wallpaper
+    wallpaper=$(find "$theme_wallpaper_dir" -type f | shuf -n 1)
+    [ -n "$wallpaper" ] && swww img "$wallpaper" --transition-type wipe --transition-angle 30 --transition-step 90
+  fi
+
+  reload_services
+  notify-send "🎨 Pyre: Theme Changed" "Palette activated: $theme_name_capitalized" -i "preferences-desktop-theme"
 }
 
 # =================================================================
@@ -121,70 +129,75 @@ apply_theme() {
 # =================================================================
 # --- Theme Menu ---
 show_theme_menu() {
-    local options=" Mocha"
-    local choice; choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Select Theme:" --width 300 --height 100)
-    if [ -n "$choice" ]; then
-        local theme_name; theme_name=$(echo "$choice" | sed -e 's/ //' | tr '[:upper:]' '[:lower:]')
-        apply_theme "$theme_name"
-    fi
+  local options=" Mocha"
+  local choice
+  choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Select Theme:" --width 300 --height 100)
+  if [ -n "$choice" ]; then
+    local theme_name
+    theme_name=$(echo "$choice" | sed -e 's/ //' | tr '[:upper:]' '[:lower:]')
+    apply_theme "$theme_name"
+  fi
 }
 
 # --- Layout Selection Menu ---
 show_layout_menu() {
-    local options=("󰄛 Showcase" " F0urth" " Fastfetch" " Dual Pane")
-    local choice; choice=$(printf "%s\n" "${options[@]}" | wofi --dmenu --prompt "Select Layout:" --width 300 --height 170)
-    case "$choice" in
-        "󰄛 Showcase")  (launch_showcase_layout) & ;;
-        " F0urth")     (launch_f0urth_layout_simple) & ;;
-        " Fastfetch")  (launch_fastfetch_layout) & ;;
-        " Dual Pane")  (launch_dual_pane_layout) & ;;
-    esac
+  local options=("󰄛 Showcase" " F0urth" " Fastfetch" " Dual Pane")
+  local choice
+  choice=$(printf "%s\n" "${options[@]}" | wofi --dmenu --prompt "Select Layout:" --width 300 --height 170)
+  case "$choice" in
+  "󰄛 Showcase") (launch_showcase_layout) & ;;
+  " F0urth") (launch_f0urth_layout_simple) & ;;
+  " Fastfetch") (launch_fastfetch_layout) & ;;
+  " Dual Pane") (launch_dual_pane_layout) & ;;
+  esac
 }
 
 # --- Session Menu (Power + Lock) ---
 show_session_menu() {
-    local options=" Power\n Lock"
-    local choice; choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Session Control:" --width 300 --height 100)
-    case "$choice" in
-        " Power") "$SCRIPTS_DIR/powermenu.sh" ;;
-        " Lock") "$SCRIPTS_DIR/lockscreen.sh" ;;
-    esac
+  local options=" Power\n Lock"
+  local choice
+  choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Session Control:" --width 300 --height 100)
+  case "$choice" in
+  " Power") "$SCRIPTS_DIR/powermenu.sh" ;;
+  " Lock") "$SCRIPTS_DIR/lockscreen.sh" ;;
+  esac
 }
 
 # --- Tools Menu (Screenshot + Clipboard) ---
 show_tools_menu() {
-    local options=" Screenshot\n Clipboard"
-    local choice; choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Tools:" --width 300 --height 100)
-    case "$choice" in
-        " Screenshot") "$SCRIPTS_DIR/screenshot.sh" ;;
-        " Clipboard") "$SCRIPTS_DIR/clipboard_history.sh" ;;
-    esac
+  local options=" Screenshot\n Clipboard"
+  local choice
+  choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Tools:" --width 300 --height 100)
+  case "$choice" in
+  " Screenshot") "$SCRIPTS_DIR/screenshot.sh" ;;
+  " Clipboard") "$SCRIPTS_DIR/clipboard_history.sh" ;;
+  esac
 }
 
 # --- Main Menu ---
 show_main_menu() {
-    local state_file="$HOME/.config/pyre/main_menu_last_choice"
-    local options=(" Themes" " Layouts" " Tools" "󰒃 Session")
-    local menu_string
+  local state_file="$HOME/.config/pyre/main_menu_last_choice"
+  local options=(" Themes" " Layouts" " Tools" "󰒃 Session")
+  local menu_string
 
-    if [ -f "$state_file" ] && last_choice=$(<"$state_file"); then
-        local other_options=$(printf "%s\n" "${options[@]}" | grep -vF -- "$last_choice")
-        menu_string="$last_choice\n$other_options"
-    else
-        menu_string=$(printf "%s\n" "${options[@]}")
-    fi
+  if [ -f "$state_file" ] && last_choice=$(<"$state_file"); then
+    local other_options=$(printf "%s\n" "${options[@]}" | grep -vF -- "$last_choice")
+    menu_string="$last_choice\n$other_options"
+  else
+    menu_string=$(printf "%s\n" "${options[@]}")
+  fi
 
-    local choice=$(echo -e "$menu_string" | wofi --dmenu --prompt "Pyre Mission Control:" --width 300 --height 170)
+  local choice=$(echo -e "$menu_string" | wofi --dmenu --prompt "Pyre Mission Control:" --width 300 --height 170)
 
-    if [ -n "$choice" ]; then
-        echo "$choice" > "$state_file"
-        case "$choice" in
-            " Themes")         show_theme_menu ;;
-            " Layouts")        show_layout_menu ;;
-            " Tools")          show_tools_menu ;;
-            "󰒃 Session")        show_session_menu ;;
-        esac
-    fi
+  if [ -n "$choice" ]; then
+    echo "$choice" >"$state_file"
+    case "$choice" in
+    " Themes") show_theme_menu ;;
+    " Layouts") show_layout_menu ;;
+    " Tools") show_tools_menu ;;
+    "󰒃 Session") show_session_menu ;;
+    esac
+  fi
 }
 
 # ┌──────────────────────────────────────────────────┐
@@ -193,7 +206,7 @@ show_main_menu() {
 check_dependencies
 
 case "$1" in
-    theme)      show_theme_menu ;;
-    layout)     show_layout_menu ;;
-    *)          show_main_menu ;;
+theme) show_theme_menu ;;
+layout) show_layout_menu ;;
+*) show_main_menu ;;
 esac

@@ -157,15 +157,13 @@ metro_aliases[binds]="keybinds.conf"
 metro_aliases[rules]="window_rules.conf"
 metro_aliases[look]="look.conf"
 metro_aliases[colors]="colors.conf"
-metro_aliases[paper]="hyprpaper.conf"
 metro_aliases[pyrelayouts]="pyre_layouts.conf"
-metro_aliases[hollywood]="hollywood.conf"
-metro_aliases[hw]="hollywood.conf"
 metro_aliases[filemanager]="filemanager.conf"
 metro_aliases[kitty]="kitty.conf"
-metro_aliases[waybar]="config"
-metro_aliases[waybarstyle]="$DOTS/waybar/style.css"
+metro_aliases[wb]="$DOTS/waybar/config"
+metro_aliases[wbs]="$DOTS/waybar/style.css"
 metro_aliases[waybarcolors]="$DOTS/waybar/colors.css"
+metro_aliases[wofi]="$DOTS/wofi/style.css"
 metro_aliases[wofistyle]="$DOTS/wofi/style.css"
 metro_aliases[dunst]="dunstrc"
 metro_aliases[ff]="config.jsonc"
@@ -195,17 +193,54 @@ _metro_resolve_path() {
     fi
 }
 
+# =================================================================
+#          edit -  Find and edit config files with fzf
+# =================================================================
+# ИСПРАВЛЕНИЕ: Теперь корректно передает функции в fzf для работы превью.
 edit() {
-    if [[ -z "$1" ]]; then echo "Usage: edit <alias_or_filename>"; return 1; fi
-    if [[ "$1" == "p10k" ]]; then p10k configure; return 0; fi
-    local found_path
-    found_path=$(_metro_resolve_path "$1")
-    if [[ -n "$found_path" ]]; then
-        $EDITOR "$found_path"
-    else
-        echo "Config not found: $1"
-        return 1
+    # Если передан аргумент (например, "edit hypr"), используем старую логику
+    if [[ -n "$1" ]]; then
+        if [[ "$1" == "p10k" ]]; then p10k configure; return 0; fi
+        local found_path=$(_metro_resolve_path "$1")
+        if [[ -n "$found_path" ]]; then
+            $EDITOR "$found_path"
+        else
+            echo "Config not found: $1"; return 1
+        fi
+        return 0
     fi
+
+    # --- НОВАЯ ЛОГИКА С FZF ---
+    local aliases
+    aliases=$(for key in "${(@k)metro_aliases}"; do
+        local full_path=${metro_aliases[$key]}
+        local filename=$(basename "$full_path")
+        printf "%-15s -> %s\n" "$key" "$filename"
+    done | sort)
+
+    # ИСПРАВЛЕНИЕ: Мы "внедряем" текст самих функций (_metro_find_config и _metro_resolve_path)
+    # прямо в команду для превью. Это гарантирует, что fzf их "увидит".
+    local functions_to_export
+    functions_to_export=$(typeset -f _metro_find_config _metro_resolve_path)
+
+    local selected_alias
+    selected_alias=$(echo -e "p10k           -> Configure Powerlevel10k\n$aliases" | fzf \
+        --header=" Select a config to edit" \
+        --prompt="❯ " \
+        --border=rounded \
+        --height=40% \
+        --layout=reverse \
+        --preview-window='right:50%:border-rounded' \
+        --preview="$functions_to_export; \
+            alias_to_preview=\$(echo {} | awk '{print \$1}'); \
+            path_to_preview=\$(_metro_resolve_path \"\$alias_to_preview\"); \
+            bat --color=always --style=plain \"\$path_to_preview\" 2>/dev/null || echo \"Cannot preview this file.\"
+        ")
+
+    if [[ -z "$selected_alias" ]]; then return 0; fi
+
+    local final_alias_to_edit=$(echo "$selected_alias" | awk '{print $1}')
+    edit "$final_alias_to_edit"
 }
 
 view() {

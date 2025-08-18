@@ -1,12 +1,12 @@
 /* ╔══════════════════════════════════════════════════════════════╗
    ║                                                              ║
-   ║           WOFI - CATPPUCCIN MOCHA (REFINED EDITION)            ║
+   ║           WOFI - CATPPUCCIN MOCHA (REFINED EDITION)          ║
    ║                                                              ║
    ╚══════════════════════════════════════════════════════════════╝
 */
 
 /*  Loading the Catppuccin Mocha color palette */
-@import "/home/x8u/.config/waybar/theme.css";
+@import "theme.css";
 
 /* ┌──────────────────────────────────────────────────┐
    │                   Global Styles                  │
