@@ -1,14 +1,13 @@
 # ╔══════════════════════════════════════════════════════════════╗
 # ║                                                              ║
-# ║                    ~/.zshrc - MAIN CONFIG                    ║
+# ║                  ~/.zshrc - REFINED CONFIG                   ║
 # ║                                                              ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 # ┌──────────────────────────────────────────────────┐
-# │               1. Environment & Path              │
+# │              1. Environment & Path               │
 # └──────────────────────────────────────────────────┘
-#  Using a `typeset -U path` array automatically prevents duplicate entries,
-#   which is a cleaner way to manage the PATH variable.
+#  Using `typeset -U path` automatically removes duplicate entries for a clean PATH.
 typeset -U path
 path=(
     "$HOME/.local/bin"
@@ -18,173 +17,190 @@ path=(
 )
 export PATH
 
+#  Core environment variables for scripts and applications.
 export ZSH="$HOME/.oh-my-zsh"
-export EDITOR='nvim'                                   #  Set the default text editor
-
-#  Custom environment variables for the "Metro" system
 export DOTS="$HOME/.config"
 export HYPR="$DOTS/hypr"
 
-# ┌──────────────────────────────────────────────────┐
-# │               2. Zsh & Oh My Zsh                 │
-# └──────────────────────────────────────────────────┘
-export ZSH_THEME="powerlevel10k/powerlevel10k"         #  Set the Zsh theme
+#  Set your default text editor.
+export EDITOR='nvim'
 
-#  History settings
+# ┌──────────────────────────────────────────────────┐
+# │              2. Zsh Core & Options               │
+# └──────────────────────────────────────────────────┘
+#  Set the desired Oh My Zsh theme.
+export ZSH_THEME="powerlevel10k/powerlevel10k"
+
+# --- History Settings ---
+#  Configure history behavior for a large and persistent command history.
 HISTSIZE=100000
 SAVEHIST=100000
 HISTFILE=~/.zsh_history
-setopt HIST_IGNORE_DUPS HIST_IGNORE_SPACE              #  Ignore duplicate commands and those starting with a space
 
-#  Set Oh My Zsh update mode to 'reminder'
+# --- Zsh Options ---
+#  Options for a better and more intuitive interactive experience.
+setopt AUTO_CD              # Change directory without the `cd` command.
+setopt NOTIFY               # Instantly notify on background job completion.
+setopt SHARE_HISTORY        # Share history between all open terminals.
+setopt EXTENDED_GLOB        # Enable extended globbing features (e.g., `^` for negation).
+setopt HIST_IGNORE_DUPS     # Don't save consecutive duplicate commands.
+setopt HIST_IGNORE_SPACE    # Don't save commands starting with a space.
+
+#  Fix for slow shell startup by caching completions. This significantly improves launch time.
+autoload -U compinit
+local zcompfile="${ZDOTDIR:-$HOME}/.zcompdump"
+if [[ -f "$zcompfile" ]] && (( $(date +%s -r "$zcompfile") < $(date +%s -d '-20 hours') )); then
+    compinit -i
+else
+    compinit -C -i
+fi
+
+#  Set Oh My Zsh update mode to 'reminder' to avoid auto-updates.
 zstyle ':omz:update' mode reminder
 
 # ┌──────────────────────────────────────────────────┐
 # │                     3. Plugins                   │
 # └──────────────────────────────────────────────────┘
-#  List of plugins for Oh My Zsh to load
+#  List of plugins for Oh My Zsh to load. Order can be important.
 plugins=(
   git
-  z
   zsh-autosuggestions
   zsh-syntax-highlighting
-  zsh-completions #  RECOMMENDED: Adds a vast collection of completions for various tools.
+  zsh-completions
 )
 
 # ┌──────────────────────────────────────────────────┐
-# │                     4. Aliases                   │
+# │             4. FZF Configuration                 │
 # └──────────────────────────────────────────────────┘
+#  Speed up FZF by using `fd` instead of the standard `find`.
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --strip-cwd-prefix --exclude .git'
 
-# --- 4.1. Package Management (Arch / yay) ---
-alias update='yay -Syu'
-alias install='yay -S'
-#  IMPROVEMENT: Added the `-i` flag for interactive confirmation before removing packages.
-alias remove='sudo pacman -Rnsi'
-alias search='yay -Ss'
+#  Global settings for a beautiful and functional FZF with `bat` previews.
+export FZF_DEFAULT_OPTS='
+--height 40% --layout=reverse --border=rounded
+--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8
+--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc
+--color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8
+--preview "bat --color=always --style=plain --line-range :500 {}"
+--preview-window "right:55%:border-rounded"
+'
 
-# --- 4.2. Utility Replacements ---
-#  Viewing
-alias ls='eza --icons --group-directories-first'                      # Modern replacement for 'ls'
-alias ll='eza -lh --icons --git --group-directories-first --header'
-alias la='eza -lha --icons --git --group-directories-first --header'
-alias cat='bat --paging=never --style=plain'                          # Modern replacement for 'cat'
-alias less='bat'
+# ┌──────────────────────────────────────────────────┐
+# │                     5. Aliases                   │
+# └──────────────────────────────────────────────────┘
+# --- Package Management ---
+alias update='yay -Syu'                 # Update all system packages
+alias install='yay -S'                  # Install a new package
+alias remove='sudo pacman -Rnsi'        # Remove a package with dependencies
+alias search='yay -Ss'                  # Search for a package
 
-#  Analysis
-alias lt='eza --tree --level=2 --icons'                               # Tree view
-alias lsz='eza -lrh --sort=size --icons'                              # Sort by size
-alias ld='eza -lrh --sort=modified --icons'                           # Sort by date
+# --- Utility Replacements ---
+alias ls='eza --icons --group-directories-first'                         # Modern replacement for 'ls'
+alias ll='eza -lh --icons --git --group-directories-first --header'      # Long list format
+alias la='eza -lha --icons --git --group-directories-first --header'     # Long list format with hidden files
+alias cat='bat --paging=never --style=plain'                             # Modern replacement for 'cat'
+alias less='bat'                                                         # Use bat as a pager
+alias lt='eza --tree --level=2 --icons'                                  # Tree view (2 levels deep)
+alias ltf='eza --tree --level=10 --icons'                                # Full tree view
+alias lsz='eza -lrh --sort=size --icons'                                 # Sort by size
+alias ld='eza -lrh --sort=modified --icons'                              # Sort by date
+alias find='fd'                                                          # Modern replacement for 'find'
+alias grep='rg'                                                          # Modern replacement for 'grep'
+alias top='btop'                                                         # Modern replacement for 'top'
+alias df='duf'                                                           # Modern replacement for 'df'
 
-#  Searching
-alias find='fd'                                                       # Modern replacement for 'find'
-alias grep='rg'                                                       # Modern replacement for 'grep'
+# --- Navigation & Convenience ---
+alias ..='cd ..'                        # Go up one directory
+alias ...='cd ../..'                    # Go up two directories
+alias c='clear'                         # Clear the terminal screen
+alias h='history'                       # Show command history
 
-#  Monitoring
-alias top='btop'                                                      # Modern replacement for 'top'
-alias df='duf'                                                        # Modern replacement for 'df'
+# --- Quick Navigation ---
+alias gohome='cd ~'                     # Go to home directory
+alias goconf='cd $DOTS'                 # Go to config directory
+alias gohypr='cd $HYPR'                 # Go to Hyprland config directory
+alias gowaybar='cd $DOTS/waybar'        # Go to Waybar config directory
+alias gowofi='cd $DOTS/wofi'            # Go to Wofi config directory
+alias godunst='cd $DOTS/dunst'          # Go to Dunst config directory
+alias gokitty='cd $DOTS/kitty'          # Go to Kitty config directory
+alias goscripts='cd $HYPR/scripts'      # Go to Hyprland scripts directory
 
-# --- 4.3. Navigation & Convenience ---
-alias ..='cd ..'
-alias ...='cd ../..'
-alias c='clear'
-alias h='history'
-
-# --- 4.4. Quick Navigation ---
-alias goconf='cd $DOTS'
-alias godunst='cd $DOTS/dunst'
-alias gohome='cd ~'
-alias gohypr='cd $HYPR'
-alias gokitty='cd $DOTS/kitty'
-alias goscripts='cd $HYPR/scripts'
-alias gowaybar='cd $DOTS/waybar'
-alias gowofi='cd $DOTS/wofi'
-
-# --- 4.5. Dotfiles Management ---
-#  A wrapper function to manage dotfiles in a bare Git repository.
+# --- Dotfiles Management ---
+#  [INFO] Core wrapper function for the bare dotfiles repository.
+#          All other 'd*' aliases depend on this.
 dotgit() {
     git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" "$@"
 }
-alias dstat='dotgit status'
-alias dadd='dotgit add'
-alias ddel='dotgit rm'
-alias dsee='dotgit ls-files | eza --tree --icons'
-alias dcomm='dotgit commit -m'
-alias dpush='dotgit push'
-alias dlog='dotgit log --oneline --graph --decorate'
-alias lg='lazygit --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-alias lzd='lazydocker'
+
+alias dstat='dotgit status'             # Show status of dotfiles repo
+alias dadd='dotgit add'                 # Add files to dotfiles repo
+alias ddel='dotgit rm'                  # Remove files from dotfiles repo
+alias dsee='dotgit ls-files | eza --tree --icons' # View tracked dotfiles as a tree
+alias dcomm='dotgit commit -m'          # Commit changes to dotfiles
+alias dpush='dotgit push'               # Push dotfiles to remote
+alias dlog='dotgit log --oneline --graph --decorate' # View dotfiles commit log
+alias lg='lazygit --git-dir=$HOME/.dotfiles/ --work-tree=$HOME' # Open lazygit for dotfiles
+
+# --- TUI Applications ---
+alias lzd='lazydocker'                  # Launch Lazydocker
+alias lgit='lazygit'                    # Launch Lazygit
+alias zj='zellij'                       # Launch Zellij
+alias za='zellij attach'                # Attach to a Zellij session
+alias zk='zellij kill-all-sessions'     # Kill all Zellij sessions
 
 # ┌──────────────────────────────────────────────────┐
-# │                    5. Functions                  │
+# │                    6. Functions                  │
 # └──────────────────────────────────────────────────┘
-
 # =================================================================
 #          dfind - Audit untracked configuration files
 # =================================================================
 dfind() {
     local untracked_files
     untracked_files=$(dotgit ls-files --others --exclude-standard -- ~/.config ~/.local/bin ~/.zshrc ~/.p10k.zsh)
+
     if [ -n "$untracked_files" ]; then
-        echo "┌─────────────────────────────   Git Audit ───────────────────────────────┐"
-        echo "$untracked_files" | awk '
-            BEGIN { first = 1 } {
-                if (first) { prefix = "│ ┌ "; first = 0; } else { prefix = "│ ├ "; }
-                lines[NR] = prefix $0;
-            }
-            END {
-                sub(/├/, "└", lines[NR]);
-                for (i = 1; i <= NR; i++) { print lines[i]; }
-            }
-        '
-        echo "└──────────────────────────────────────────────────────────────────────────┘"
-        echo "  Use 'dadd <path>' to add them to the next commit."
+        echo "┌─  Untracked Dotfiles ───────────────────────────────────────────┐"
+        echo "$untracked_files" | sed 's/^/│  /;$s/│/└/'
+        echo "└────────────────────────────────────────────────────────────────┘"
+        echo "  Use 'dadd <path>' to add them."
     else
-        echo "┌────────────────────   Git Audit  ────────────────────┐"
-        echo "│                   ┌───────────────┐                   │"
-        echo "│                   ├ System is up. ┤                   │"
-        echo "│                   └───────────────┘                   │"
-        echo "└───────────────────────────────────────────────────────┘"
+        echo " All dotfiles are tracked."
     fi
 }
 
-# ==============================================================
-#                          Metro System
-# ==============================================================
-#  Maps short aliases to their corresponding config filenames for the `edit` and `view` functions.
+# =================================================================
+#          Metro System - Config file management system
+# =================================================================
 typeset -A metro_aliases
-metro_aliases[hypr]="hyprland.conf"
-metro_aliases[binds]="keybinds.conf"
-metro_aliases[rules]="window_rules.conf"
-metro_aliases[look]="look.conf"
-metro_aliases[colors]="colors.conf"
-metro_aliases[pyrelayouts]="pyre_layouts.conf"
-metro_aliases[filemanager]="filemanager.conf"
-metro_aliases[kitty]="kitty.conf"
-metro_aliases[wb]="$DOTS/waybar/config"
-metro_aliases[wbs]="$DOTS/waybar/style.css"
-metro_aliases[waybarcolors]="$DOTS/waybar/colors.css"
-metro_aliases[wofi]="$DOTS/wofi/style.css"
-metro_aliases[wofistyle]="$DOTS/wofi/style.css"
-metro_aliases[dunst]="dunstrc"
-metro_aliases[ff]="config.jsonc"
-metro_aliases[pyre]="pyre"
-metro_aliases[zsh]=".zshrc"
-metro_aliases[gitig]=".gitignore"
+metro_aliases=(
+    [hypr]="hyprland.conf"
+    [binds]="keybinds.conf"
+    [rules]="window_rules.conf"
+    [look]="look.conf"
+    [colors]="colors.conf"
+    [pyrelayouts]="pyre_layouts.conf"
+    [filemanager]="filemanager.conf"
+    [kitty]="kitty.conf"
+    [wb]="$DOTS/waybar/config"
+    [wbs]="$DOTS/waybar/style.css"
+    [waybarcolors]="$DOTS/waybar/colors.css"
+    [wofi]="$DOTS/wofi/style.css"
+    [wofistyle]="$DOTS/wofi/style.css"
+    [dunst]="dunstrc"
+    [ff]="config.jsonc"
+    [pyre]="pyre"
+    [zsh]=".zshrc"
+    [gitig]="$HOME/.gitignore"
+    [swww]="$HOME/.local/bin/wpr"
+)
 
 _metro_find_config() {
-    local target_file=$1
-    fd --type f --hidden --absolute-path "^${target_file}$" "$DOTS" "$HOME/.local/bin" "$HOME" --max-depth 5 | head -n 1
+    fd --type f --hidden --absolute-path "^${1}$" "$DOTS" "$HOME/.local/bin" "$HOME" --max-depth 5 | head -n 1
 }
 
 _metro_resolve_path() {
     local input=$1
-    local target_path
-
-    if [[ -v "metro_aliases[$input]" ]]; then
-        target_path=${metro_aliases[$input]}
-    else
-        target_path=$input
-    fi
+    local target_path=${metro_aliases[$input]:-$input}
 
     if [[ "$target_path" == \/* || "$target_path" == \~* ]]; then
         echo "$target_path"
@@ -193,75 +209,49 @@ _metro_resolve_path() {
     fi
 }
 
-# =================================================================
-#          edit -  Find and edit config files with fzf
-# =================================================================
-# ИСПРАВЛЕНИЕ: Теперь корректно передает функции в fzf для работы превью.
 edit() {
-    # Если передан аргумент (например, "edit hypr"), используем старую логику
+    # Handle direct argument calls first
     if [[ -n "$1" ]]; then
-        if [[ "$1" == "p10k" ]]; then p10k configure; return 0; fi
+        if [[ "$1" == "p10k" ]]; then
+            p10k configure
+            return 0
+        fi
         local found_path=$(_metro_resolve_path "$1")
         if [[ -n "$found_path" ]]; then
             $EDITOR "$found_path"
         else
-            echo "Config not found: $1"; return 1
+            echo "Config not found: $1"
+            return 1
         fi
         return 0
     fi
 
-    # --- НОВАЯ ЛОГИКА С FZF ---
-    local aliases
-    aliases=$(for key in "${(@k)metro_aliases}"; do
-        local full_path=${metro_aliases[$key]}
-        local filename=$(basename "$full_path")
-        printf "%-15s -> %s\n" "$key" "$filename"
-    done | sort)
-
-    # ИСПРАВЛЕНИЕ: Мы "внедряем" текст самих функций (_metro_find_config и _metro_resolve_path)
-    # прямо в команду для превью. Это гарантирует, что fzf их "увидит".
-    local functions_to_export
-    functions_to_export=$(typeset -f _metro_find_config _metro_resolve_path)
-
+    # Interactive FZF menu if no arguments are given
+    local aliases=$(for key in "${(@k)metro_aliases}"; do printf "%-15s -> %s\n" "$key" "$(basename "${metro_aliases[$key]}")"; done | sort)
+    local functions_to_export=$(typeset -f _metro_find_config _metro_resolve_path)
     local selected_alias
+    
     selected_alias=$(echo -e "p10k           -> Configure Powerlevel10k\n$aliases" | fzf \
         --header=" Select a config to edit" \
-        --prompt="❯ " \
-        --border=rounded \
-        --height=40% \
-        --layout=reverse \
-        --preview-window='right:50%:border-rounded' \
         --preview="$functions_to_export; \
             alias_to_preview=\$(echo {} | awk '{print \$1}'); \
             path_to_preview=\$(_metro_resolve_path \"\$alias_to_preview\"); \
-            bat --color=always --style=plain \"\$path_to_preview\" 2>/dev/null || echo \"Cannot preview this file.\"
-        ")
+            bat --color=always --style=plain \"\$path_to_preview\" 2>/dev/null || echo \"Cannot preview this file.\"")
 
-    if [[ -z "$selected_alias" ]]; then return 0; fi
-
-    local final_alias_to_edit=$(echo "$selected_alias" | awk '{print $1}')
-    edit "$final_alias_to_edit"
+    if [[ -n "$selected_alias" ]]; then
+        edit "$(echo "$selected_alias" | awk '{print $1}')"
+    fi
 }
 
 view() {
-    if [[ -z "$1" ]]; then echo "Usage: view <alias_or_filename>"; return 1; fi
-    local found_path
-    found_path=$(_metro_resolve_path "$1")
+    if [[ -z "$1" ]]; then
+        echo "Usage: view <alias_or_filename>"
+        return 1
+    fi
+    
+    local found_path=$(_metro_resolve_path "$1")
     if [[ -n "$found_path" ]]; then
-        local lang
-        case "${found_path##*.}" in
-            conf)       lang="conf" ;;
-            css)        lang="css" ;;
-            jsonc|json) lang="json" ;;
-            sh|zsh)     lang="sh" ;;
-            gitignore)  lang="gitignore" ;;
-            *)          lang="" ;;
-        esac
-        if [[ -n "$lang" ]]; then
-            bat --paging=never -l "$lang" "$found_path"
-        else
-            bat --paging=never "$found_path"
-        fi
+        bat --paging=never "$found_path"
     else
         echo "Config not found: $1"
         return 1
@@ -269,55 +259,44 @@ view() {
 }
 
 # =================================================================
-#          slay -  Find and kill processes by name
+#          slay - Find and kill processes by name
 # =================================================================
-#  IMPROVEMENT: The function is now safer. It first sends a graceful `SIGTERM`
-#   signal. If that fails, it escalates to a forceful `SIGKILL`.
 slay() {
-    if [ -z "$1" ]; then
+    if [[ -z "$1" ]]; then
         echo "Usage: slay <process_name>"
         return 1
     fi
-    local pids
-    pids=$(pgrep -fi "$1")
-    if [ -z "$pids" ]; then
+
+    local pids=$(pgrep -fi "$1")
+    if [[ -z "$pids" ]]; then
         echo "No processes found matching '$1'."
         return 0
     fi
 
-    echo "Found PIDs: $pids"
-    echo "Sending SIGTERM to processes matching '$1'..."
-    echo "$pids" | xargs kill >/dev/null 2>&1
-    
+    echo "Found PIDs: $pids. Sending SIGTERM..."
+    kill $pids >/dev/null 2>&1
     sleep 1
+    
+    # Check if processes are still running
     pids=$(pgrep -fi "$1")
-
-    if [ -n "$pids" ]; then
+    if [[ -n "$pids" ]]; then
         echo "Processes still running. Sending SIGKILL..."
-        echo "$pids" | xargs kill -9
-        echo "Done."
+        kill -9 $pids
     else
         echo "All processes terminated gracefully."
     fi
 }
 
 # =================================================================
-#                 gstat - Git Status for all repos
+#          gstat - Git status for all repos in current dir
 # =================================================================
-# Usage: gstat (run it in your main projects folder)
 gstat() {
     command find . -maxdepth 2 -name ".git" -type d | while read -r gitdir; do
-        # CORRECTED: Use a combined declaration and assignment syntax
-        # to prevent the shell from printing debug output.
         local projectdir=$(dirname "$gitdir")
+        echo "\n---  Status for: $projectdir ---"
         
-        echo ""
-        echo "---   Status for: $projectdir ---"
-        
-        # CORRECTED: Same combined syntax for this variable
         local git_status=$(cd "$projectdir" && git status -s)
-        
-        if [ -z "$git_status" ]; then
+        if [[ -z "$git_status" ]]; then
             echo "   Clean"
         else
             echo "$git_status"
@@ -329,21 +308,57 @@ gstat() {
 #          extract - Decompress any archive
 # =================================================================
 extract() {
-    if [ -f "$1" ]; then
-        case "$1" in
-            *.tar.bz2)  tar xjf "$1"    ;;
-            *.tar.gz)   tar xzf "$1"    ;;
-            *.bz2)      bunzip2 "$1"    ;;
-            *.rar)      unrar x "$1"    ;;
-            *.gz)       gunzip "$1"     ;;
-            *.tar)      tar xf "$1"     ;;
-            *.zip)      unzip "$1"      ;;
-            *.7z)       7z x "$1"       ;;
-            *)          echo "'$1' cannot be extracted" ;;
-        esac
-    else
+    if [[ ! -f "$1" ]]; then
         echo "'$1' is not a valid file"
+        return 1
     fi
+
+    case "$1" in
+        *.tar.bz2)  tar xjf "$1"    ;;
+        *.tar.gz)   tar xzf "$1"    ;;
+        *.bz2)      bunzip2 "$1"    ;;
+        *.rar)      unrar x "$1"    ;;
+        *.gz)       gunzip "$1"     ;;
+        *.tar)      tar xf "$1"     ;;
+        *.zip)      unzip "$1"      ;;
+        *.7z)       7z x "$1"       ;;
+        *)          echo "'$1' cannot be extracted" ;;
+    esac
+}
+
+# =================================================================
+#          up - Go up multiple directory levels
+# =================================================================
+up() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: up <levels>"
+        return 1
+    fi
+
+    local target_dir="../"
+    for i in {1..$(( $1 - 1 ))}; do
+        target_dir="$target_dir../"
+    done
+    cd "$target_dir"
+}
+
+# =================================================================
+#          serve - Start a simple web server
+# =================================================================
+serve() {
+    echo "Serving current directory on http://localhost:8000"
+    python -m http.server
+}
+
+# =================================================================
+#          bak - Create a timestamped backup of a file
+# =================================================================
+bak() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: bak <filename>"
+        return 1
+    fi
+    cp -iv "$1" "$1.bak.$(date +'%Y%m%d-%H%M%S')"
 }
 
 # =================================================================
@@ -354,14 +369,22 @@ mkcd() {
 }
 
 # ┌──────────────────────────────────────────────────┐
-# │             6. Initialization & Startup          │
+# │             7. Initialization & Startup          │
 # └──────────────────────────────────────────────────┘
-#  Load Oh My Zsh
+#  More robust initialization to prevent errors if a tool is not installed.
+
+#  Load Zoxide if it exists
+command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
+
+#  Load Atuin if it exists
+command -v atuin >/dev/null && eval "$(atuin init zsh)"
+
+#  Load Oh My Zsh framework
 source $ZSH/oh-my-zsh.sh
 
-#  Load Powerlevel10k
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+#  Load Powerlevel10k theme configuration
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
-#  Load fzf key bindings and completions manually
+#  Load fzf key bindings and completions
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh

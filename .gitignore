@@ -78,3 +78,13 @@
 # Игнорируем системные симлинки systemd
 .config/systemd/
 .cargo/
+
+# --- Game Mods, Saves & Cache ---
+.config/HKModInstaller/
+.config/unity3d/
+
+# --- Application Cache & State ---
+.config/atuin/
+.config/qt6ct/
+.config/viewnior/
+.config/zellij/

@@ -65,8 +65,7 @@ window#waybar {
 }
 
 #workspaces button.active {
-    /*  ИЗМЕНЕНО: Заменил яркий @mauve на более спокойный @sapphire. */
-    background-color: @mauve;
+    background-color: @lavender;
     color: @base;
 }
 
@@ -77,7 +76,7 @@ window#waybar {
 /* ┌──────────────────────────────────────────────────┐
    │               Цвета Иконок для Модулей             │
    └──────────────────────────────────────────────────┘*/
-#clock           { color: @mauve;   }
+#clock           { color: @lavender;   }
 #cpu             { color: @teal;    }
 #memory          { color: @blue;    }
 #network         { color: @yellow;  }

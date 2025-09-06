@@ -5,17 +5,15 @@
    ╚══════════════════════════════════════════════════════════════╝
 */
 
-/*  Loading the Catppuccin Mocha color palette */
-@import "theme.css";
+/* ИСПРАВЛЕНО: Указываем полный путь к файлу темы */
+@import "/home/x8u/.config/wofi/theme.css";
 
 /* ┌──────────────────────────────────────────────────┐
    │                   Global Styles                  │
    └──────────────────────────────────────────────────┘*/
 * {
-    /*  Configure your main font and its size */
     font-family: "JetBrains Mono Nerd Font", sans-serif;
     font-size: 16px;
-    
     color: @text;
     border: none;
 }
@@ -23,20 +21,15 @@
 /* ┌──────────────────────────────────────────────────┐
    │                    Main Window                   │
    └──────────────────────────────────────────────────┘*/
-window {
+#window {
     width: 650px;
     max-height: 460px;
-    
     background-color: @mantle;
     border-radius: 18px;
-    
-    /*  A combination of border and shadow creates a clean glow effect. */
-    border:     2px solid #B4BEFE; /* Crisp lavender border */
-    box-shadow: 0 0 12px #CBA6F7;  /* Soft mauve glow       */
+    border: 2px solid @lavender;
 }
 
 #outer-box {
-    /*  The inner container is now only responsible for padding. */
     padding: 20px;
 }
 
@@ -48,17 +41,12 @@ window {
     padding: 12px 18px;
     margin-bottom: 15px;
     border-radius: 12px;
-    
-    /*  The color of the input cursor (caret) */
-    caret-color: @mauve;
-    
-    /*  Smooth transition for a modern feel. */
+    caret-color: @lavender;
     transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 #input:focus {
-    /*  Visual feedback when the input field is active. */
-    box-shadow: 0 0 0 2px @mauve;
+    box-shadow: 0 0 0 2px @lavender;
     outline: none;
 }
 
@@ -73,7 +61,6 @@ window {
 }
 
 #entry:not(:selected) {
-    /*  A soft gradient separator between list items. */
     border-bottom: 1px solid transparent;
     border-image: linear-gradient(to right, @base, @surface0, @base) 1;
 }
@@ -86,8 +73,7 @@ window {
 }
 
 #entry:selected {
-    /*  Style for the currently selected item. */
-    background-color: @mauve;
+    background-color: @lavender;
     color: @base;
 }
 
@@ -103,7 +89,6 @@ window {
 /* ┌──────────────────────────────────────────────────┐
    │                      Scrollbar                   │
    └──────────────────────────────────────────────────┘*/
-/*  Scrollbar styling for a consistent look. */
 scrollbar {
     background-color: transparent;
     border-radius: 8px;

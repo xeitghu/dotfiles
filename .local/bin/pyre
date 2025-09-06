@@ -9,7 +9,7 @@
 # │                 PATHS & SETTINGS                 │
 # └──────────────────────────────────────────────────┘
 #  Core paths used by the engine
-WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
+WALLPAPER_DIR="$HOME/Pictures/walls"
 STATE_FILE="$HOME/.config/pyre/state"
 SCRIPTS_DIR="$HOME/.config/hypr/scripts"
 ENGINE_THEMES_DIR="$HOME/.config/hypr/engine/themes"

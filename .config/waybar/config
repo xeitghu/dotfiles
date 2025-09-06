@@ -60,11 +60,12 @@
     },
     "clock#date": {
         "format": " {:%d.%m}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "tooltip-format": "<big>{:%A, %d %B %Y}</big>\n<tt><small>{calendar}</small></tt>",
         "on-click": "yad --calendar --title='Calendar'"
     },
     "clock#time": {
-        "format": " {:%H:%M:%S}"
+        "format": " {:%H:%M:%S}",
+        "interval": 1
     },
     "cpu": {
         "format": " {usage}%",
@@ -95,6 +96,7 @@
         "on-click": "~/.config/hypr/scripts/notif_history.sh",
         "on-click-right": "dunstctl close-all"
     },
+
     "pulseaudio": {
         "scroll-step": 5,
         "format": "{volume}% {icon}",
@@ -111,21 +113,23 @@
         "tooltip": false,
         "on-click": "pavucontrol"
     },
+
     "battery": {
         "states": {
             "warning": 30,
             "critical": 15
         },
         "format": "{capacity}% {icon}",
-        "format-charging": "{capacity}% {icon} ",
-        "format-plugged": "{capacity}% {icon} ",
-        "format-full": "{capacity}% {icon}",
-        "format-unknown": " Unknown",
+        "format-charging": "{capacity}% {icon} 󰂄",
+        "format-plugged": "{capacity}% {icon} 󰚥",
+        "format-full": "{capacity}% 󰁹",
+        "format-unknown": "󰂑",
         "format-alt": "{time} {icon}",
         "format-icons": [
-            "", "", "", "", "", "", "", "", "", ""
+            "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂"
         ]
     },
+
     "tray": {
         "icon-size": 18,
         "spacing": 10
