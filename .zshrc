@@ -91,15 +91,16 @@ export FZF_DEFAULT_OPTS='
 # --- Package Management ---
 alias update='yay -Syu'                 # Update all system packages
 alias install='yay -S'                  # Install a new package
-alias remove='sudo pacman -Rnsi'        # Remove a package with dependencies
+alias remove='sudo pacman -Rns'         # Remove a package with dependencies
 alias search='yay -Ss'                  # Search for a package
+alias clean='sudo pacman -Rns $(pacman -Qtdq) 2>/dev/null || echo "No orphans to remove."; yay -Yc'
 
 # --- Utility Replacements ---
 alias ls='eza --icons --group-directories-first'                         # Modern replacement for 'ls'
 alias ll='eza -lh --icons --git --group-directories-first --header'      # Long list format
 alias la='eza -lha --icons --git --group-directories-first --header'     # Long list format with hidden files
 alias cat='bat --paging=never --style=plain'                             # Modern replacement for 'cat'
-alias less='bat'                                                         # Use bat as a pager
+alias less='bat --paging=always'                                         # Use bat as a pager
 alias lt='eza --tree --level=2 --icons'                                  # Tree view (2 levels deep)
 alias ltf='eza --tree --level=10 --icons'                                # Full tree view
 alias lsz='eza -lrh --sort=size --icons'                                 # Sort by size
@@ -140,6 +141,7 @@ alias dcomm='dotgit commit -m'          # Commit changes to dotfiles
 alias dpush='dotgit push'               # Push dotfiles to remote
 alias dlog='dotgit log --oneline --graph --decorate' # View dotfiles commit log
 alias lg='lazygit --git-dir=$HOME/.dotfiles/ --work-tree=$HOME' # Open lazygit for dotfiles
+alias glog="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 
 # --- TUI Applications ---
 alias lzd='lazydocker'                  # Launch Lazydocker
@@ -147,6 +149,9 @@ alias lgit='lazygit'                    # Launch Lazygit
 alias zj='zellij'                       # Launch Zellij
 alias za='zellij attach'                # Attach to a Zellij session
 alias zk='zellij kill-all-sessions'     # Kill all Zellij sessions
+
+# --- Custom ---
+alias vencord='sh -c "$(curl -sS https://raw.githubusercontent.com/Vendicated/VencordInstaller/main/install.sh)"'
 
 # ┌──────────────────────────────────────────────────┐
 # │                    6. Functions                  │
@@ -324,6 +329,20 @@ extract() {
         *.7z)       7z x "$1"       ;;
         *)          echo "'$1' cannot be extracted" ;;
     esac
+}
+
+# =================================================================
+#          tarc - Create a .tar.gz archive
+# =================================================================
+tarc() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: tarc <archive_name> [files_to_compress...]"
+        return 1
+    fi
+    local archive_name="$1.tar.gz"
+    shift
+    echo "Creating archive: $archive_name"
+    tar -czvf "$archive_name" "$@"
 }
 
 # =================================================================
