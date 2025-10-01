@@ -1,8 +1,9 @@
-# =============================
-#           GITIGNORE
-# =============================
+# ┌──────────────────────────────────────────────────┐
+# │               GLOBAL .GITIGNORE                  │
+# └──────────────────────────────────────────────────┘
 
-# --- Global ---
+# --- Generic Patterns ---
+# [INFO] Ignore common temporary files, logs, and editor backups.
 *.bak
 *.cache
 *.log
@@ -15,80 +16,78 @@
 *lock*
 *socket*
 
-# --- Cache ---
+# ┌──────────────────────────────────────────────────┐
+# │      APPLICATION DATA, CACHE & STATE FILES       │
+# └──────────────────────────────────────────────────┘
+# [INFO] Ignoring user-specific data that should not be in dotfiles.
+# [INFO] This list is sorted alphabetically.
+
+.config/arkrc
+.config/atuin/
+.config/btop/themes/
+.config/dconf/
 .config/discord/
 .config/go/
-.config/LM Studio/
-.config/LosslessCut/
-.config/millennium/
-.config/Olympus/
-.config/obs-studio/
-.config/obsidian/
-.config/obsidian_backup/
-.config/Pinta/
-.config/Proton/
-.config/spotify/
-.config/torbrowser/
-.config/VSCodium/
-.config/wal/
-.config/Vencord/
-.config/yazi/
 .config/gwe/
-.config/ryzen-controller/
-
-# --- Theme  ---
-.config/Kvantum/
-.config/btop/themes/
+.config/gtk-3.0/bookmarks
 .config/gtk-4.0/assets
-.config/spicetify/CustomApps/
-.config/spicetify/Themes/
-
-# --- KDE / Qt ---
-.config/arkrc
+.config/haruna/haruna.conf
+.config/HKModInstaller/
 .config/kactivitymanagerdrc
 .config/katevirc
+.config/kde.org/
 .config/kdeglobals
 .config/knfsshare
 .config/konsolerc
 .config/konsolesshconfig
+.config/Kvantum/
 .config/kwriterc
-.config/okularrc
-.config/QtProject.conf
-
-# --- DE ---
-.config/dconf/
-.config/gtk-3.0/bookmarks
-.config/haruna/haruna.conf
+.config/LM Studio/
+.config/LosslessCut/
+.config/macchina/
+.config/millennium/
 .config/mimeapps.list
 .config/nwg-look/config
+.config/obs-studio/
+.config/obsidian/
+.config/obsidian_backup/
+.config/okularrc
+.config/Olympus/
 .config/pavucontrol.ini
-.config/Thunar/
-.config/user-dirs.dirs
-.config/user-dirs.locale
-.config/xfce4/
-.config/xsettingsd/xsettingsd.conf
-.config/kde.org/
-.config/vidcutter/
-
-# --- Custom Scripts ---
-.config/pyre/state
-# Игнорируем временные файлы состояния Pyre
-.config/pyre/
-
-# Игнорируем системные симлинки systemd
-.config/systemd/
-.cargo/
-
-# --- Game Mods, Saves & Cache ---
-.config/HKModInstaller/
-.config/unity3d/
-
-# --- Application Cache & State ---
-.config/atuin/
+.config/Pinta/
+.config/Proton/
+.config/pyre/                     # [INFO] Ignoring Pyre's temporary state files.
 .config/qt6ct/
-.config/viewnior/
-.config/zellij/
+.config/QtProject.conf
 .config/r2modman/
 .config/r2modmanPlus-local/
+.config/ryzen-controller/
+.config/spicetify/CustomApps/
+.config/spicetify/Themes/
+.config/spotify/
+.config/Thunar/
+.config/torbrowser/
+.config/unity3d/
+.config/user-dirs.dirs
+.config/user-dirs.locale
+.config/Vencord/
 .config/vesktop/
-.config/macchina/
+.config/VSCodium/
+.config/vidcutter/
+.config/viewnior/
+.config/wal/
+.config/xfce4/
+.config/xsettingsd/xsettingsd.conf
+.config/yazi/
+.config/zellij/
+
+# ┌──────────────────────────────────────────────────┐
+# │              SYSTEM & DEV INTEGRATION            │
+# └──────────────────────────────────────────────────┘
+
+# --- Development Tools ---
+.cargo/
+
+# --- System Services ---
+# [INFO] Ignoring user-level systemd symlinks.
+.config/systemd/

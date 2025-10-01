@@ -1,46 +1,53 @@
-# ╔══════════════════════════════════════════════════════════════╗
-# ║                                                              ║
-# ║              DUNST CONFIG - CATPPUCCIN MOCHA (UNIFIED)       ║
-# ║                                                              ║
-# ╚══════════════════════════════════════════════════════════════╝
+# ┌──────────────────────────────────────────────────┐
+# │             DUNST - MAIN CONFIGURATION           │
+# └──────────────────────────────────────────────────┘
+
 [global]
-    # --- Расположение и геометрия ---
-    origin = top-right
-    offset = (30, 90)
-    width = 350
+    # --- Geometry & Position ---
+    # [CONFIG] Main notification window placement.
+    origin            = top-right
+    offset            = 30, 90
+    width             = 350
 
-    # --- Внешний вид ---
-    frame_width = 2
-    frame_color = "#B4BEFE" # lavender
-    separator_color = frame
-    font = JetBrains Mono Nerd Font 10
-    corner_radius = 18
-    background = "#1E1E2E" # base
-    foreground = "#CDD6F4" # text
+    # --- Appearance & Theme ---
+    # [CONFIG] Visual style of the notifications.
+    frame_width       = 2
+    frame_color       = "#B4BEFE"              # Catppuccin Lavender
+    separator_color   = frame
+    font              = JetBrains Mono Nerd Font 10
+    corner_radius     = 18
+    background        = "#1E1E2E"              # Catppuccin Base
+    foreground        = "#CDD6F4"              # Catppuccin Text
+    
+    # --- Behavior & Formatting ---
+    # [INFO] How notifications are sorted, formatted, and displayed.
+    sort              = yes
+    alignment         = left
+    word_wrap         = yes
+    icon_position     = left
+    max_icon_size     = 48
+    padding           = 12
+    horizontal_padding= 12
 
-    # --- Поведение ---
-    sort = yes
-    alignment = left
-    word_wrap = yes
-    icon_position = left
-    max_icon_size = 48
-    padding = 12
-    horizontal_padding = 12
+# ┌──────────────────────────────────────────────────┐
+# │                    URGENCY LEVELS                │
+# └──────────────────────────────────────────────────┘
+# [INFO] Defines specific colors and timeouts for different notification priorities.
 
 [urgency_low]
-    background = "#1E1E2E" # base
-    foreground = "#A6ADC8" # subtext1
-    frame_color = "#585B70" # overlay0
-    timeout = 5
+    background        = "#1E1E2E"              # Catppuccin Base
+    foreground        = "#A6ADC8"              # Catppuccin Subtext1
+    frame_color       = "#585B70"              # Catppuccin Overlay0
+    timeout           = 5
 
 [urgency_normal]
-    background = "#1E1E2E" # base
-    foreground = "#CDD6F4" # text
-    frame_color = "#B4BEFE" # lavender
-    timeout = 10
+    background        = "#1E1E2E"              # Catppuccin Base
+    foreground        = "#CDD6F4"              # Catppuccin Text
+    frame_color       = "#B4BEFE"              # Catppuccin Lavender
+    timeout           = 10
 
 [urgency_critical]
-    background = "#1E1E2E" # base
-    foreground = "#F38BA8" # red
-    frame_color = "#F38BA8" # red
-    timeout = 0
+    background        = "#1E1E2E"              # Catppuccin Base
+    foreground        = "#F38BA8"              # Catppuccin Red
+    frame_color       = "#F38BA8"              # Catppuccin Red
+    timeout           = 0

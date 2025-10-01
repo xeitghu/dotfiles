@@ -1,16 +1,14 @@
-/* ╔══════════════════════════════════════════════════════════════╗
-   ║                                                              ║
-   ║              WAYBAR - CATPPUCCIN MOCHA (PILL STYLE)          ║
-   ║                                                              ║
-   ╚══════════════════════════════════════════════════════════════╝
-*/
+/* ┌──────────────────────────────────────────────────┐ */
+/* │           WAYBAR - CATPPUCCIN MOCHA (PILL STYLE)   │ */
+/* └──────────────────────────────────────────────────┘ */
 
-/*  Загружаем централизованную палитру цветов */
+/* --- Theme Import --- */
+/* [INFO] Load the centralized color palette. */
 @import "theme.css";
 
-/* ┌──────────────────────────────────────────────────┐
-   │                  Глобальные Стили                  │
-   └──────────────────────────────────────────────────┘*/
+/* ┌──────────────────────────────────────────────────┐ */
+/* │                  GLOBAL STYLES                   │ */
+/* └──────────────────────────────────────────────────┘ */
 * {
     font-family: "JetBrains Mono Nerd Font", FontAwesome, sans-serif;
     font-size: 14px;
@@ -18,24 +16,27 @@
     border-radius: 0;
 }
 
-/* ┌──────────────────────────────────────────────────┐
-   │                 Основное Окно Панели               │
-   └──────────────────────────────────────────────────┘*/
+/* --- Main Bar Window --- */
 window#waybar {
-    /*  Используем полупрозрачный фон для эффекта "плавающей" панели */
+    /* [INFO] Use a semi-transparent background for a "floating" bar effect. */
     background-color: alpha(@base, 0.4);
     color: @text;
     border-radius: 15px;
 }
 
-/* ┌──────────────────────────────────────────────────┐
-   │              Общий Стиль для Всех Модулей          │
-   └──────────────────────────────────────────────────┘*/
+#waybar > box {
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+/* ┌──────────────────────────────────────────────────┐ */
+/* │                  GENERAL MODULE STYLE            │ */
+/* └──────────────────────────────────────────────────┘ */
+/* [INFO] A common "pill" style for all modules. */
+#custom-updates,
 #workspaces,
 #window,
-#clock,
-#cpu,
-#memory,
+#custom-clock,
 #network,
 #custom-language,
 #custom-dunst,
@@ -49,9 +50,11 @@ window#waybar {
     border-radius: 12px;
 }
 
-/* ┌──────────────────────────────────────────────────┐
-   │                     Воркспейсы                     │
-   └──────────────────────────────────────────────────┘*/
+/* ┌──────────────────────────────────────────────────┐ */
+/* │                PER-MODULE STYLING                │ */
+/* └──────────────────────────────────────────────────┘ */
+
+/* --- Workspaces --- */
 #workspaces button {
     padding: 0 8px;
     background-color: transparent;
@@ -73,16 +76,56 @@ window#waybar {
     color: @red;
 }
 
-/* ┌──────────────────────────────────────────────────┐
-   │               Цвета Иконок для Модулей             │
-   └──────────────────────────────────────────────────┘*/
-#clock           { color: @lavender;   }
-#cpu             { color: @teal;    }
-#memory          { color: @blue;    }
-#network         { color: @yellow;  }
-#custom-language { color: @green;   }
-#custom-dunst    { color: @peach;   }
-#pulseaudio      { color: @maroon;  }
-#pulseaudio.muted{ color: @overlay0;}
-#battery         { color: @green;   }
-#battery.critical{ color: @red;     }
+/* --- System Monitor Group (CPU, MEM, TEMP) --- */
+/* [INFO] Define a common style for all three modules in the group. */
+#cpu, #memory, #custom-temperature {
+    background-color: @base;
+    padding: 2px 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: 1px solid @overlay0;
+}
+
+/* [INFO] Apply rounding only to the outer edges of the group. */
+#cpu {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    margin-left: 4px;
+}
+#memory {
+    border-radius: 0;
+}
+#custom-temperature {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    margin-right: 4px;
+}
+
+/* [FIX] Shift the modules to the left by 1px to make their borders overlap, creating a seamless look. */
+#memory, #custom-temperature {
+    margin-left: -1px;
+}
+
+/* [INFO] Assign unique colors to each monitor's icon for quick identification. */
+#cpu {
+    color: @teal;
+}
+#memory {
+    color: @blue;
+}
+#custom-temperature {
+    color: @peach;
+}
+
+/* ┌──────────────────────────────────────────────────┐ */
+/* │               MODULE ICON COLORS                 │ */
+/* └──────────────────────────────────────────────────┘ */
+#custom-updates     { color: @flamingo; }
+#custom-clock       { color: @lavender; }
+#network            { color: @yellow;   }
+#custom-language    { color: @green;    }
+#custom-dunst       { color: @peach;    }
+#pulseaudio         { color: @maroon;   }
+#pulseaudio.muted   { color: @overlay0; }
+#battery            { color: @green;    }
+#battery.critical   { color: @red;      }

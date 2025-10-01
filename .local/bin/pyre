@@ -1,57 +1,61 @@
 #!/bin/bash
-# ╔═════════════════════════════════════════════════════════════════════════╗
-# ║                                                                         ║
-# ║                           PYRE ENGINE                                   ║
-# ║                                                                         ║
-# ╚═════════════════════════════════════════════════════════════════════════╝
+# ┌──────────────────────────────────────────────────┐
+# │                    PYRE ENGINE                   │
+# └──────────────────────────────────────────────────┘
 
 # ┌──────────────────────────────────────────────────┐
-# │                 PATHS & SETTINGS                 │
+# │                 1. PATHS & SETTINGS              │
 # └──────────────────────────────────────────────────┘
-#  Core paths used by the engine
+# [INFO] Core paths used by the engine.
 WALLPAPER_DIR="$HOME/Pictures/walls"
 STATE_FILE="$HOME/.config/pyre/state"
 SCRIPTS_DIR="$HOME/.config/hypr/scripts"
-ENGINE_THEMES_DIR="$HOME/.config/hypr/engine/themes"
+ENGINE_THEMES_DIR="$HOME/.config/hypr/themes"
 WAL_CACHE_DIR="$HOME/.cache/wal"
 
-# =================================================================
-#                         CORE FUNCTIONS
-# =================================================================
+# ┌──────────────────────────────────────────────────┐
+# │                 2. CORE FUNCTIONS                │
+# └──────────────────────────────────────────────────┘
+
 # --- Dependency Check ---
+# [INFO] Verifies that all required commands and directories are present.
 check_dependencies() {
   local missing=0
-  #  Check for all required commands
+
+  # Check for required commands
   for cmd in wofi swww kitty notify-send; do
     if ! command -v "$cmd" &>/dev/null; then
       notify-send "Pyre Error" "Required command not found: $cmd" -i "dialog-error"
       missing=1
     fi
   done
-  #  Check for all required directories
+
+  # Check for required directories
   for dir in "$WALLPAPER_DIR" "$ENGINE_THEMES_DIR" "$SCRIPTS_DIR"; do
     if [ ! -d "$dir" ]; then
       notify-send "Pyre Error" "Required directory not found: $dir" -i "dialog-error"
       missing=1
     fi
   done
+
   [ "$missing" -eq 1 ] && exit 1
 }
 
 # --- Reload Services ---
+# [INFO] Reloads core desktop services to apply changes.
 reload_services() {
   hyprctl reload
   pkill -SIGUSR2 waybar
   pkill dunst && dunst &
 }
 
-# =================================================================
-#                        LAYOUT LAUNCHERS
-# =================================================================
+# ┌──────────────────────────────────────────────────┐
+# │                 3. LAYOUT LAUNCHERS              │
+# └──────────────────────────────────────────────────┘
+
 # --- Showcase Layout ---
 launch_showcase_layout() {
-  #  Load temporary window layout configuration
-  hyprctl keyword source ~/.config/hypr/showcase.conf
+  hyprctl keyword source ~/.config/hypr/layouts/showcase.conf
   sleep 0.2
   kitty -o font_size=10.0 --title "hollywood-clock" tty-clock -c -C 2 &
   sleep 0.2
@@ -67,6 +71,7 @@ launch_f0urth_layout_simple() {
   local small_font_size=8
   kitty -o font_size=$small_font_size &
   sleep 0.3
+
   local directions=("r" "d" "l")
   for dir in "${directions[@]}"; do
     hyprctl dispatch movefocus "$dir"
@@ -77,8 +82,7 @@ launch_f0urth_layout_simple() {
 
 # --- Fastfetch Layout ---
 launch_fastfetch_layout() {
-  #  Load temporary window layout configuration
-  hyprctl keyword source ~/.config/hypr/pyre_layouts.conf
+  hyprctl keyword source ~/.config/hypr/layouts/fastfetch.conf
   sleep 0.1
   kitty --title "pyre-fastfetch" \
     -o font_size=10.0 \
@@ -89,30 +93,31 @@ launch_fastfetch_layout() {
 
 # --- Dual Pane Layout ---
 launch_dual_pane_layout() {
-  #  Load and clear temporary configurations
-  hyprctl keyword source ~/.config/hypr/filemanager.conf
+  hyprctl keyword source ~/.config/hypr/layouts/dual_pane.conf
   thunar &
   sleep 0.5
   kitty -o font_size=10.0 --title "fm-yazi" yazi &
   sleep 1
-  hyprctl keyword source ~/.config/hypr/filemanager_clear.conf
+  hyprctl keyword source ~/.config/hypr/layouts/dual_pane_clear.conf
 }
 
-# =================================================================
-#                   ENGINE: THEME & WALLPAPER
-# =================================================================
-# --- Apply Mocha Theme ---
+# ┌──────────────────────────────────────────────────┐
+# │              4. THEME & WALLPAPER ENGINE         │
+# └──────────────────────────────────────────────────┘
+
+# --- Apply Theme ---
+# [INFO] Applies a theme by copying config files and setting a random wallpaper.
 apply_theme() {
   local theme_name_lower=$1
   local theme_name_capitalized
   theme_name_capitalized=$(echo "$theme_name_lower" | awk '{print toupper(substr($0,1,1))substr($0,2)}')
 
-  #  Копируем мастер-файлы тем в локальные папки приложений.
+  # Copy master theme files to local application folders
   cp "$ENGINE_THEMES_DIR/hypr/$theme_name_lower.conf" "$HOME/.config/hypr/theme.conf"
   cp "$ENGINE_THEMES_DIR/waybar/$theme_name_lower.css" "$HOME/.config/waybar/theme.css"
   cp "$ENGINE_THEMES_DIR/wofi/$theme_name_lower.css" "$HOME/.config/wofi/theme.css"
 
-  #  Устанавливаем случайные обои из папки темы.
+  # Set a random wallpaper from the theme's wallpaper directory
   local theme_wallpaper_dir="$WALLPAPER_DIR/$theme_name_lower"
   if [ -d "$theme_wallpaper_dir" ]; then
     local wallpaper
@@ -124,14 +129,16 @@ apply_theme() {
   notify-send "🎨 Pyre: Theme Changed" "Palette activated: $theme_name_capitalized" -i "preferences-desktop-theme"
 }
 
-# =================================================================
-#                       MENUS & DISPATCHER
-# =================================================================
+# ┌──────────────────────────────────────────────────┐
+# │                 5. MENUS & DISPATCHER            │
+# └──────────────────────────────────────────────────┘
+
 # --- Theme Menu ---
 show_theme_menu() {
   local options=" Mocha"
   local choice
   choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Select Theme:" --width 300 --height 100)
+
   if [ -n "$choice" ]; then
     local theme_name
     theme_name=$(echo "$choice" | sed -e 's/ //' | tr '[:upper:]' '[:lower:]')
@@ -144,6 +151,7 @@ show_layout_menu() {
   local options=("󰄛 Showcase" " F0urth" " Fastfetch" " Dual Pane")
   local choice
   choice=$(printf "%s\n" "${options[@]}" | wofi --dmenu --prompt "Select Layout:" --width 300 --height 170)
+
   case "$choice" in
   "󰄛 Showcase") (launch_showcase_layout) & ;;
   " F0urth") (launch_f0urth_layout_simple) & ;;
@@ -157,6 +165,7 @@ show_session_menu() {
   local options=" Power\n Lock"
   local choice
   choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Session Control:" --width 300 --height 100)
+
   case "$choice" in
   " Power") "$SCRIPTS_DIR/powermenu.sh" ;;
   " Lock") "$SCRIPTS_DIR/lockscreen.sh" ;;
@@ -168,6 +177,7 @@ show_tools_menu() {
   local options=" Screenshot\n Clipboard"
   local choice
   choice=$(printf "%b" "$options" | wofi --dmenu --prompt "Tools:" --width 300 --height 100)
+
   case "$choice" in
   " Screenshot") "$SCRIPTS_DIR/screenshot.sh" ;;
   " Clipboard") "$SCRIPTS_DIR/clipboard_history.sh" ;;
@@ -180,6 +190,7 @@ show_main_menu() {
   local options=(" Themes" " Layouts" " Tools" "󰒃 Session")
   local menu_string
 
+  # [INFO] Prioritize the last selected menu item for faster access.
   if [ -f "$state_file" ] && last_choice=$(<"$state_file"); then
     local other_options=$(printf "%s\n" "${options[@]}" | grep -vF -- "$last_choice")
     menu_string="$last_choice\n$other_options"
@@ -201,10 +212,12 @@ show_main_menu() {
 }
 
 # ┌──────────────────────────────────────────────────┐
-# │                SCRIPT ENTRY POINT                │
+# │                6. SCRIPT ENTRY POINT             │
 # └──────────────────────────────────────────────────┘
+# [INFO] First, check if all dependencies are met.
 check_dependencies
 
+# [INFO] Then, determine which menu to show based on the script's argument.
 case "$1" in
 theme) show_theme_menu ;;
 layout) show_layout_menu ;;

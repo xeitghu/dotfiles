@@ -3,37 +3,39 @@
 # --- Опции для Wofi ---
 options=" Area (Copy)\n Area (Edit)\n Window (Copy)\n Window (Edit)\n󰍹 Screen (Copy)\n󰍹 Screen (Edit)"
 
+# --- Временный файл ---
+TMP_FILE="/tmp/screenshot_frozen.png"
+trap 'rm -f "$TMP_FILE"' EXIT
+
 # --- Вызов Wofi ---
 choice=$(echo -e "$options" | wofi --dmenu --prompt "Screenshot" --width 300 --height 250)
 
 # --- Логика выбора ---
 case "$choice" in
 " Area (Copy)")
-  grim /tmp/screenshot_full.png
-  imv -f /tmp/screenshot_full.png &
+  grim "$TMP_FILE"
+  imv -f "$TMP_FILE" &
   IMV_PID=$!
   sleep 0.3
   GEOMETRY=$(slurp)
   kill $IMV_PID
-  sleep 0.5
   if [ -n "$GEOMETRY" ]; then
-    grim -g "$GEOMETRY" - | wl-copy
+    CROP_GEOMETRY=$(echo "$GEOMETRY" | sed -E 's/([0-9]+),([0-9]+) ([0-9]+x[0-9]+)/\3+\1+\2/')
+    convert "$TMP_FILE" -crop "$CROP_GEOMETRY" - | wl-copy
     notify-send "Screenshot Copied" "Selected area copied to clipboard." -i "camera-photo"
   fi
-  rm /tmp/screenshot_full.png
   ;;
 " Area (Edit)")
-  grim /tmp/screenshot_full.png
-  imv -f /tmp/screenshot_full.png &
+  grim "$TMP_FILE"
+  imv -f "$TMP_FILE" &
   IMV_PID=$!
   sleep 0.3
   GEOMETRY=$(slurp)
   kill $IMV_PID
-  sleep 0.5
   if [ -n "$GEOMETRY" ]; then
-    grim -g "$GEOMETRY" - | swappy -f -
+    CROP_GEOMETRY=$(echo "$GEOMETRY" | sed -E 's/([0-9]+),([0-9]+) ([0-9]+x[0-9]+)/\3+\1+\2/')
+    convert "$TMP_FILE" -crop "$CROP_GEOMETRY" - | swappy -f -
   fi
-  rm /tmp/screenshot_full.png
   ;;
 " Window (Copy)")
   grim -g "$(hyprctl -j activewindow | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"')" - | wl-copy

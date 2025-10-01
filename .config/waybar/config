@@ -1,72 +1,73 @@
-// ==================================================
-//                     WAYBAR
-// ==================================================
+// ┌──────────────────────────────────────────────────┐
+// │             WAYBAR - MAIN CONFIGURATION          │
+// └──────────────────────────────────────────────────┘
 {
+    // ┌──────────────────────────────────────────────────┐
+    // │               MAIN BAR SETTINGS                  │
+    // └──────────────────────────────────────────────────┘
+    // [CONFIG] General settings for the bar's position and appearance.
     "layer": "top",
     "position": "top",
     "height": 40,
     "spacing": 4,
 
+    // [CONFIG] Module layout for the bar.
     "modules-left": [
-        "clock#time",
-        "clock#date",
+        "hyprland/workspaces",
         "hyprland/window"
     ],
     "modules-center": [
-        "hyprland/workspaces"
+        "custom/language",
+        "custom/clock",
+        "custom/dunst"
     ],
     "modules-right": [
         "cpu",
         "memory",
+        "custom/temperature",
         "network",
-        "custom/language",
-        "custom/dunst",
+        "custom/updates",
         "pulseaudio",
         "battery",
         "tray"
     ],
 
+    // ┌──────────────────────────────────────────────────┐
+    // │               MODULE CONFIGURATION               │
+    // └──────────────────────────────────────────────────┘
+
+    // --- Hyprland Workspaces ---
     "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": true,
         "on-click": "activate",
         "format": "{icon}",
-        "rewrite": {
-            "": "default"
-        },
         "format-icons": {
             "default": "",
-            "1": "一",
-            "2": "二",
-            "3": "三",
-            "4": "四",
-            "5": "五",
-            "6": "六",
-            "7": "七",
-            "8": "八",
-            "9": "九",
-            "10": "〇",
+            "1": "一", "2": "二", "3": "三", "4": "四", "5": "五",
+            "6": "六", "7": "七", "8": "八", "9": "九", "10": "〇",
             "special": "",
             "urgent": ""
         }
     },
 
+    // --- Hyprland Window Title ---
     "hyprland/window": {
         "format": "{}",
-        "max-length": 100,
-        "rewrite": {
-            "": null
-        }
+        "max-length": 100
     },
-    "clock#date": {
-        "format": " {:%d.%m}",
-        "tooltip-format": "<big>{:%A, %d %B %Y}</big>\n<tt><small>{calendar}</small></tt>",
-        "on-click": "yad --calendar --title='Calendar'"
+
+    // --- Clock Module ---
+    "custom/clock": {
+        "exec": "~/.config/hypr/scripts/waybar/clock_module.sh",
+        "return-type": "json",
+        "on-click": "~/.config/hypr/scripts/waybar/toggle_clock.sh",
+        "on-click-right": "yad --calendar --title='Calendar'", // [INFO] Opens a calendar on right-click.
+        "interval": 1, // [INFO] Update every second for the time.
+        "signal": 10   // [INFO] Listen for signal 10 for forced updates.
     },
-    "clock#time": {
-        "format": " {:%H:%M:%S}",
-        "interval": 1
-    },
+
+    // --- System Monitors ---
     "cpu": {
         "format": " {usage}%",
         "tooltip": true,
@@ -76,6 +77,13 @@
         "format": "󰍛 {used}GiB",
         "interval": 1
     },
+    "custom/temperature": {
+        "exec": "~/.config/hypr/scripts/waybar/temperature.sh",
+        "return-type": "json",
+        "interval": 1
+    },
+
+    // --- Network ---
     "network": {
         "format-wifi": "{essid}  ",
         "format-ethernet": "{ifname} 󰈀",
@@ -83,55 +91,58 @@
         "tooltip-format-wifi": "{ipaddr}/{cidr} @ {signalStrength}%",
         "on-click": "nm-connection-editor"
     },
+
+    // --- Keyboard Layout ---
     "custom/language": {
-        "exec": "~/.config/hypr/scripts/get_layout.sh",
+        "exec": "~/.config/hypr/scripts/waybar/get_layout.sh",
         "interval": 1,
         "format": "{} ",
         "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"
     },
+
+    // --- Dunst (Notifications) ---
     "custom/dunst": {
         "format": " {}",
         "exec": "dunstctl count waiting",
         "exec-if": "dunstctl count waiting > 0",
-        "on-click": "~/.config/hypr/scripts/notif_history.sh",
+        "on-click": "~/.config/hypr/scripts/utils/notif_history.sh",
         "on-click-right": "dunstctl close-all"
     },
 
+    // --- Audio ---
     "pulseaudio": {
         "scroll-step": 5,
         "format": "{volume}% {icon}",
         "format-muted": " Muted",
         "format-icons": {
             "default": ["", "", ""],
-            "headphone": "",
-            "headset": "",
-            "hands-free": "",
-            "phone": "",
-            "portable": "",
-            "car": ""
+            "headphone": "", "headset": ""
         },
         "tooltip": false,
         "on-click": "pavucontrol"
     },
 
+    // --- Battery ---
     "battery": {
-        "states": {
-            "warning": 30,
-            "critical": 15
-        },
+        "states": { "warning": 30, "critical": 15 },
         "format": "{capacity}% {icon}",
         "format-charging": "{capacity}% {icon} 󰂄",
         "format-plugged": "{capacity}% {icon} 󰚥",
         "format-full": "{capacity}% 󰁹",
-        "format-unknown": "󰂑",
-        "format-alt": "{time} {icon}",
-        "format-icons": [
-            "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂"
-        ]
+        "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂"]
     },
 
+    // --- System Tray ---
     "tray": {
         "icon-size": 18,
         "spacing": 10
+    },
+
+    // --- Package Updates ---
+    "custom/updates": {
+        "exec": "~/.config/hypr/scripts/waybar/updates.sh",
+        "interval": 3600, // [INFO] Check for updates every hour.
+        "on-click": "kitty --class kitty-update -e ~/.config/hypr/scripts/core/system_update.sh",
+        "tooltip": true
     }
 }
