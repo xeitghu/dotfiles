@@ -91,3 +91,14 @@
 # --- System Services ---
 # [INFO] Ignoring user-level systemd symlinks.
 .config/systemd/
+
+# ┌──────────────────────────────────────────────────┐
+# │           AUTO-GENERATED & CACHE FILES           │
+# └──────────────────────────────────────────────────┘
+# [INFO] Ignoring user-specific or auto-generated configs.
+
+.config/MangoHud/
+.config/cava/shaders/
+.config/cava/themes/
+.config/cpupower_gui/
+.config/xdg-desktop-portal/
