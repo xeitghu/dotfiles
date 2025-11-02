@@ -35,7 +35,9 @@ window#waybar {
 /* [INFO] A common "pill" style for all modules. */
 #custom-updates,
 #workspaces,
-#window,
+#custom-mediaplayer,
+#custom-power,
+#custom-window,
 #custom-clock,
 #network,
 #custom-language,
@@ -95,6 +97,7 @@ window#waybar {
 #memory {
     border-radius: 0;
 }
+
 #custom-temperature {
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
@@ -129,3 +132,4 @@ window#waybar {
 #pulseaudio.muted   { color: @overlay0; }
 #battery            { color: @green;    }
 #battery.critical   { color: @red;      }
+#custom-mediaplayer { color: @mauve;    }

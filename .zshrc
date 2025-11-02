@@ -88,31 +88,34 @@ export FZF_DEFAULT_OPTS='
 # └──────────────────────────────────────────────────┘
 
 # --- Package Management ---
-alias update='yay -Syu'                 # Update all system packages
-alias install='yay -S'                  # Install a new package
-alias remove='sudo pacman -Rns'         # Remove a package with dependencies
-alias search='yay -Ss'                  # Search for a package
+alias update='sudo ~/.config/hypr/scripts/core/system_update.sh'          # Update all system packages
+alias install='yay -S'                                               # Install a new package
+alias remove='sudo pacman -Rns'                                      # Remove a package with dependencies
+alias search='yay -Ss'                                               # Search for a package
+
+# --- Security & Integrity ---
+alias aideupd='sudo aide-update'
 
 # --- Utility Replacements ---
-alias ls='eza --icons --group-directories-first'          # Modern replacement for 'ls'
-alias ll='eza -lh --icons --git --group-directories-first --header' # Long list format
+alias ls='eza --icons --group-directories-first'                     # Modern replacement for 'ls'
+alias ll='eza -lh --icons --git --group-directories-first --header'  # Long list format
 alias la='eza -lha --icons --git --group-directories-first --header' # Long list format with hidden files
-alias cat='bat --paging=never --style=plain'              # Modern replacement for 'cat'
-alias less='bat --paging=always'                          # Use bat as a pager
-alias lt='eza --tree --level=2 --icons'                   # Tree view (2 levels deep)
-alias ltf='eza --tree --level=10 --icons'                 # Full tree view
-alias lsz='eza -lrh --sort=size --icons'                  # Sort by size
-alias ld='eza -lrh --sort=modified --icons'               # Sort by date
-alias find='fd'                                           # Modern replacement for 'find'
-alias grep='rg'                                           # Modern replacement for 'grep'
-alias top='btop'                                          # Modern replacement for 'top'
-alias df='duf'                                            # Modern replacement for 'df'
+alias cat='bat --paging=never --style=plain'                         # Modern replacement for 'cat'
+alias less='bat --paging=always'                                     # Use bat as a pager
+alias lt='eza --tree --level=2 --icons'                              # Tree view (2 levels deep)
+alias ltf='eza --tree --level=10 --icons'                            # Full tree view
+alias lsz='eza -lrh --sort=size --icons'                             # Sort by size
+alias ld='eza -lrh --sort=modified --icons'                          # Sort by date
+alias find='fd'                                                      # Modern replacement for 'find'
+alias grep='rg'                                                      # Modern replacement for 'grep'
+alias top='btop'                                                     # Modern replacement for 'top'
+alias df='duf'                                                       # Modern replacement for 'df'
 
 # --- Navigation & Convenience ---
-alias ..='cd ..'                        # Go up one directory
-alias ...='cd ../..'                    # Go up two directories
-alias c='clear'                         # Clear the terminal screen
-alias h='history'                       # Show command history
+alias ..='cd ..'                                                     # Go up one directory
+alias ...='cd ../..'                                                 # Go up two directories
+alias c='clear'                                                      # Clear the terminal screen
+alias h='history'                                                    # Show command history
 
 # --- Quick Navigation ---
 alias gohome='cd ~'                     # Go to home directory
@@ -123,6 +126,7 @@ alias gowofi='cd $DOTS/wofi'            # Go to Wofi config directory
 alias godunst='cd $DOTS/dunst'          # Go to Dunst config directory
 alias gokitty='cd $DOTS/kitty'          # Go to Kitty config directory
 alias goscripts='cd $HYPR/scripts'      # Go to Hyprland scripts directory
+alias goeg='cd "$HOME/Documents/Vaults/Obsidian Vault/prompt-engineering/Evergreen"'
 
 # --- Dotfiles Management ---
 dotgit() {
@@ -148,6 +152,9 @@ alias zk='zellij kill-all-sessions'     # Kill all Zellij sessions
 # --- Custom ---
 alias vencord='sh -c "$(curl -sS https://raw.githubusercontent.com/Vendicated/VencordInstaller/main/install.sh)"'
 alias soundreload='systemctl --user restart pipewire.service pipewire-pulse.service wireplumber.service'
+alias spiceinstall='curl -fsSL https://raw.githubusercontent.com/spicetify/spicetify-cli/master/install.sh | sh'
+alias spicefix='spicetify backup apply'
+alias sampler="sampler --config ~/.config/sampler/sampler.yml"
 
 # ┌──────────────────────────────────────────────────┐
 # │                    6. Functions                  │
@@ -174,7 +181,7 @@ metro_aliases=(
     # --- Hyprland & Components ---
     [hypr]="$HYPR/hyprland.conf"
     [binds]="$HYPR/keybinds.conf"
-    [rules]="$HYPR/window_rules.conf"
+    [rules]="$HYPR/rules.conf"
     [look]="$HYPR/look.conf"
     [theme]="$HYPR/theme.conf"
 
@@ -182,9 +189,12 @@ metro_aliases=(
     [kitty]="$DOTS/kitty/kitty.conf"
     [dunst]="$DOTS/dunst/dunstrc"
     [fastfetch]="$DOTS/fastfetch/config.jsonc"
+    [gammastep]="$DOTS/gammastep/config.ini"
+    [cava]="$DOTS/cava/config"
+    [sampelr]="$DOTS/sampler/sampler.yml"
 
     # --- Waybar ---
-    [waybar]="$DOTS/waybar/config.jsonc"
+    [waybar]="$DOTS/waybar/config"
     [waybarstyle]="$DOTS/waybar/style.css"
     [waybarcolors]="$DOTS/waybar/colors.css"
 
@@ -194,13 +204,16 @@ metro_aliases=(
 
     # --- Scripts & Shell ---
     [pyre]="$HOME/.local/bin/pyre"
+    [pyre-fn]="$HOME/.config/pyre/functions.sh"
     [wpr]="$HOME/.local/bin/wpr"
     [zsh]="$HOME/.zshrc"
     [gitig]="$HOME/.gitignore"
 )
+
 _metro_find_config() {
     fd --type f --hidden --absolute-path "^${1}$" "$DOTS" "$HOME/.local/bin" "$HOME" --max-depth 5 | head -n 1
 }
+
 _metro_resolve_path() {
     local input=$1
     local target_path=${metro_aliases[$input]:-$input}
@@ -211,6 +224,7 @@ _metro_resolve_path() {
         _metro_find_config "$target_path"
     fi
 }
+
 edit() {
     # [INFO] Handle direct argument calls first.
     if [[ -n "$1" ]]; then
@@ -244,6 +258,57 @@ edit() {
         edit "$(echo "$selected_alias" | awk '{print $1}')"
     fi
 }
+
+# --- vsearch - The ultimate interactive file explorer ---
+vsearch() {
+    # [INFO] If no file argument is provided, display usage instructions and exit.
+    if [[ -z "$1" ]]; then
+        echo "Usage: vsearch <filename>"
+        echo "  Opens a fzf-powered view with live, interactive search."
+        return 1
+    fi
+
+    # [INFO] Ensure the provided file actually exists before proceeding.
+    local file="$1"
+    if [[ ! -f "$file" ]]; then
+        echo "Error: File not found: $file"
+        return 1
+    fi
+
+    # --- Core FZF Search ---
+    # [CRITICAL] The preview command is a self-contained, multi-line bash script.
+    # This avoids all shell-scoping issues with helper functions, while remaining
+    # perfectly readable and maintainable in the config file.
+    local selection
+    selection=$(
+        rg --no-heading --line-number --color=always -i "" "$file" | \
+        fzf \
+            --ansi \
+            --delimiter : \
+            --header="🔍 $file — Type to search, Enter → open, ESC → cancel" \
+            --layout=reverse \
+            --height=30% \
+            --border=rounded \
+            --preview "bash -c ' \
+                line={1}; \
+                start=\$(( line > 10 ? line-10 : 1 )); \
+                end=\$(( line+10 )); \
+                bat --paging=never --style=numbers --color=always --highlight-line \$line \"$file\" --line-range \$start:\$end \
+            '" \
+            --preview-window="right:50%:wrap:border-rounded:follow"
+    )
+
+    # --- Handle User Cancellation ---
+    if [[ $? -ne 0 || -z "$selection" ]]; then
+        return 0
+    fi
+
+    # --- Extract Line Number & Open Editor ---
+    local line
+    line=$(echo "$selection" | awk -F: '{print $1}' | head -n1)
+    ${EDITOR:-nvim} +"$line" "$file"
+}
+
 view() {
     # [INFO] Default viewer is 'bat' with its full features.
     local viewer_command="bat --paging=never"
@@ -328,6 +393,10 @@ copy() {
         echo "Error: Clipboard tool not found. Please install 'xclip' (Xorg) or 'wl-clipboard' (Wayland)." >&2
         return 1
     fi
+}
+
+edit_pyre() {
+    nvim -o "$HOME/.local/bin/pyre" "$HOME/.config/pyre/functions.sh"
 }
 
 # --- gstat - Git status for all repos in current dir ---
@@ -447,3 +516,5 @@ source $ZSH/oh-my-zsh.sh
 # --- Load FZF ---
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
+
+export PATH=$PATH:/home/x8u/.spicetify

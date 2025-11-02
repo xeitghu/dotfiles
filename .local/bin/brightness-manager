@@ -1,0 +1,24 @@
+#!/bin/bash
+# ┌──────────────────────────────────────────────────┐
+# │           BRIGHTNESS MANAGER (TIME-BASED)        │
+# └──────────────────────────────────────────────────┘
+# [INFO] This script sets screen brightness based on the time of day.
+# [INFO] It's designed to be run periodically by a cron job.
+
+# --- Configuration ---
+# [CONFIG] Set your desired brightness levels (0-100).
+BRIGHTNESS_DAY="90%"
+BRIGHTNESS_NIGHT="30%"
+
+# --- Logic ---
+# [INFO] Get the current hour in 24-hour format.
+CURRENT_HOUR=$(date +%H)
+
+# [INFO] Set night brightness from 22:00 to 06:59.
+if ((CURRENT_HOUR >= 21 || CURRENT_HOUR < 8)); then
+  # [INFO] It's nighttime, set brightness to low.
+  brightnessctl set "$BRIGHTNESS_NIGHT"
+else
+  # [INFO] It's daytime, set brightness to high.
+  brightnessctl set "$BRIGHTNESS_DAY"
+fi

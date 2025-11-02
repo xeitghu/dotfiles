@@ -14,7 +14,8 @@
     // [CONFIG] Module layout for the bar.
     "modules-left": [
         "hyprland/workspaces",
-        "hyprland/window"
+        "custom/window",
+        "custom/mediaplayer"
     ],
     "modules-center": [
         "custom/language",
@@ -36,6 +37,21 @@
     // │               MODULE CONFIGURATION               │
     // └──────────────────────────────────────────────────┘
 
+    // --- playerctld Media Control ---
+    "custom/mediaplayer": {
+        // [INFO] Powered by playerctld for state management.
+        "exec": "~/.config/hypr/scripts/waybar/mediaplayer.sh",
+        "return-type": "json",
+        "format": "{}  {alt}",
+        "max-length": 35,
+        "interval": 1,
+        // [CONFIG] All actions are mapped to available mouse events.
+        "on-click": "playerctl play-pause",       // [INFO] Left-click: Play/Pause
+        "on-click-right": "playerctld shift",     // [INFO] Right-click: Cycle Players
+        "on-scroll-up": "playerctl next",         // [INFO] Scroll Up: Next Track
+        "on-scroll-down": "playerctl previous"    // [INFO] Scroll Down: Previous Track
+    },
+
     // --- Hyprland Workspaces ---
     "hyprland/workspaces": {
         "disable-scroll": true,
@@ -51,8 +67,11 @@
         }
     },
 
-    // --- Hyprland Window Title ---
-    "hyprland/window": {
+    // --- Custom Smart Window Title ---
+    "custom/window": {
+        // [INFO] This module is controlled by custom script.
+        "exec": "~/.config/hypr/scripts/waybar/window_title.sh",
+        "return-type": "json",
         "format": "{}",
         "max-length": 100
     },
@@ -141,8 +160,8 @@
     // --- Package Updates ---
     "custom/updates": {
         "exec": "~/.config/hypr/scripts/waybar/updates.sh",
-        "interval": 3600, // [INFO] Check for updates every hour.
+        "interval": 900, // [INFO] Check for updates every 15 minutes.
         "on-click": "kitty --class kitty-update -e ~/.config/hypr/scripts/core/system_update.sh",
         "tooltip": true
-    }
+    },
 }

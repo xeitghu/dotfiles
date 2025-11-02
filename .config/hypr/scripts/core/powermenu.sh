@@ -1,29 +1,27 @@
 #!/bin/bash
-
 # ┌──────────────────────────────────────────────────┐
-# │               Power & Session Menu               │
+# │               Power & Session Menu (v2)            │
 # └──────────────────────────────────────────────────┘
-# [INFO] This script displays a Wofi menu for session control
-# [INFO] (lock, logout, suspend, reboot, shutdown) with a confirmation dialog
-# [INFO] for critical actions.
+# [INFO] This script displays a Wofi menu for session control with
+# [INFO] a confirmation dialog for critical actions.
 
 # --- Configuration ---
-# [CONFIG] Define menu entries with Nerd Font icons
+# [CONFIG] Define menu entries with Nerd Font icons, ordered logically.
 lock=" Lock"
-logout=" Logout"
 suspend=" Suspend"
+hibernate="󰒲 Hibernate"
+logout=" Logout"
 reboot=" Reboot"
 shutdown=" Shutdown"
 
-# [CONFIG] Wofi window dimensions
-main_menu_width="280"
-main_menu_height="210"
-confirm_menu_width="280"
+# [CONFIG] Wofi window dimensions.
+main_menu_width="300"
+main_menu_height="250"
+confirm_menu_width="300"
 confirm_menu_height="100"
 
 # --- Function: Confirmation Dialog ---
 # [INFO] Shows a 'Yes/No' confirmation dialog for a given action.
-# [INFO] Usage: confirm_action "Your question here"
 confirm_action() {
   local question="$1"
   local confirm_options=" Yes\n No"
@@ -41,8 +39,8 @@ confirm_action() {
 }
 
 # --- Main Logic ---
-# [INFO] Assemble the main menu options.
-options="$lock\n$logout\n$suspend\n$reboot\n$shutdown"
+# [INFO] Assemble the main menu options in a logical order.
+options="$lock\n$suspend\n$hibernate\n$logout\n$reboot\n$shutdown"
 
 # [INFO] Show the main menu.
 choice=$(echo -e "$options" | wofi --dmenu \
@@ -53,7 +51,7 @@ choice=$(echo -e "$options" | wofi --dmenu \
 # [INFO] Process the user's choice.
 case "$choice" in
 "$lock")
-  ~/.config/hypr/scripts/lockscreen.sh
+  ~/.config/hypr/scripts/core/lockscreen.sh
   ;;
 "$logout")
   if confirm_action "Are you sure?"; then
@@ -61,8 +59,12 @@ case "$choice" in
   fi
   ;;
 "$suspend")
-  # [INFO] Suspend does not require confirmation by default.
   systemctl suspend
+  ;;
+"$hibernate")
+  if confirm_action "Are you sure?"; then
+    systemctl hibernate
+  fi
   ;;
 "$reboot")
   if confirm_action "Are you sure?"; then

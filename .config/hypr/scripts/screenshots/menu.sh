@@ -1,52 +1,44 @@
 #!/bin/bash
+# ┌──────────────────────────────────────────────┐
+# │              SCREENSHOT - MENU               │
+# └──────────────────────────────────────────────┘
 
-# --- Опции для Wofi ---
-options=" Area (Copy)\n Area (Edit)\n Window (Copy)\n Window (Edit)\n󰍹 Screen (Copy)\n󰍹 Screen (Edit)"
+# --- Wofi Configuration ---
+# [CONFIG] Wofi window settings.
+wofi_command="wofi --dmenu --prompt=Screenshot --width=300 --height=250"
 
-# --- Временный файл ---
-TMP_FILE="/tmp/screenshot_frozen.png"
-trap 'rm -f "$TMP_FILE"' EXIT
+# --- Options ---
+# [CONFIG] Options to display in the Wofi menu.
+options=" Area (Copy)
+ Area (Edit)
+ Window (Copy)
+ Window (Edit)
+󰍹 Screen (Copy)
+󰍹 Screen (Edit)"
 
-# --- Вызов Wofi ---
-choice=$(echo -e "$options" | wofi --dmenu --prompt "Screenshot" --width 300 --height 250)
+# --- Main Logic ---
+# [INFO] Display the menu and capture the user's choice.
+choice=$(echo -e "$options" | ${wofi_command})
 
-# --- Логика выбора ---
+# [INFO] Execute the corresponding action based on the choice.
 case "$choice" in
 " Area (Copy)")
-  grim "$TMP_FILE"
-  imv -f "$TMP_FILE" &
-  IMV_PID=$!
-  sleep 0.3
-  GEOMETRY=$(slurp)
-  kill $IMV_PID
-  if [ -n "$GEOMETRY" ]; then
-    CROP_GEOMETRY=$(echo "$GEOMETRY" | sed -E 's/([0-9]+),([0-9]+) ([0-9]+x[0-9]+)/\3+\1+\2/')
-    convert "$TMP_FILE" -crop "$CROP_GEOMETRY" - | wl-copy
-    notify-send "Screenshot Copied" "Selected area copied to clipboard." -i "camera-photo"
-  fi
+  ~/.config/hypr/scripts/screenshots/_capture.sh | wl-copy
+  notify-send "Screenshot Copied" "Selected area copied." -i "camera-photo"
   ;;
 " Area (Edit)")
-  grim "$TMP_FILE"
-  imv -f "$TMP_FILE" &
-  IMV_PID=$!
-  sleep 0.3
-  GEOMETRY=$(slurp)
-  kill $IMV_PID
-  if [ -n "$GEOMETRY" ]; then
-    CROP_GEOMETRY=$(echo "$GEOMETRY" | sed -E 's/([0-9]+),([0-9]+) ([0-9]+x[0-9]+)/\3+\1+\2/')
-    convert "$TMP_FILE" -crop "$CROP_GEOMETRY" - | swappy -f -
-  fi
+  ~/.config/hypr/scripts/screenshots/_capture.sh | swappy -f -
   ;;
 " Window (Copy)")
   grim -g "$(hyprctl -j activewindow | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"')" - | wl-copy
-  notify-send "Screenshot Copied" "Active window copied to clipboard." -i "camera-photo"
+  notify-send "Screenshot Copied" "Active window copied." -i "camera-photo"
   ;;
 " Window (Edit)")
   grim -g "$(hyprctl -j activewindow | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"')" - | swappy -f -
   ;;
 "󰍹 Screen (Copy)")
   grim - | wl-copy
-  notify-send "Screenshot Copied" "Fullscreen copied to clipboard." -i "camera-photo"
+  notify-send "Screenshot Copied" "Fullscreen copied." -i "camera-photo"
   ;;
 "󰍹 Screen (Edit)")
   grim - | swappy -f -
