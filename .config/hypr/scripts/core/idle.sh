@@ -7,7 +7,7 @@
 # [INFO] for screen locking and power management.
 
 swayidle -w \
-  timeout 300 '~/.config/hypr/scripts/core/smart_lock.sh' \
+  timeout 300 '~/.config/hypr/scripts/core/smartlock.sh' \
   timeout 600 'hyprctl dispatch dpms off' \
   resume 'sleep 1 && hyprctl dispatch dpms on' \
   before-sleep '~/.config/hypr/scripts/core/lockscreen.sh'
