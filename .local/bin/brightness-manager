@@ -1,24 +1,55 @@
-#!/bin/bash
+#!/usr/bin/env zsh
 # ┌──────────────────────────────────────────────────┐
-# │           BRIGHTNESS MANAGER (TIME-BASED)        │
+# │             BRIGHTNESS MANAGER (SMART)           │
 # └──────────────────────────────────────────────────┘
-# [INFO] This script sets screen brightness based on the time of day.
-# [INFO] It's designed to be run periodically by a cron job.
+# [INFO] Adaptive time-based brightness controller with user override detection.
 
 # --- Configuration ---
-# [CONFIG] Set your desired brightness levels (0-100).
-BRIGHTNESS_DAY="90%"
-BRIGHTNESS_NIGHT="30%"
+BRIGHTNESS_DAY=90
+BRIGHTNESS_NIGHT=30
+LOCK_FILE="/tmp/auto_brightness_disabled"
+LOG_FILE="$HOME/.cache/brightness-manager.log"
 
-# --- Logic ---
-# [INFO] Get the current hour in 24-hour format.
-CURRENT_HOUR=$(date +%H)
+mkdir -p "$(dirname "$LOG_FILE")"
 
-# [INFO] Set night brightness from 22:00 to 06:59.
-if ((CURRENT_HOUR >= 21 || CURRENT_HOUR < 8)); then
-  # [INFO] It's nighttime, set brightness to low.
-  brightnessctl set "$BRIGHTNESS_NIGHT"
-else
-  # [INFO] It's daytime, set brightness to high.
-  brightnessctl set "$BRIGHTNESS_DAY"
+# --- Helper function for logging ---
+log() {
+  print -r "$(date '+%F %T') | $1" >>"$LOG_FILE"
+}
+
+# --- Skip if locked ---
+if [[ -f "$LOCK_FILE" ]]; then
+  log "🔒 Auto brightness disabled by user (lock file present)"
+  exit 0
 fi
+
+# --- Determine current time ---
+integer HOUR=$(date +%H)
+if ((HOUR >= 21 || HOUR < 8)); then
+  TARGET=$BRIGHTNESS_NIGHT
+else
+  TARGET=$BRIGHTNESS_DAY
+fi
+
+# --- Get current brightness ---
+integer CURRENT=$(brightnessctl g 2>/dev/null)
+integer MAX=$(brightnessctl m 2>/dev/null)
+((MAX == 0)) && {
+  log "⚠️ Failed to read max brightness"
+  exit 1
+}
+
+integer PERCENT=$((CURRENT * 100 / MAX))
+
+# --- Compute absolute difference ---
+integer DIFF=$((PERCENT > TARGET ? PERCENT - TARGET : TARGET - PERCENT))
+
+# --- Only adjust if within 10% of target ---
+if ((DIFF > 10)); then
+  log "⏭  User override detected (current=$PERCENT%, target=$TARGET%) — skipping"
+  exit 0
+fi
+
+# --- Apply brightness ---
+brightnessctl set "${TARGET}%" &>/dev/null
+log "🌗 Adjusted brightness to ${TARGET}% (current was ${PERCENT}%)"
