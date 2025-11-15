@@ -90,18 +90,17 @@
     "cpu": {
         "format": " {usage}%",
         "tooltip": true,
-        "interval": 1
+        "interval": 3
     },
     "memory": {
         "format": "󰍛 {used}GiB",
-        "interval": 1
+        "interval": 3
     },
     "custom/temperature": {
         "exec": "~/.config/hypr/scripts/waybar/temperature.sh",
         "return-type": "json",
-        "interval": 1
+        "interval": 3
     },
-
     // --- Network ---
     "network": {
         "format-wifi": "{essid}  ",
@@ -159,9 +158,12 @@
 
     // --- Package Updates ---
     "custom/updates": {
-        "exec": "~/.config/hypr/scripts/waybar/updates.sh",
-        "interval": 900, // [INFO] Check for updates every 15 minutes.
-        "on-click": "kitty --class kitty-update -e ~/.config/hypr/scripts/core/system_update.sh",
-        "tooltip": true
+        "exec":     "~/.config/hypr/scripts/waybar/updates.sh",
+        "interval": 900, // [CONFIG] Check for updates every 15 minutes.
+        "return-type": "json",
+        "format": "{}",
+        "format":   "{}",  // [CRITICAL] Must be set to parse JSON from the exec script.
+        "tooltip":  true,
+        "on-click": "kitty --class kitty-update -e ~/.config/hypr/scripts/core/sysup.sh",
     },
 }
