@@ -116,6 +116,7 @@
         {
             "type":     "wm",
             "key":      "└ └ WM",
+            "format":   "Hyprland",
             "keyColor": "blue"
         },
         { "type": "custom", "format": "└────────────────────────────────────────────────────────────────────────┘", "outputColor": "red" },
