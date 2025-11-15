@@ -88,7 +88,7 @@ export FZF_DEFAULT_OPTS='
 # └──────────────────────────────────────────────────┘
 
 # --- Package Management ---
-alias update='sudo ~/.config/hypr/scripts/core/system_update.sh'          # Update all system packages
+alias update='sudo ~/.config/hypr/scripts/core/system_update.sh'     # Update all system packages
 alias install='yay -S'                                               # Install a new package
 alias remove='sudo pacman -Rns'                                      # Remove a package with dependencies
 alias search='yay -Ss'                                               # Search for a package
@@ -136,7 +136,8 @@ alias dstat='dotgit status'             # Show status of dotfiles repo
 alias dadd='dotgit add'                 # Add files to dotfiles repo
 alias ddel='dotgit rm'                  # Remove files from dotfiles repo
 alias dsee='dotgit ls-files | eza --tree --icons' # View tracked dotfiles as a tree
-alias dcomm='dotgit commit -m'          # Commit changes to dotfiles
+alias dgcm='dotgit commit -m'          # Commit changes to all dotfiles
+alias dgc='dotgit commit'              # Commit changes to dotfiles   
 alias dpush='dotgit push'               # Push dotfiles to remote
 alias dlog='dotgit log --oneline --graph --decorate' # View dotfiles commit log
 alias lg='lazygit --git-dir=$HOME/.dotfiles/ --work-tree=$HOME' # Open lazygit for dotfiles
@@ -148,6 +149,11 @@ alias lgit='lazygit'                    # Launch Lazygit
 alias zj='zellij'                       # Launch Zellij
 alias za='zellij attach'                # Attach to a Zellij session
 alias zk='zellij kill-all-sessions'     # Kill all Zellij sessions
+
+# --- Brightness control helpers ---
+alias brighton='rm -f /tmp/auto_brightness_disabled && echo "🌞 Auto brightness re-enabled."'
+alias brightoff='touch /tmp/auto_brightness_disabled && echo "🌙 Auto brightness disabled."'
+alias brightlog='bat --style=plain ~/.cache/brightness-manager.log | tail -n 20'
 
 # --- Custom ---
 alias vencord='sh -c "$(curl -sS https://raw.githubusercontent.com/Vendicated/VencordInstaller/main/install.sh)"'
@@ -192,6 +198,8 @@ metro_aliases=(
     [gammastep]="$DOTS/gammastep/config.ini"
     [cava]="$DOTS/cava/config"
     [sampelr]="$DOTS/sampler/sampler.yml"
+    [imv]="$DOTS/imv/config"
+    [nvim]="$DOTS/nvim/lua/config/lazy.lua"
 
     # --- Waybar ---
     [waybar]="$DOTS/waybar/config"
@@ -208,6 +216,7 @@ metro_aliases=(
     [wpr]="$HOME/.local/bin/wpr"
     [zsh]="$HOME/.zshrc"
     [gitig]="$HOME/.gitignore"
+    [brightness]="$HOME/.local/bin/brightness-manager"
 )
 
 _metro_find_config() {
@@ -259,53 +268,69 @@ edit() {
     fi
 }
 
-# --- vsearch - The ultimate interactive file explorer ---
-vsearch() {
-    # [INFO] If no file argument is provided, display usage instructions and exit.
+# --- rgo - Search for a pattern across the entire project ---
+rgo() {
+    local editor=${2:-${EDITOR:-nvim}}
+    local selection
+    
+    selection=$(rg --line-number --no-heading "$1" | fzf \
+        --height=50% \
+        --border=rounded \
+        --delimiter=':' \
+        --header="🔍 Project Search: $1 — Enter → open, ESC → cancel" \
+        --preview-window="right:60%:wrap:border-rounded:follow" \
+        --preview="bash -c ' \
+            file_path=\"{1}\"; \
+            line_num=\"{2}\"; \
+            [[ -f \"\$file_path\" ]] && bat --paging=never --style=numbers --color=always --highlight-line \"\$line_num\" \"\$file_path\" \
+        '")
+
+    [[ -z "$selection" ]] && return 0
+
+    local file=$(echo "$selection" | cut -d: -f1)
+    local line=$(echo "$selection" | cut -d: -f2)
+
+    "$editor" +"$line" "$file"
+}
+
+# --- fpeek - Interactively fuzzy-search within a single file ---
+fpeek() {
     if [[ -z "$1" ]]; then
-        echo "Usage: vsearch <filename>"
-        echo "  Opens a fzf-powered view with live, interactive search."
+        echo "Usage: fpeek <filename>"
+        echo "  Opens an fzf-powered view for interactive fuzzy-searching within a file."
         return 1
     fi
 
-    # [INFO] Ensure the provided file actually exists before proceeding.
     local file="$1"
     if [[ ! -f "$file" ]]; then
         echo "Error: File not found: $file"
         return 1
     fi
 
-    # --- Core FZF Search ---
-    # [CRITICAL] The preview command is a self-contained, multi-line bash script.
-    # This avoids all shell-scoping issues with helper functions, while remaining
-    # perfectly readable and maintainable in the config file.
     local selection
-    selection=$(
-        rg --no-heading --line-number --color=always -i "" "$file" | \
-        fzf \
-            --ansi \
-            --delimiter : \
-            --header="🔍 $file — Type to search, Enter → open, ESC → cancel" \
-            --layout=reverse \
-            --height=30% \
-            --border=rounded \
-            --preview "bash -c ' \
-                line={1}; \
-                start=\$(( line > 10 ? line-10 : 1 )); \
-                end=\$(( line+10 )); \
-                bat --paging=never --style=numbers --color=always --highlight-line \$line \"$file\" --line-range \$start:\$end \
-            '" \
-            --preview-window="right:50%:wrap:border-rounded:follow"
-    )
+    
+    selection=$(rg --no-heading --line-number --color=always -i "" "$file" | fzf \
+        --ansi \
+        --delimiter=: \
+        --header="🔍 $file — Fuzzy-search, Enter → open, ESC → cancel" \
+        --height=30% \
+        --layout=reverse \
+        --border=rounded \
+        --preview-window="right:50%:wrap:border-rounded:follow" \
+        --preview="bash -c ' \
+            file_path=\"\$1\"; \
+            line_num=\"{1}\"; \
+            start=\$(( line_num > 10 ? line_num - 10 : 1 )); \
+            end=\$(( line_num + 10 )); \
+            bat --paging=never --style=numbers --color=always --highlight-line \"\$line_num\" \"\$file_path\" --line-range \"\$start:\$end\" \
+        ' bash \"$file\"")
 
-    # --- Handle User Cancellation ---
     if [[ $? -ne 0 || -z "$selection" ]]; then
         return 0
     fi
 
-    # --- Extract Line Number & Open Editor ---
-    local line
-    line=$(echo "$selection" | awk -F: '{print $1}' | head -n1)
+    local line=$(echo "$selection" | awk -F: '{print $1}' | head -n1)
+
     ${EDITOR:-nvim} +"$line" "$file"
 }
 
