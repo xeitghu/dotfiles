@@ -1,6 +1,6 @@
-# ┌──────────────────────────────────────────────────┐
-# │               GLOBAL .GITIGNORE                  │
-# └──────────────────────────────────────────────────┘
+# ┌───────────────────────────────────────┐
+# │            GLOBAL .GITIGNORE          │
+# └───────────────────────────────────────┘
 
 # --- Generic Patterns ---
 # [INFO] Ignore common temporary files, logs, and editor backups.
@@ -16,15 +16,16 @@
 *lock*
 *socket*
 
-# ┌──────────────────────────────────────────────────┐
-# │      APPLICATION DATA, CACHE & STATE FILES       │
-# └──────────────────────────────────────────────────┘
+# ┌───────────────────────────────────────────────┐
+# │     APPLICATION DATA, CACHE & STATE FILES     │
+# └───────────────────────────────────────────────┘
 # [INFO] Ignoring user-specific data that should not be in dotfiles.
 # [INFO] This list is sorted alphabetically.
 
 .config/arkrc
 .config/atuin/
 .config/btop/themes/
+.config/Bitwarden/
 .config/dconf/
 .config/discord/
 .config/go/
@@ -59,6 +60,7 @@
 .config/pyre/                     # [INFO] Ignoring Pyre's temporary state files.
 .config/qt6ct/
 .config/QtProject.conf
+.config/qalculate/
 .config/r2modman/
 .config/r2modmanPlus-local/
 .config/ryzen-controller/
