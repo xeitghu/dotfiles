@@ -1,5 +1,5 @@
 /* ┌──────────────────────────────────────────────────┐ */
-/* │           WAYBAR - CATPPUCCIN MOCHA (PILL STYLE)   │ */
+/* │           WAYBAR - CATPPUCCIN MOCHA (PILL STYLE) │ */
 /* └──────────────────────────────────────────────────┘ */
 
 /* --- Theme Import --- */
@@ -18,10 +18,11 @@
 
 /* --- Main Bar Window --- */
 window#waybar {
-    /* [INFO] Use a semi-transparent background for a "floating" bar effect. */
+    /* [INFO] Semi-transparent, floating pill-style bar */
     background-color: alpha(@base, 0.4);
     color: @text;
     border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2); /* [INFO] Subtle shadow for depth */
 }
 
 #waybar > box {
@@ -32,7 +33,6 @@ window#waybar {
 /* ┌──────────────────────────────────────────────────┐ */
 /* │                  GENERAL MODULE STYLE            │ */
 /* └──────────────────────────────────────────────────┘ */
-/* [INFO] A common "pill" style for all modules. */
 #custom-updates,
 #workspaces,
 #custom-mediaplayer,
@@ -50,11 +50,8 @@ window#waybar {
     margin: 5px 4px;
     border: 1px solid @overlay0;
     border-radius: 12px;
+    transition: background-color 0.2s ease, color 0.2s ease; /* [FIX] Smooth transitions */
 }
-
-/* ┌──────────────────────────────────────────────────┐ */
-/* │                PER-MODULE STYLING                │ */
-/* └──────────────────────────────────────────────────┘ */
 
 /* --- Workspaces --- */
 #workspaces button {
@@ -62,11 +59,11 @@ window#waybar {
     background-color: transparent;
     color: @subtext1;
     border-radius: 10px;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, background-color 0.3s ease; /* [FIX] Targeted transitions */
 }
 
 #workspaces button:hover {
-    background-color: @overlay0;
+    background-color: @overlay0; /* [INFO] Hover effect */
 }
 
 #workspaces button.active {
@@ -79,7 +76,7 @@ window#waybar {
 }
 
 /* --- System Monitor Group (CPU, MEM, TEMP) --- */
-/* [INFO] Define a common style for all three modules in the group. */
+/* [INFO] Flex-like alignment handled via margins and border-radius */
 #cpu, #memory, #custom-temperature {
     background-color: @base;
     padding: 2px 10px;
@@ -88,36 +85,38 @@ window#waybar {
     border: 1px solid @overlay0;
 }
 
-/* [INFO] Apply rounding only to the outer edges of the group. */
+/* [INFO] Rounded corners for outer edges */
 #cpu {
+    background-color: @base;
+    padding: 2px 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: 1px solid @overlay0;
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
     margin-left: 4px;
+    color: @teal;
 }
+
 #memory {
     border-radius: 0;
+    margin-left: -1px; /* [FIX] Overlap borders for seamless look */
+    color: @blue;
 }
 
 #custom-temperature {
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
     margin-right: 4px;
-}
-
-/* [FIX] Shift the modules to the left by 1px to make their borders overlap, creating a seamless look. */
-#memory, #custom-temperature {
-    margin-left: -1px;
-}
-
-/* [INFO] Assign unique colors to each monitor's icon for quick identification. */
-#cpu {
-    color: @teal;
-}
-#memory {
-    color: @blue;
-}
-#custom-temperature {
+    margin-left: -1px; /* [FIX] Overlap borders */
     color: @peach;
+}
+
+/* [INFO] Hover effect for system monitors */
+#cpu:hover,
+#memory:hover,
+#custom-temperature:hover {
+    background-color: @overlay0;
 }
 
 /* ┌──────────────────────────────────────────────────┐ */
@@ -125,11 +124,12 @@ window#waybar {
 /* └──────────────────────────────────────────────────┘ */
 #custom-updates     { color: @flamingo; }
 #custom-clock       { color: @lavender; }
-#network            { color: @yellow;   }
-#custom-language    { color: @green;    }
-#custom-dunst       { color: @peach;    }
-#pulseaudio         { color: @maroon;   }
-#pulseaudio.muted   { color: @overlay0; }
-#battery            { color: @green;    }
-#battery.critical   { color: @red;      }
-#custom-mediaplayer { color: @mauve;    }
+#network            { color: @yellow; }
+#custom-language    { color: @green; }
+#custom-dunst       { color: @peach; }
+#pulseaudio         { color: @maroon; }
+#pulseaudio.muted   { color: @overlay0; opacity: 0.6; } /* [INFO] Muted state visually distinct */
+#battery            { color: @green; }
+#battery.critical   { color: @red; opacity: 0.8; }      /* [INFO] Critical battery highlight */
+#custom-mediaplayer { color: @mauve; }
+
