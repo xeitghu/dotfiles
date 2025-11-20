@@ -6,7 +6,7 @@
 
 > **"Metro" Environment.** A highly modular, keyboard-centric, and aesthetic workspace built for DevOps engineering and Security research. 
 
-<img width="1914" height="1076" alt="image" src="https://github.com/user-attachments/assets/2e2880c6-e006-46a6-9a85-b2e35954c8dd" />
+<img width="1919" height="1078" alt="image" src="https://github.com/user-attachments/assets/1c1bab32-82f3-429c-a90d-4e61aca9608d" />
 
 ## ⚡ Philosophy
 
