@@ -1,30 +1,30 @@
-; ┌──────────────────────────────────────────────────┐
-; │               CAVA - CATPPUCCIN MOCHA            │
-; └──────────────────────────────────────────────────┘
+; ┌────────────────────────────────────────────────────────────────────────────┐
+; │                                  CAVA                                      │
+; └────────────────────────────────────────────────────────────────────────────┘
 
 [general]
 ; [CONFIG] Auto-adjust the number of bars to fill the window width.
-bars = 0
+bars		= 0
 
 ; [CONFIG] Define the width and spacing of each bar.
-bar_width = 2
-bar_spacing = 1
+bar_width	= 2
+bar_spacing	= 1
 
 ; [CONFIG] Set framerate for smoother animations.
-framerate = 60
+framerate	= 60
 
 [input]
 ; [INFO] Use pipewire as the audio source.
-method = pipewire
+method		= pipewire
 
 [output]
 ; [INFO] Use ncurses for terminal output.
-method = ncurses
+method		= ncurses
 
 [color]
 ; [CONFIG] Set a single foreground color from your palette.
-foreground = '#89b4fa'
+foreground	= '#89b4fa'
 
 [smoothing]
 ; [INFO] Apply smoothing for a less jittery visualizer.
-monstercat = 1
+monstercat	= 1

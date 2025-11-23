@@ -1,3 +1,10 @@
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                          SAMPLER - MAIN DASHBOARD                          │
+# └────────────────────────────────────────────────────────────────────────────┘
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                                  CHARTS                                    │
+# └────────────────────────────────────────────────────────────────────────────┘
 runcharts:
   - title: Search engine response time
     position: [[0, 0], [44, 19]]
@@ -16,6 +23,7 @@ runcharts:
         sample: curl --retry 2 --max-time 5 -o /dev/null -s -w '%{time_total}' https://www.google.com
       - label: DUCKDUCKGO
         sample: curl --retry 2 --max-time 5 -o /dev/null -s -w '%{time_total}' https://www.duckduckgo.com
+
 barcharts:
   - title: Local network activity
     position: [[45, 25], [35, 7]]
@@ -25,6 +33,10 @@ barcharts:
         sample: awk '/eth|enp|wlan/ {sum += $2} END {print sum}' /proc/net/dev
       - label: Bytes out
         sample: awk '/eth|enp|wlan/ {sum += $10} END {print sum}' /proc/net/dev
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                                  WIDGETS                                   │
+# └────────────────────────────────────────────────────────────────────────────┘
 gauges:
   - title: Year progress
     position: [[45, 0], [35, 2]]
@@ -76,6 +88,7 @@ gauges:
         sample: echo 60
     min:
         sample: echo 0
+
 sparklines:
   - title: CPU usage
     position: [[0, 20], [21, 8]]
@@ -86,6 +99,7 @@ sparklines:
     position: [[22, 20], [22, 8]]
     rate-ms: 2000
     sample: free -m | awk 'NR==2{printf "%d", $4}'
+
 textboxes:
   - title: Docker containers stats
     position: [[0, 28], [44, 12]]
@@ -101,6 +115,7 @@ textboxes:
     rate-ms: 900000
     sample: curl wttr.in/newyork?0ATQF
     border: true
+
 asciiboxes:
   - title: UTC time
     position: [[45, 15], [35, 9]]
