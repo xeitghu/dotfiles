@@ -51,7 +51,7 @@ choice=$(echo -e "$options" | wofi --dmenu \
 # [INFO] Process the user's choice.
 case "$choice" in
 "$lock")
-  ~/.config/hypr/scripts/core/lockscreen.sh
+  hyprlock
   ;;
 "$logout")
   if confirm_action "Are you sure?"; then

@@ -1,13 +1,13 @@
 #!/bin/bash
-# ┌──────────────────────────────────────────────────┐
-# │                 IDLE MANAGER DAEMON              │
-# └──────────────────────────────────────────────────┘
+# ┌───────────────────────────────────────┐
+# │          IDLE MANAGER DAEMON          │
+# └───────────────────────────────────────┘
 
-# [INFO] This script launches swayidle with configured timeouts
+# [INFO] This script launches hypridle with configured timeouts
 # [INFO] for screen locking and power management.
 
-swayidle -w \
+hypridle -w \
   timeout 300 '~/.config/hypr/scripts/core/smartlock.sh' \
   timeout 600 'hyprctl dispatch dpms off' \
   resume 'sleep 1 && hyprctl dispatch dpms on' \
-  before-sleep '~/.config/hypr/scripts/core/lockscreen.sh'
+  before-sleep 'hyprlock'
