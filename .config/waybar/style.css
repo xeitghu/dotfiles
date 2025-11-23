@@ -1,14 +1,14 @@
-/* ┌──────────────────────────────────────────────────┐ */
-/* │           WAYBAR - CATPPUCCIN MOCHA (PILL STYLE) │ */
-/* └──────────────────────────────────────────────────┘ */
+/* ┌────────────────────────────────────────────────────────────────────────────┐ */
+/* │                          WAYBAR - STYLE CONFIGARATION                      │ */
+/* └────────────────────────────────────────────────────────────────────────────┘ */
 
 /* --- Theme Import --- */
 /* [INFO] Load the centralized color palette. */
 @import "theme.css";
 
-/* ┌──────────────────────────────────────────────────┐ */
-/* │                  GLOBAL STYLES                   │ */
-/* └──────────────────────────────────────────────────┘ */
+/* ┌────────────────────────────────────────────────────────────────────────────┐ */
+/* │                                GLOBAL STYLES                               │ */
+/* └────────────────────────────────────────────────────────────────────────────┘ */
 * {
     font-family: "JetBrains Mono Nerd Font", FontAwesome, sans-serif;
     font-size: 14px;
@@ -22,7 +22,7 @@ window#waybar {
     background-color: alpha(@base, 0.4);
     color: @text;
     border-radius: 15px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2); /* [INFO] Subtle shadow for depth */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);        /* [INFO] Subtle shadow for depth */
 }
 
 #waybar > box {
@@ -30,9 +30,9 @@ window#waybar {
     margin-right: 12px;
 }
 
-/* ┌──────────────────────────────────────────────────┐ */
-/* │                  GENERAL MODULE STYLE            │ */
-/* └──────────────────────────────────────────────────┘ */
+/* ┌────────────────────────────────────────────────────────────────────────────┐ */
+/* │                             GENERAL MODULE STYLE                           │ */
+/* └────────────────────────────────────────────────────────────────────────────┘ */
 #custom-updates,
 #workspaces,
 #custom-mediaplayer,
@@ -50,7 +50,7 @@ window#waybar {
     margin: 5px 4px;
     border: 1px solid @overlay0;
     border-radius: 12px;
-    transition: background-color 0.2s ease, color 0.2s ease; /* [FIX] Smooth transitions */
+    transition: background-color 0.2s ease, color 0.2s ease;        /* [FIX] Smooth transitions */
 }
 
 /* --- Workspaces --- */
@@ -59,11 +59,11 @@ window#waybar {
     background-color: transparent;
     color: @subtext1;
     border-radius: 10px;
-    transition: color 0.3s ease, background-color 0.3s ease; /* [FIX] Targeted transitions */
+    transition: color 0.3s ease, background-color 0.3s ease;        /* [FIX] Targeted transitions */
 }
 
 #workspaces button:hover {
-    background-color: @overlay0; /* [INFO] Hover effect */
+    background-color: @overlay0;        /* [INFO] Hover effect */
 }
 
 #workspaces button.active {
@@ -100,7 +100,7 @@ window#waybar {
 
 #memory {
     border-radius: 0;
-    margin-left: -1px; /* [FIX] Overlap borders for seamless look */
+    margin-left: -1px;        /* [FIX] Overlap borders for seamless look */
     color: @blue;
 }
 
@@ -108,7 +108,7 @@ window#waybar {
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
     margin-right: 4px;
-    margin-left: -1px; /* [FIX] Overlap borders */
+    margin-left: -1px;        /* [FIX] Overlap borders */
     color: @peach;
 }
 
@@ -119,17 +119,16 @@ window#waybar {
     background-color: @overlay0;
 }
 
-/* ┌──────────────────────────────────────────────────┐ */
-/* │               MODULE ICON COLORS                 │ */
-/* └──────────────────────────────────────────────────┘ */
+/* ┌────────────────────────────────────────────────────────────────────────────┐ */
+/* │                             MODULE ICON COLORS                             │ */
+/* └────────────────────────────────────────────────────────────────────────────┘ */
 #custom-updates     { color: @flamingo; }
 #custom-clock       { color: @lavender; }
 #network            { color: @yellow; }
 #custom-language    { color: @green; }
 #custom-dunst       { color: @peach; }
 #pulseaudio         { color: @maroon; }
-#pulseaudio.muted   { color: @overlay0; opacity: 0.6; } /* [INFO] Muted state visually distinct */
+#pulseaudio.muted   { color: @overlay0; opacity: 0.6; }        /* [INFO] Muted state visually distinct */
 #battery            { color: @green; }
-#battery.critical   { color: @red; opacity: 0.8; }      /* [INFO] Critical battery highlight */
+#battery.critical   { color: @red; opacity: 0.8; }             /* [INFO] Critical battery highlight */
 #custom-mediaplayer { color: @mauve; }
-

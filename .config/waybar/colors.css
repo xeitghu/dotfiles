@@ -1,44 +1,44 @@
-/* ┌──────────────────────────────────────────────────┐ */
-/* │        COLOR PALETTE - CATPPUCCIN MOCHA          │ */
-/* └──────────────────────────────────────────────────┘ */
+/* ┌────────────────────────────────────────────────────────────────────────────┐ */
+/* │                       COLOR PALETTE - CATPPUCCIN MOCHA                       │ */
+/* └────────────────────────────────────────────────────────────────────────────┘ */
 
-/* ┌──────────────────────────────────────────────────┐ */
-/* │                  ACCENT COLORS                   │ */
-/* └──────────────────────────────────────────────────┘ */
+/* ┌────────────────────────────────────────────────────────────────────────────┐ */
+/* │                                ACCENT COLORS                               │ */
+/* └────────────────────────────────────────────────────────────────────────────┘ */
 
-@define-color rosewater #f5e0dc; /* Rosewater */
-@define-color flamingo  #f2cdcd; /* Flamingo */
-@define-color pink      #f5c2e7; /* Pink */
-@define-color mauve     #cba6f7; /* Mauve */
-@define-color red       #f38ba8; /* Red */
-@define-color maroon    #eba0ac; /* Maroon */
-@define-color peach     #fab387; /* Peach */
-@define-color yellow    #f9e2af; /* Yellow */
-@define-color green     #a6e3a1; /* Green */
-@define-color teal      #94e2d5; /* Teal */
-@define-color sky       #89dceb; /* Sky */
-@define-color sapphire  #74c7ec; /* Sapphire */
-@define-color blue      #89b4fa; /* Blue */
-@define-color lavender  #b4befe; /* Lavender */
+@define-color rosewater #f5e0dc;        /* Rosewater */
+@define-color flamingo  #f2cdcd;        /* Flamingo */
+@define-color pink      #f5c2e7;        /* Pink */
+@define-color mauve     #cba6f7;        /* Mauve */
+@define-color red       #f38ba8;        /* Red */
+@define-color maroon    #eba0ac;        /* Maroon */
+@define-color peach     #fab387;        /* Peach */
+@define-color yellow    #f9e2af;        /* Yellow */
+@define-color green     #a6e3a1;        /* Green */
+@define-color teal      #94e2d5;        /* Teal */
+@define-color sky       #89dceb;        /* Sky */
+@define-color sapphire  #74c7ec;        /* Sapphire */
+@define-color blue      #89b4fa;        /* Blue */
+@define-color lavender  #b4befe;        /* Lavender */
 
-/* ┌──────────────────────────────────────────────────┐ */
-/* │                  NEUTRAL TONES                   │ */
-/* └──────────────────────────────────────────────────┘ */
+/* ┌────────────────────────────────────────────────────────────────────────────┐ */
+/* │                               NEUTRAL TONES                                │ */
+/* └────────────────────────────────────────────────────────────────────────────┘ */
 
 /* --- Text & Overlays --- */
-@define-color text      #cdd6f4; /* Text */
-@define-color subtext1  #bac2de; /* Subtext 1 */
-@define-color subtext0  #a6adc8; /* Subtext 0 */
-@define-color overlay2  #9399b2; /* Overlay 2 */
-@define-color overlay1  #7f849c; /* Overlay 1 */
-@define-color overlay0  #6c7086; /* Overlay 0 */
+@define-color text      #cdd6f4;        /* Text */
+@define-color subtext1  #bac2de;        /* Subtext 1 */
+@define-color subtext0  #a6adc8;        /* Subtext 0 */
+@define-color overlay2  #9399b2;        /* Overlay 2 */
+@define-color overlay1  #7f849c;        /* Overlay 1 */
+@define-color overlay0  #6c7086;        /* Overlay 0 */
 
 /* --- Surfaces --- */
-@define-color surface2  #585b70; /* Surface 2 */
-@define-color surface1  #45475a; /* Surface 1 */
-@define-color surface0  #313244; /* Surface 0 */
+@define-color surface2  #585b70;        /* Surface 2 */
+@define-color surface1  #45475a;        /* Surface 1 */
+@define-color surface0  #313244;        /* Surface 0 */
 
 /* --- Base --- */
-@define-color base      #1e1e2e; /* Base */
-@define-color mantle    #181825; /* Mantle */
-@define-color crust     #11111b; /* Crust */
+@define-color base      #1e1e2e;        /* Base */
+@define-color mantle    #181825;        /* Mantle */
+@define-color crust     #11111b;        /* Crust */

@@ -1,10 +1,10 @@
-// ┌──────────────────────────────────────────────────┐
-// │             WAYBAR - MAIN CONFIGURATION          │
-// └──────────────────────────────────────────────────┘
+// ┌────────────────────────────────────────────────────────────────────────────┐
+// │                         WAYBAR - MAIN CONFIGURATION                        │
+// └────────────────────────────────────────────────────────────────────────────┘
 {
-    // ┌──────────────────────────────────────────────────┐
-    // │               MAIN BAR SETTINGS                  │
-    // └──────────────────────────────────────────────────┘
+    // ┌────────────────────────────────────────────────────────────────────────────┐
+    // │                             MAIN BAR SETTINGS                              │
+    // └────────────────────────────────────────────────────────────────────────────┘
     // [CONFIG] General settings for the bar's position and appearance.
     "layer": "top",
     "position": "top",
@@ -33,9 +33,9 @@
         "tray"
     ],
 
-    // ┌──────────────────────────────────────────────────┐
-    // │               MODULE CONFIGURATION               │
-    // └──────────────────────────────────────────────────┘
+    // ┌────────────────────────────────────────────────────────────────────────────┐
+    // │                           MODULE CONFIGURATION                             │
+    // └────────────────────────────────────────────────────────────────────────────┘
 
     // --- playerctld Media Control ---
     "custom/mediaplayer": {
@@ -46,10 +46,10 @@
         "max-length": 35,
         "interval": 1,
         // [CONFIG] All actions are mapped to available mouse events.
-        "on-click": "playerctl play-pause",       // [INFO] Left-click: Play/Pause
-        "on-click-right": "playerctld shift",     // [INFO] Right-click: Cycle Players
-        "on-scroll-up": "playerctl next",         // [INFO] Scroll Up: Next Track
-        "on-scroll-down": "playerctl previous"    // [INFO] Scroll Down: Previous Track
+        "on-click": "playerctl play-pause",           // [INFO] Left-click: Play/Pause
+        "on-click-right": "playerctld shift",         // [INFO] Right-click: Cycle Players
+        "on-scroll-up": "playerctl next",             // [INFO] Scroll Up: Next Track
+        "on-scroll-down": "playerctl previous"        // [INFO] Scroll Down: Previous Track
     },
 
     // --- Hyprland Workspaces ---
@@ -81,9 +81,9 @@
         "exec": "~/.config/hypr/scripts/waybar/clock_module.sh",
         "return-type": "json",
         "on-click": "~/.config/hypr/scripts/waybar/toggle_clock.sh",
-        "on-click-right": "yad --calendar --title='Calendar'", // [INFO] Opens a calendar on right-click.
-        "interval": 1, // [INFO] Update every second for the time.
-        "signal": 10   // [INFO] Listen for signal 10 for forced updates.
+        "on-click-right": "yad --calendar --title='Calendar'",              // [INFO] Opens a calendar on right-click.
+        "interval": 1,                                                      // [INFO] Update every second for the time.
+        "signal": 10                                                        // [INFO] Listen for signal 10 for forced updates.
     },
 
     // --- System Monitors ---
@@ -159,11 +159,10 @@
     // --- Package Updates ---
     "custom/updates": {
         "exec":     "~/.config/hypr/scripts/waybar/updates.sh",
-        "interval": 900, // [CONFIG] Check for updates every 15 minutes.
+        "interval": 900,                                                              // [CONFIG] Check for updates every 15 minutes.
         "return-type": "json",
-        "format": "{}",
-        "format":   "{}",  // [CRITICAL] Must be set to parse JSON from the exec script.
+        "format":   "{}",                                                             // [CRITICAL] Must be set to parse JSON from the exec script.
         "tooltip":  true,
-        "on-click": "kitty --class kitty-update -e ~/.config/hypr/scripts/core/sysup.sh",
-    },
+        "on-click": "kitty --class kitty-update -e ~/.config/hypr/scripts/core/sysup.sh"
+    }
 }
