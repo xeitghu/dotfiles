@@ -14,6 +14,7 @@
 *.tmp
 *journal*
 *lock*
+!/.config/hypr/hyprlock.conf
 *socket*
 
 # ┌───────────────────────────────────────────────┐
@@ -104,3 +105,13 @@
 .config/cava/themes/
 .config/cpupower_gui/
 .config/xdg-desktop-portal/
+
+# --- Proton Mail Fix ---
+.config/Proton Mail/
+
+# --- Clipboard Manager (Clipse) ---
+.config/clipse/clipboard_history.json
+.config/clipse/tmp_files/
+
+# --- Security Apps ---
+.config/keepassxc/
