@@ -1,84 +1,164 @@
-# 🌌 Arch Linux + Hyprland Dotfiles
+<div align="center">
+    <img src="https://raw.githubusercontent.com/xeitghu/dotfiles/main/.config/fastfetch/arch.txt" alt="Logo" width="120" />
+    <h1>Metro Dotfiles</h1>
+    <p>
+        <b>A highly modular, aesthetic, and performance-oriented Hyprland configuration.</b><br>
+        Powered by the custom <i>Pyre Engine</i> for dynamic theming.
+    </p>
 
-![License](https://img.shields.io/github/license/xeitghu/dotfiles?style=for-the-badge&color=caa6f7)
-![OS](https://img.shields.io/badge/OS-EndeavourOS-7c3aed?style=for-the-badge&logo=archlinux)
-![WM](https://img.shields.io/badge/WM-Hyprland-40a4ff?style=for-the-badge&logo=c)
+![Stars](https://img.shields.io/github/stars/xeitghu/dotfiles?style=for-the-badge&color=cba6f7)
+![Forks](https://img.shields.io/github/forks/xeitghu/dotfiles?style=for-the-badge&color=89b4fa)
+![License](https://img.shields.io/github/license/xeitghu/dotfiles?style=for-the-badge&color=a6e3a1)
 
-> **"Metro" Environment.** A highly modular, keyboard-centric, and aesthetic workspace built for DevOps engineering and Security research. 
+</div>
 
-<img width="1919" height="1078" alt="image" src="https://github.com/user-attachments/assets/1c1bab32-82f3-429c-a90d-4e61aca9608d" />
+---
 
-## ⚡ Philosophy
+## ⚡ Overview
 
-This repository is not just a collection of config files; it is an **Infrastructure as Code (IaC)** project for my personal workspace. 
+This repository contains my personal configuration files (dotfiles) for Arch Linux. It is built around **Hyprland** and follows the "Metro" design philosophy: strictly organized, modular, and keyboard-centric.
 
-The goal was to create a system that is:
-1.  **Modular:** Every component (WM, Shell, Bar) is decoupled.
-2.  **Maintainable:** Custom tooling (`Metro` system) makes managing configs instant.
-3.  **Efficient:** VIM-like navigation everywhere, minimal mouse usage.
-
-## 🛠️ The Stack
+### 🛠 Tech Stack
 
 | Component | Choice | Description |
-| :--- | :--- | :--- |
-| **OS** | [EndeavourOS](https://endeavouros.com/) | Arch-based rolling release |
-| **Compositor** | [Hyprland](https://hyprland.org/) | Dynamic tiling Wayland compositor |
-| **Shell** | Zsh | Powered by custom `Metro` framework |
-| **Terminal** | Kitty | GPU-accelerated, highly scriptable |
-| **Bar** | Waybar | Custom JSON modules & bash scripts |
-| **Launcher** | Wofi / FZF | Application & fuzzy finding |
-| **Editor** | Neovim | LazyVim based configuration |
-| **Browser** | Zen Browser | Firefox fork optimized for productivity |
+|-----------|--------|-------------|
+| **OS** | Arch Linux | The base system |
+| **WM** | Hyprland | Dynamic tiling Wayland compositor |
+| **Shell** | Zsh | Modular config with extensive aliases |
+| **Terminal** | Kitty | GPU-accelerated, highly configurable |
+| **Editor** | Neovim | LazyVim based, fully IDE-like |
+| **Bar** | Waybar | Custom CSS, informative modules |
+| **Launcher** | Wofi | App launcher and clipboard manager |
+| **Lock** | Hyprlock | Native screen locking utility |
+| **Idle** | Hypridle | Idle management daemon |
+| **Clipboard**| Clipse | TUI-based clipboard history manager |
+| **Notifications** | Dunst | Minimalist notification daemon |
 
 ---
 
-## 🚇 The "Metro" Config System
+## 🔥 Key Features
 
-The core of this repository is a custom Zsh framework I wrote to manage configuration complexity. It uses associative arrays to map aliases to file paths and integrates `fzf` + `bat` for live previews.
+### 1. The Pyre Engine (`.config/pyre/`)
+A custom bash-based engine that handles system state, theming, and automation.
+- **Dynamic Theming:** Instantly switches wallpapers and colors across Waybar, Hyprland, and Kitty.
+- **State Management:** Remembers your last used theme and layout across reboots.
 
-### Key Functions:
+### 2. Modular Zsh System (`.config/zsh/`)
+Gone is the giant `.zshrc`. The shell configuration is split into logical modules:
+- `01_environment.zsh`: Paths and export variables.
+- `02_options.zsh`: History and shell behavior.
+- `03_plugins.zsh`: Plugin management.
+- `04_fzf.zsh`: Fuzzy finder integration.
+- `05_aliases.zsh`: Structured aliases (including the `dotgit` helper).
+- `06_functions.zsh`: Custom utility functions.
 
-*   **`edit [alias]`**: Instantly open config files. Supports fuzzy searching.
-    *   *Example:* `edit hypr` opens the Hyprland module menu.
-    *   *Example:* `edit waybarconf` opens the config directly.
-*   **`view [alias]`**: Inspect configuration files (with syntax highlighting) without opening an editor.
-*   **`metro_modules`**: The logic separates "Files" from "Modules", allowing recursive editing of complex directories.
-
-> *Source code location:* `zsh/06_functions.zsh`
+### 3. WPR - Wallpaper Picker (`.local/bin/wpr`)
+A rewritten, interactive wallpaper manager.
+- **Interactive:** `wpr` opens a Wofi menu to select wallpapers.
+- **Random:** `wpr -r` sets a random wallpaper from the current theme.
+- **All:** `wpr -a` lets you pick from your entire collection.
 
 ---
-
-## ⚡ Workflow & Productivity Features
-
-Designed for a high-efficiency **DevOps** workflow:
-
-*   **Instant OCR:** Built-in `ocr.sh` script (using `grim` + `slurp` + `tesseract`) to extract text from images/video directly to the clipboard.
-*   **Clipboard Manager:** Integrated `cliphist` workflow with fuzzy search via Wofi.
-*   **System Monitoring:** Custom JSON-based Waybar modules for real-time resource tracking and updates.
-*   **Automation:** Custom scripts for system maintenance (`sysup`, `sysmenu`) and window management.
 
 ## 🚀 Installation
 
-> ⚠️ **Warning:** These dotfiles are tailored to my specific hardware (AMD Ryzen + NVIDIA Hybrid). Review the `hyprland.conf` regarding `nvidia-drm` before applying.
+### 1. Dependencies
+Ensure you have the required packages. On Arch Linux (using `yay`):
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/xeitghu/dotfiles.git ~/.dotfiles
-    cd ~/.dotfiles
-    ```
+```bash
+# Core System
+yay -S hyprland hyprlock hypridle waybar wofi dunst kitty zsh starship
 
-2.  **Link configurations (using Stow or manual linking):**
-    ```bash
-    # Example manual link
-    ln -s ~/.dotfiles/.config/hypr ~/.config/hypr
-    ln -s ~/.dotfiles/.config/zsh ~/.config/zsh
-    ```
+# Tools & Utilities
+yay -S clipse brightnessctl playerctl pamixer swww grim slurp ttf-jetbrains-mono-nerd
 
-3.  **Install dependencies (Arch Linux):**
-    ```bash
-    yay -S hyprland kitty waybar wofi dunst zsh starship fzf bat eza fd
-    ```
+# Neovim & build tools
+yay -S neovim npm ripgrep fd
+```
 
-## 📜 License
+> **Note:** A Nerd Font (like JetBrains Mono) is required for icons to render correctly.
 
-MIT License. Feel free to fork and adapt to your needs.
+### 2. Clone the Repository
+Clone the repo into your home directory (or wherever you prefer, but paths might need adjustment).
+
+```bash
+git clone https://github.com/xeitghu/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+```
+
+### 3. Initialize Neovim Submodule
+Since Neovim configuration is tracked as a submodule:
+
+```bash
+git submodule update --init --recursive
+```
+
+### 4. Link Configurations
+I recommend using **GNU Stow** to manage symlinks, or you can link manually.
+
+**Using Stow (Recommended):**
+```bash
+# Warning: Backup your existing configs first!
+cd ~/.dotfiles
+stow .
+```
+
+**Manual Linking:**
+```bash
+ln -s ~/.dotfiles/.config/hypr ~/.config/hypr
+ln -s ~/.dotfiles/.config/zsh ~/.config/zsh
+ln -s ~/.dotfiles/.zshrc ~/.zshrc
+# Repeat for kitty, waybar, wofi, etc.
+```
+
+---
+
+## ⌨️ Keybindings Cheat Sheet
+
+Here are the most essential Hyprland bindings to get you started.
+
+| Key Combination | Action |
+|-----------------|--------|
+| `Super + Enter` | Open **Terminal** (Kitty) |
+| `Super + Q` | **Close** active window |
+| `Super + D` | Open **App Launcher** (Wofi) |
+| `Super + E` | Open **File Manager** (Thunar) |
+| `Super + F` | Toggle **Floating** mode |
+| `Super + P` | Launch **Pyre** Dashboard |
+| `Super + V` | Open **Clipboard History** (Clipse) |
+| `Super + Shift + X` | **Lock Screen** |
+| `Super + Shift + E` | **Exit** Hyprland |
+
+<details>
+<summary>Click to see Window Management keys</summary>
+
+- `Super + H/J/K/L`: Move focus
+- `Super + Shift + H/J/K/L`: Move window
+- `Super + 1-0`: Switch workspace
+- `Super + Shift + 1-0`: Move window to workspace
+- `Super + S`: Toggle Scratchpad
+</details>
+
+---
+
+## 📂 Structure
+
+```graphql
+~/.dotfiles
+├── .config/
+│   ├── hypr/          # Hyprland (Conf, Rules, Scripts)
+│   ├── zsh/           # Modular Shell Config
+│   ├── waybar/        # Status Bar
+│   ├── nvim/          # Neovim (Submodule)
+│   ├── pyre/          # Custom Engine Scripts
+│   └── ...            # Other apps (kitty, wofi, etc.)
+├── .local/
+│   └── bin/           # Custom executables (wpr, pyre, etc.)
+└── .zshrc             # Entry point for Zsh
+```
+
+---
+
+<div align="center">
+    <p><i>Crafted with ❤️ by xeitghu</i></p>
+</div>
