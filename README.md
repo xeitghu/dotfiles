@@ -1,5 +1,6 @@
 <div align="center">
-<img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Arch_Linux_logo.svg" alt="Logo" width="120" />
+<img src="<img width="1524" height="1524" alt="archpuccinn" src="https://github.com/user-attachments/assets/13f42d50-fd65-4a94-a459-1e1ba803ae55" />
+" alt="Logo" width="120" />
 
 <h1>Metro Dotfiles</h1>
 <p>
