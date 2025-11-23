@@ -1,55 +1,61 @@
 #!/usr/bin/env zsh
-# ┌──────────────────────────────────────────────────┐
-# │             BRIGHTNESS MANAGER (SMART)           │
-# └──────────────────────────────────────────────────┘
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                            BRIGHTNESS MANAGER                              │
+# └────────────────────────────────────────────────────────────────────────────┘
 # [INFO] Adaptive time-based brightness controller with user override detection.
 
 # --- Configuration ---
+# [CONFIG] Set your preferred day/night brightness levels (in percent).
 BRIGHTNESS_DAY=90
 BRIGHTNESS_NIGHT=30
+
+# [INFO] Paths for the lock file and log file.
 LOCK_FILE="/tmp/auto_brightness_disabled"
 LOG_FILE="$HOME/.cache/brightness-manager.log"
 
-mkdir -p "$(dirname "$LOG_FILE")"
-
-# --- Helper function for logging ---
+# --- Helper Functions ---
+# [INFO] A standardized logging function.
+# [EXAMPLE] log "This is a message"
 log() {
-  print -r "$(date '+%F %T') | $1" >>"$LOG_FILE"
+	# [INFO] Ensure the log directory exists before writing.
+	mkdir -p "$(dirname "$LOG_FILE")"
+	print -r "$(date '+%F %T') | $1" >>"$LOG_FILE"
 }
 
-# --- Skip if locked ---
+# --- Core Logic ---
+# [INFO] Check for a lock file to allow the user to temporarily disable the script.
 if [[ -f "$LOCK_FILE" ]]; then
-  log "🔒 Auto brightness disabled by user (lock file present)"
-  exit 0
+	log "🔒 Auto brightness disabled by user (lock file present)"
+	exit 0
 fi
 
-# --- Determine current time ---
+# [INFO] Determine target brightness based on the time of day.
 integer HOUR=$(date +%H)
-if ((HOUR >= 21 || HOUR < 8)); then
-  TARGET=$BRIGHTNESS_NIGHT
+if ((HOUR >= 19 || HOUR < 9)); then
+	TARGET=$BRIGHTNESS_NIGHT
 else
-  TARGET=$BRIGHTNESS_DAY
+	TARGET=$BRIGHTNESS_DAY
 fi
 
-# --- Get current brightness ---
+# [INFO] Get current and maximum brightness from the system.
 integer CURRENT=$(brightnessctl g 2>/dev/null)
 integer MAX=$(brightnessctl m 2>/dev/null)
-((MAX == 0)) && {
-  log "⚠️ Failed to read max brightness"
-  exit 1
-}
+if ((MAX == 0)); then
+	log "⚠️  Failed to read max brightness. Exiting."
+	exit 1
+fi
 
 integer PERCENT=$((CURRENT * 100 / MAX))
 
-# --- Compute absolute difference ---
+# [INFO] Calculate the difference to detect if the user has manually set brightness.
+#        The script will not override a recent manual adjustment.
 integer DIFF=$((PERCENT > TARGET ? PERCENT - TARGET : TARGET - PERCENT))
 
-# --- Only adjust if within 10% of target ---
 if ((DIFF > 10)); then
-  log "⏭  User override detected (current=$PERCENT%, target=$TARGET%) — skipping"
-  exit 0
+	log "⏭️  User override detected (current=$PERCENT%, target=$TARGET%). Skipping adjustment."
+	exit 0
 fi
 
-# --- Apply brightness ---
+# [INFO] Apply the new brightness level.
 brightnessctl set "${TARGET}%" &>/dev/null
 log "🌗 Adjusted brightness to ${TARGET}% (current was ${PERCENT}%)"
