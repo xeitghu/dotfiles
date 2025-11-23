@@ -1,5 +1,5 @@
 <div align="center">
-    <!-- ИСПРАВЛЕННЫЙ ЛОГОТИП (Официальный логотип Arch) -->
+    <!-- ЛОГОТИП: Теперь используется векторный SVG логотип Arch Linux -->
     <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Arch_Linux_logo.svg" alt="Logo" width="120" />
     
     <h1>Metro Dotfiles</h1>
@@ -8,6 +8,7 @@
         Powered by the custom <i>Pyre Engine</i> for dynamic theming.
     </p>
 
+<!-- БЕЙДЖИ -->
 ![Stars](https://img.shields.io/github/stars/xeitghu/dotfiles?style=for-the-badge&color=cba6f7)
 ![Forks](https://img.shields.io/github/forks/xeitghu/dotfiles?style=for-the-badge&color=89b4fa)
 ![License](https://img.shields.io/github/license/xeitghu/dotfiles?style=for-the-badge&color=a6e3a1)
@@ -16,8 +17,10 @@
 
 ---
 
+<!-- ГЛАВНЫЙ СКРИНШОТ -->
 <div align="center">
-    <img src="screenshots/desktop.png" alt="Desktop Preview" width="100%" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.5);" />
+    <!-- Используем твою ссылку на изображение -->
+    <img src="https://github.com/user-attachments/assets/7f3913fb-a640-460c-a6f0-cd8a448cdbdd" alt="Desktop Preview" width="100%" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.5);" />
 </div>
 
 ---
