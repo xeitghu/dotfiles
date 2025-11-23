@@ -1,6 +1,6 @@
 <div align="center">
-<img src="<img width="1524" height="1524" alt="archpuccinn" src="https://github.com/user-attachments/assets/13f42d50-fd65-4a94-a459-1e1ba803ae55" />
-" alt="Logo" width="120" />
+    <img src="https://github.com/user-attachments/assets/13f42d50-fd65-4a94-a459-1e1ba803ae55" alt="Logo" width="120" />
+</div>
 
 <h1>Metro Dotfiles</h1>
 <p>
