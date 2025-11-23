@@ -4,7 +4,7 @@
 
 <h1>Metro Dotfiles</h1>
 <p>
-<b>A highly modular, aesthetic, and performance-oriented Hyprland configuration.</b><br>
+<b>A highly modular, aesthetic, and performance-oriented Hyprland configuration in Catpuccin Mocha style.</b><br>
 Powered by the custom <i>Pyre Engine</i> for dynamic theming.
 </p>
 
