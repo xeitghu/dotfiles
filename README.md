@@ -1,5 +1,7 @@
 <div align="center">
-    <img src="https://raw.githubusercontent.com/xeitghu/dotfiles/main/.config/fastfetch/arch.txt" alt="Logo" width="120" />
+    <!-- ИСПРАВЛЕННЫЙ ЛОГОТИП (Официальный логотип Arch) -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Arch_Linux_logo.svg" alt="Logo" width="120" />
+    
     <h1>Metro Dotfiles</h1>
     <p>
         <b>A highly modular, aesthetic, and performance-oriented Hyprland configuration.</b><br>
@@ -10,6 +12,12 @@
 ![Forks](https://img.shields.io/github/forks/xeitghu/dotfiles?style=for-the-badge&color=89b4fa)
 ![License](https://img.shields.io/github/license/xeitghu/dotfiles?style=for-the-badge&color=a6e3a1)
 
+</div>
+
+---
+
+<div align="center">
+    <img src="screenshots/desktop.png" alt="Desktop Preview" width="100%" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.5);" />
 </div>
 
 ---
@@ -33,6 +41,12 @@ This repository contains my personal configuration files (dotfiles) for Arch Lin
 | **Idle** | Hypridle | Idle management daemon |
 | **Clipboard**| Clipse | TUI-based clipboard history manager |
 | **Notifications** | Dunst | Minimalist notification daemon |
+
+---
+
+## 📸 Gallery
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/7f3913fb-a640-460c-a6f0-cd8a448cdbdd" />
 
 ---
 
@@ -101,14 +115,6 @@ I recommend using **GNU Stow** to manage symlinks, or you can link manually.
 # Warning: Backup your existing configs first!
 cd ~/.dotfiles
 stow .
-```
-
-**Manual Linking:**
-```bash
-ln -s ~/.dotfiles/.config/hypr ~/.config/hypr
-ln -s ~/.dotfiles/.config/zsh ~/.config/zsh
-ln -s ~/.dotfiles/.zshrc ~/.zshrc
-# Repeat for kitty, waybar, wofi, etc.
 ```
 
 ---
