@@ -5,6 +5,9 @@
 # [INFO] This script performs the full, safe update procedure.
 # [INFO] It's intended for non-interactive use (e.g., via Waybar).
 
+# --- Configuration ---
+export PACMAN_LOG="/tmp/pacman_update.log"
+
 # [INFO] Source the shared library with all the logic.
 source "$(dirname "$0")/syslib.sh"
 
@@ -25,7 +28,7 @@ create_snapshot &&
   perform_cleanup
 
 # --- Finalization (Reboot Prompt) ---
-KERNEL_UPDATED=$(grep -E "upgraded (linux|linux-zen|linux-lts)" /tmp/pacman_update.log 2>/dev/null | wc -l)
+KERNEL_UPDATED=$(grep -E "upgraded (linux|linux-zen|linux-lts)" "$PACMAN_LOG" 2>/dev/null | wc -l)
 if [ "$KERNEL_UPDATED" -gt 0 ]; then
   REBOOT_PROMPT="Kernel updated. Reboot now? (Y/n) "
   DEFAULT_REPLY="y"
@@ -51,4 +54,4 @@ while true; do
 done
 
 # --- Cleanup ---
-sudo rm -f /tmp/pacman_update.log
+sudo rm -f "$PACMAN_LOG"

@@ -20,12 +20,21 @@ print_header() {
 # --- Function: System Update ---
 perform_update() {
   print_header "UPDATING SYSTEM PACKAGES (yay)"
-  yay -Syu --sudoloop --noconfirm --logfile /tmp/pacman_update.log
+
+  local LOG_FILE=${PACMAN_LOG:-"/tmp/pacman_update.fallback.log"}
+
+  sudo pacman -Syu --noconfirm --logfile "$LOG_FILE"
   if [ $? -ne 0 ]; then
-    printf "${C_RED}Update failed.${C_NC}\n"
+    printf "${C_RED}Critical error during pacman update. Aborting.${C_NC}\n"
     return 1
   fi
-  printf "${C_GREEN}Package update completed successfully.${C_NC}\n"
+
+  yay -Sua --sudoloop --noconfirm --logfile "$LOG_FILE"
+  if [ $? -ne 0 ]; then
+    printf "${C_YELLOW}Warning: AUR package update failed. Please check the log.${C_NC}\n"
+  fi
+
+  printf "${C_GREEN}Package update completed.${C_NC}\n"
 }
 
 # --- Function: System Cleanup ---
