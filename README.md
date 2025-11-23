@@ -45,12 +45,6 @@ This repository contains my personal configuration files (dotfiles) for Arch Lin
 
 ---
 
-## 📸 Gallery
-
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/7f3913fb-a640-460c-a6f0-cd8a448cdbdd" />
-
----
-
 ## 🔥 Key Features
 
 ### 1. The Pyre Engine (`.config/pyre/`)
