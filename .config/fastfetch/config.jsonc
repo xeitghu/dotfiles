@@ -77,13 +77,11 @@
 		{
 			"type":     "terminal",
 			"key":      "│ ├ Terminal",
-			"format":   "kitty",
 			"keyColor": "yellow"
 		},
 		{
 			"type":     "shell",
 			"key":      "│ ├ Shell",
-			"format":   "zsh",
 			"keyColor": "yellow"
 		},
 		{
@@ -116,7 +114,6 @@
 		{
 			"type":     "wm",
 			"key":      "└ └ WM",
-			"format":   "Hyprland",
 			"keyColor": "blue"
 		},
 		{ "type": "custom", "format": "└────────────────────────────────────────────────────────────────────────┘", "outputColor": "red" },
