@@ -102,7 +102,7 @@ _edit_module() {
 
     # [INFO] If a file was selected, open it in the editor.
     if [[ -n "$selected_file" ]]; then
-        $EDITOR "$selected_file"
+        z "$(dirname "$selected_file")" && $EDITOR "$(basename "$selected_file")"
     fi
 }
 
@@ -118,7 +118,8 @@ edit() {
         if [[ "$target_alias" == "p10k" ]]; then p10k configure; return 0; fi
 
         if [[ -v metro_files[$target_alias] ]]; then
-            $EDITOR "${metro_files[$target_alias]}"
+            local f="${metro_files[$target_alias]}"
+            z "$(dirname "$f")" && $EDITOR "$(basename "$f")"
         elif [[ -v metro_modules[$target_alias] ]]; then
             _edit_module "${metro_modules[$target_alias]}"
         else
@@ -216,9 +217,9 @@ view() {
 # └────────────────────────────────────────────────────────────────────────────┘
 magic-enter() {
     if [[ -z "${BUFFER// }" ]]; then
-        local cmd=" ls"
+        local cmd="eza --icons --group-directories-first --git"
         
-        if git status -s &>/dev/null; then
+        if git status --porcelain &>/dev/null; then
             cmd="$cmd && git status -sb"
         fi
         
@@ -231,50 +232,51 @@ magic-enter() {
 
 zle -N magic-enter
 
-# --- g - Your personal Git helper ---
-g() {
-    # If no arguments are provided, show the custom helper.
-    if [ "$#" -eq 0 ]; then
-        # --- Color Definitions ---
-        C_RESET='\033[0m'
-        C_BOLD='\033[1m'
-        C_CYAN='\033[0;36m'
-        C_GREEN='\033[0;32m'
-        C_YELLOW='\033[0;33m'
-        C_MAUVE='\033[0;35m' # A purple-ish color for titles
 
-        echo -e "${C_BOLD}${C_MAUVE}┌──────────────────────────────────────────────────┐${C_RESET}"
-        echo -e "${C_BOLD}${C_MAUVE}│            Your Personal Git Helper              │${C_RESET}"
-        echo -e "${C_BOLD}${C_MAUVE}└──────────────────────────────────────────────────┘${C_RESET}"
-
-        echo -e "\n${C_BOLD}${C_YELLOW}:: Dotfiles Management (d* aliases) ::${C_RESET}"
-        echo -e " ${C_CYAN}dstat${C_RESET}\t\t         Show status of your dotfiles repo"
-        echo -e " ${C_CYAN}dadd <file>${C_RESET}\t         Add a file to dotfiles tracking"
-        echo -e " ${C_CYAN}dgcm \"...\"${C_RESET}\t\t Commit all staged dotfiles with a message"
-        echo -e " ${C_CYAN}dpush${C_RESET}\t\t         Push dotfiles changes to remote"
-        echo -e " ${C_CYAN}dlog${C_RESET}\t\t         View dotfiles commit history"
-        echo -e " ${C_CYAN}lg${C_RESET}\t\t         Open Lazygit for dotfiles (interactive)"
-
-        echo -e "\n${C_BOLD}${C_YELLOW}:: Standard Git Workflow (g <command>) ::${C_RESET}"
-        echo -e " ${C_GREEN}g add <file>${C_RESET}\t         Stage a file for commit"
-        echo -e " ${C_GREEN}g commit -m \"...\"${C_RESET}       Commit staged files"
-        echo -e " ${C_GREEN}g push${C_RESET}\t\t         Push commits to the remote branch"
-        echo -e " ${C_GREEN}g pull${C_RESET}\t\t         Fetch and merge changes from remote"
-        echo -e " ${C_GREEN}g status${C_RESET}\t\t Check the current repository status"
-        echo -e " ${C_GREEN}g log${C_RESET}\t\t         View commit history"
-        echo -e " ${C_GREEN}glog${C_RESET}\t\t         View pretty, graphical commit history"
-        echo -e " ${C_GREEN}lgit${C_RESET}\t\t         Open Lazygit for the current repo"
-
-        echo -e "\n${C_BOLD}[TIP]${C_RESET} Use ${C_CYAN}lg${C_RESET} for dotfiles and ${C_GREEN}lgit${C_RESET} for everything else to simplify your workflow."
-        return 0
-    fi
-
-    # If arguments are present, pass them to the actual git command.
-    command git "$@"
+# --- dotgit - Wrapper for dotfiles management ---
+dotgit() {
+    git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" "$@"
 }
 
-# --- dfind - Audit untracked configuration files ---
-dfind() {
+# --- Project Jumper ---
+pj() {
+    local project_dir
+    
+    project_dir=$(fd --type d --hidden --glob ".git" \
+        "$HOME/Projects" "$HOME/Documents" "$DOTS" "$HOME/.config" \
+        --exec dirname {} \; | \
+        sed "s|$HOME|~|" | \
+        fzf --height=50% --layout=reverse --border --prompt="Project> " \
+            --preview="eza --tree --level=2 --icons --git-ignore $(echo {} | sed "s|~|$HOME|")" \
+            --preview-window=right:60%)
+
+    if [[ -n "$project_dir" ]]; then
+        local real_path=$(echo "$project_dir" | sed "s|~|$HOME|")
+        z "$real_path"
+    fi
+}
+
+# --- cht - Cheat Sheet Seeker ---
+cht() {
+    if [ "$#" -eq 0 ]; then
+        echo "Usage: cht <language> <question>"
+        echo "Example: cht python read file"
+        return 1
+    fi
+
+    local lang=$1
+    shift
+    local query=$(echo "$*" | tr ' ' '+')
+
+    if command -v bat > /dev/null; then
+        curl -s "cht.sh/$lang/$query?T" | bat --language="$lang" --style=plain
+    else
+        curl -s "cht.sh/$lang/$query"
+    fi
+}
+
+# --- dfd - Audit untracked configuration files ---
+dfd() {
     local untracked_files
     untracked_files=$(dotgit ls-files --others --exclude-standard -- ~/.config ~/.local/bin ~/.zshrc ~/.p10k.zsh)
 
@@ -288,35 +290,32 @@ dfind() {
     fi
 }
 
-# --- rgo - Search for a pattern across the entire project ---
-rgo() {
+# --- Ripgrep Fzf - Search for a pattern across the entire project ---
+rf() {
     local editor=${2:-${EDITOR:-nvim}}
     local selection
     
-    selection=$(rg --line-number --no-heading "$1" | fzf \
+    selection=$(rg --line-number --no-heading --hidden --glob '!.git' "$1" | fzf \
         --height=50% \
         --border=rounded \
         --delimiter=':' \
         --header="🔍 Project Search: $1 — Enter → open, ESC → cancel" \
         --preview-window="right:60%:wrap:border-rounded:follow" \
-        --preview="bash -c ' \
-            file_path=\"{1}\"; \
-            line_num=\"{2}\"; \
-            [[ -f \"\$file_path\" ]] && bat --paging=never --style=numbers --color=always --highlight-line \"\$line_num\" \"\$file_path\" \
-        '")
+        --preview="bat --paging=never --style=numbers --color=always --highlight-line {2} {1}")
 
     [[ -z "$selection" ]] && return 0
 
     local file=$(echo "$selection" | cut -d: -f1)
     local line=$(echo "$selection" | cut -d: -f2)
 
+    z "$(dirname "$file")"
     "$editor" +"$line" "$file"
 }
 
-# --- fpeek - Interactively fuzzy-search within a single file ---
-fpeek() {
+# --- Find Inside - Interactively fuzzy-search within a single file ---
+fin() {
     if [[ -z "$1" ]]; then
-        echo "Usage: fpeek <filename>"
+        echo "Usage: fin <filename>"
         echo "  Opens an fzf-powered view for interactive fuzzy-searching within a file."
         return 1
     fi
@@ -354,145 +353,44 @@ fpeek() {
     ${EDITOR:-nvim} +"$line" "$file"
 }
 
-# --- slay - Find and kill processes interactively ---
-slay() {
-    # [INFO] If no argument is given, show all processes in FZF for selection.
-    if [[ -z "$1" ]]; then
-        local pid_to_kill
-        # [INFO] Select PID from an interactive FZF list.
-        pid_to_kill=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
-        if [[ -n "$pid_to_kill" ]]; then
-            # [INFO] Use xargs to pass all selected PIDs to kill.
-            echo "$pid_to_kill" | xargs kill -9
-            echo "Process(es) terminated."
-        fi
-        return 0
+# --- Fuzzy Kill - Find and kill processes interactively ---
+fk() {
+    local pid
+    if [[ -n "$1" ]]; then
+        pid=$(pgrep -f "$1" | fzf --preview="ps -fp {}" --header="Select PID to kill (matches '$1')")
+    else
+        pid=$(ps -u "$USER" -o pid,comm,args | sed 1d | fzf \
+            --header="Select process to kill" \
+            --preview="echo {}" \
+            --preview-window=down:20% \
+            | awk '{print $1}')
     fi
 
-    # [INFO] Original logic for searching by name if an argument is provided.
-    local pids
-    pids=$(pgrep -fi "$1")
-    [[ -z "$pids" ]] && { echo "No processes found matching '$1'."; return 0; }
-    
-    echo "Found PIDs for '$1': $pids"
-    ps -fp "$pids"
-    read -r "ans?Kill these processes? [y/N] "
-    if [[ $ans == [yY] ]]; then
-        kill "$pids" >/dev/null 2>&1 && sleep 0.5
-        if pgrep -fi "$1" >/dev/null; then
-            echo "Processes still running. Sending SIGKILL..."
-            kill -9 "$pids"
-        else
-            echo "Processes terminated."
-        fi
-    else
-        echo "Aborted."
+    if [[ -n "$pid" ]]; then
+        echo "Killing PID $pid..."
+        kill -9 "$pid" && echo "Process $pid terminated."
     fi
 }
 
 # --- copy - Copy piped input to the system clipboard ---
 copy() {
-    # [INFO] 1. Wayland check
     if command -v wl-copy >/dev/null 2>&1; then
         wl-copy
-    # [INFO] 2. X11 check
-    elif command -v xclip >/dev/null 2>&1; then
-        xclip -selection clipboard
-    # [INFO] 3. X11 alternative
-    elif command -v xsel >/dev/null 2>&1; then
-        xsel --clipboard --input
-    # [INFO] 4. Fallback for WSL
-    elif command -v clip.exe >/dev/null 2>&1; then
-        clip.exe
     else
-        echo "Error: Clipboard tool not found. Please install 'xclip' (Xorg) or 'wl-clipboard' (Wayland)." >&2
+        echo "Error: wl-copy not found." >&2
         return 1
     fi
 }
 
-edit_pyre() {
-    nvim -o "$HOME/.local/bin/pyre" "$HOME/.config/pyre/functions.sh"
-}
-
-# --- gstat - Git status for all repos in current dir ---
-gstat() {
-    command find . -maxdepth 2 -name ".git" -type d | while read -r gitdir; do
+# --- Git Scan - Git status for all repos in current dir ---
+gscan() {
+    fd --type d --hidden --absolute-path '.git' --max-depth 2 . | while read -r gitdir; do
         local projectdir=$(dirname "$gitdir")
-        echo "\n--- Status for: $projectdir ---"
+        if [[ "$projectdir" == *".git"* ]]; then continue; fi
         
-        local git_status=$(cd "$projectdir" && git status -s)
-        if [[ -z "$git_status" ]]; then
-            echo "  Clean"
-        else
-            echo "$git_status"
-        fi
+        echo "\n--- Status for: $(basename "$projectdir") ---"
+        git -C "$projectdir" status -s
     done
-}
-
-# --- clean - Safely remove orphan packages and clean cache ---
-clean() {
-    local orphans
-    orphans=$(pacman -Qtdq)
-    if [ -n "$orphans" ]; then
-        echo "[INFO] The following orphan packages will be removed:"
-        echo "$orphans" | nl
-        read -r "ans?Proceed? (y/N) "
-        if [[ "$ans" == [yY] ]]; then
-            sudo pacman -Rns "$orphans"
-        else
-            echo "Aborted."
-        fi
-    else
-        echo "No orphan packages to remove."
-    fi
-    # [INFO] Run yay cache cleanup regardless.
-    yay -Yc
-}
-
-# --- extract - Decompress any archive ---
-extract() {
-    if [[ ! -f "$1" ]]; then
-        echo "'$1' is not a valid file"
-        return 1
-    fi
-
-    case "$1" in
-        *.tar.bz2)  tar xjf "$1"    ;;
-        *.tar.gz)   tar xzf "$1"    ;;
-        *.bz2)      bunzip2 "$1"    ;;
-        *.rar)      unrar x "$1"    ;;
-        *.gz)       gunzip "$1"     ;;
-        *.tar)      tar xf "$1"     ;;
-        *.zip)      unzip "$1"      ;;
-        *.7z)       7z x "$1"       ;;
-        *)          echo "'$1' cannot be extracted" ;;
-    esac
-}
-
-# --- tarc - Create a .tar.gz archive ---
-tarc() {
-    if [[ -z "$1" ]]; then
-        echo "Usage: tarc <archive_name> [files_to_compress...]"
-        return 1
-    fi
-    local archive_name="$1.tar.gz"
-    shift
-    echo "Creating archive: $archive_name"
-    tar -czvf "$archive_name" "$@"
-}
-
-# --- up - Go up multiple directory levels ---
-up() {
-    if [[ -z "$1" ]]; then
-        echo "Usage: up <levels>"
-        return 1
-    fi
-
-    local target_dir="../"
-    for i in {1..$(( $1 - 1 ))}; do
-        target_dir="$target_dir../"
-    done
-    cd "$target_dir"
 }
 
 # --- serve - Start a simple web server ---
@@ -512,5 +410,5 @@ bak() {
 
 # --- mkcd - Create a directory and enter it ---
 mkcd() {
-    mkdir -p "$1" && cd "$1"
+    mkdir -p "$1" && z "$1"
 }
