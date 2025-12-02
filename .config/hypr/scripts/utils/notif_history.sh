@@ -1,19 +1,29 @@
 #!/bin/bash
-
 # ┌──────────────────────────────────────────────────┐
 # │            Dunst Notification History            │
 # └──────────────────────────────────────────────────┘
-# [INFO] This script displays the Dunst notification history using Wofi.
 
-# --- Get and Format History ---
-# [INFO] 'dunstctl history -j' gets history in JSON format.
-# [INFO] 'jq' parses the JSON and formats each notification as "Summary: Body".
-HISTORY=$(dunstctl history -j | jq -r '.data[0][] | .summary.data + ": " + .body.data')
-
-# --- Show Wofi Menu ---
-# [FIX] Only show Wofi if there is history to display.
-if [ -n "$HISTORY" ]; then
-  echo "$HISTORY" | wofi --dmenu --prompt "Notifications" --width 50% --height 60%
-else
-  notify-send "Notification History" "No history available." -i "dialog-information"
+if ! command -v fzf &>/dev/null; then
+  echo "Error: 'fzf' is not installed."
+  read -p "Press Enter to exit..."
+  exit 1
 fi
+
+HISTORY_DATA=$(dunstctl history -j | jq -r '.data[0] | reverse | .[] | "\(.appname.data) >> \(.summary.data) ;;\(.body.data)"')
+
+if [ -z "$HISTORY_DATA" ]; then
+  echo -e "\n   📭  No notification history found.\n"
+  read -p "   Press Enter to close..."
+  exit 0
+fi
+
+echo "$HISTORY_DATA" | fzf \
+  --delimiter=';;' \
+  --with-nth=1 \
+  --preview='echo -e {2}' \
+  --preview-window=down:40%:wrap \
+  --border=rounded \
+  --margin=1 \
+  --header="ESC: Close | Enter: Copy Body" \
+  --prompt="Search History > " \
+  --bind "enter:execute(echo {2} | wl-copy)+abort"
