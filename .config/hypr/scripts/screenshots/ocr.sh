@@ -1,6 +1,6 @@
 #!/bin/bash
 # ┌──────────────────────────────────────────────────┐
-# │                   SCREENSHOT - OCR                 │
+# │                 SCREENSHOT - OCR                 │
 # └──────────────────────────────────────────────────┘
 # [INFO] Updated to use the new capture engine.
 
