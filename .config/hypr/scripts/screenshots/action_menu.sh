@@ -24,7 +24,7 @@ fi
 
 # --- Main Logic ---
 # [INFO] Define menu options with Nerd Font icons.
-options=" Save\n Copy\n Edit\n Delete"
+options=" Copy\n Edit\n Save\n Delete"
 
 # [CONFIG] Wofi command with correct styling and size.
 wofi_command="wofi --show dmenu --prompt=Action --width 180 --height 160"
@@ -32,15 +32,8 @@ wofi_command="wofi --show dmenu --prompt=Action --width 180 --height 160"
 # [INFO] Display the Wofi menu and capture the user's choice.
 CHOICE=$(echo -e "$options" | ${wofi_command})
 
-# [CRITICAL] Execute the chosen action.
 case "$CHOICE" in
-" Save")
-  FILENAME="$(date +'%Y-%m-%d_%H-%M-%S').png"
-  mv "$TMP_FILE" "$SORTED_DIR/$FILENAME"
-  notify-send "Screenshot Saved" "Path: $SORTED_DIR/$FILENAME"
-  ;;
 " Copy")
-  # [FIX] Explicitly set MIME type to image/png for correct copying.
   wl-copy --type image/png <"$TMP_FILE"
   rm "$TMP_FILE"
   notify-send "Screenshot Copied" "Temporary file deleted."
@@ -48,12 +41,16 @@ case "$CHOICE" in
 " Edit")
   swappy -f "$TMP_FILE"
   ;;
+" Save")
+  FILENAME="$(date +'%Y-%m-%d_%H-%M-%S').png"
+  mv "$TMP_FILE" "$SORTED_DIR/$FILENAME"
+  notify-send "Screenshot Saved" "Path: $SORTED_DIR/$FILENAME"
+  ;;
 " Delete")
   rm "$TMP_FILE"
   notify-send "Screenshot Deleted"
   ;;
 *)
-  # [FIX] If user presses Esc in Wofi, delete the temporary file.
   rm "$TMP_FILE"
   ;;
 esac
