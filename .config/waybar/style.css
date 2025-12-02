@@ -1,14 +1,14 @@
 /* ┌────────────────────────────────────────────────────────────────────────────┐ */
-/* │                          WAYBAR - STYLE CONFIGARATION                      │ */
+/* │                       WAYBAR - STYLE CONFIGURATION                         │ */
 /* └────────────────────────────────────────────────────────────────────────────┘ */
 
 /* --- Theme Import --- */
-/* [INFO] Load the centralized color palette. */
-@import "theme.css";
+@import "theme.css";                    /* [INFO] Load the centralized color palette. */
 
 /* ┌────────────────────────────────────────────────────────────────────────────┐ */
-/* │                                GLOBAL STYLES                               │ */
+/* │                               GLOBAL STYLES                                │ */
 /* └────────────────────────────────────────────────────────────────────────────┘ */
+
 * {
     font-family: "JetBrains Mono Nerd Font", FontAwesome, sans-serif;
     font-size: 14px;
@@ -18,11 +18,10 @@
 
 /* --- Main Bar Window --- */
 window#waybar {
-    /* [INFO] Semi-transparent, floating pill-style bar */
-    background-color: alpha(@base, 0.4);
+    background-color: alpha(@base, 0.4);        /* [INFO] Semi-transparent, floating pill-style. */
     color: @text;
     border-radius: 15px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);        /* [INFO] Subtle shadow for depth */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);     /* [INFO] Subtle shadow for depth. */
 }
 
 #waybar > box {
@@ -31,16 +30,17 @@ window#waybar {
 }
 
 /* ┌────────────────────────────────────────────────────────────────────────────┐ */
-/* │                             GENERAL MODULE STYLE                           │ */
+/* │                           GENERAL MODULE STYLES                            │ */
 /* └────────────────────────────────────────────────────────────────────────────┘ */
+
 #custom-updates,
 #workspaces,
-#custom-mediaplayer,
 #custom-power,
 #custom-window,
-#custom-clock,
+#clock,
 #network,
-#custom-language,
+#mpris,
+#language,
 #custom-dunst,
 #pulseaudio,
 #battery,
@@ -50,7 +50,7 @@ window#waybar {
     margin: 5px 4px;
     border: 1px solid @overlay0;
     border-radius: 12px;
-    transition: background-color 0.2s ease, color 0.2s ease;        /* [FIX] Smooth transitions */
+    transition: background-color 0.2s ease, color 0.2s ease;        /* [FIX] Smooth transitions. */
 }
 
 /* --- Workspaces --- */
@@ -59,11 +59,11 @@ window#waybar {
     background-color: transparent;
     color: @subtext1;
     border-radius: 10px;
-    transition: color 0.3s ease, background-color 0.3s ease;        /* [FIX] Targeted transitions */
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 #workspaces button:hover {
-    background-color: @overlay0;        /* [INFO] Hover effect */
+    background-color: @overlay0;
 }
 
 #workspaces button.active {
@@ -75,60 +75,111 @@ window#waybar {
     color: @red;
 }
 
-/* --- System Monitor Group (CPU, MEM, TEMP) --- */
-/* [INFO] Flex-like alignment handled via margins and border-radius */
-#cpu, #memory, #custom-temperature {
-    background-color: @base;
-    padding: 2px 10px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    border: 1px solid @overlay0;
+/* --- Media Player --- */
+#mpris.paused {
+    color: @overlay1;
+    font-style: italic;
 }
 
-/* [INFO] Rounded corners for outer edges */
-#cpu {
-    background-color: @base;
-    padding: 2px 10px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    border: 1px solid @overlay0;
-    border-top-left-radius: 12px;
-    border-bottom-left-radius: 12px;
-    margin-left: 4px;
-    color: @teal;
-}
+/* ┌────────────────────────────────────────────────────────────────────────────┐ */
+/* │                       SYSTEM MONITORS (LINKED PILL)                        │ */
+/* └────────────────────────────────────────────────────────────────────────────┘ */
 
-#memory {
-    border-radius: 0;
-    margin-left: -1px;        /* [FIX] Overlap borders for seamless look */
-    color: @blue;
-}
-
+/* --- Shared Base Styles --- */
+#cpu,
+#memory,
 #custom-temperature {
-    border-top-right-radius: 12px;
-    border-bottom-right-radius: 12px;
-    margin-right: 4px;
-    margin-left: -1px;        /* [FIX] Overlap borders */
-    color: @peach;
+    background-color: @base;
+    padding:          2px 10px;
+    margin-top:       5px;
+    margin-bottom:    5px;
+    border:           1px solid @overlay0;
+    transition:       background-color 0.2s ease;
 }
 
-/* [INFO] Hover effect for system monitors */
-#cpu:hover,
-#memory:hover,
-#custom-temperature:hover {
-    background-color: @overlay0;
+/* --- CPU --- */
+#cpu {
+    border-top-left-radius:    12px;
+    border-bottom-left-radius: 12px;
+    margin-left:               4px;
+}
+
+/* --- Memory --- */
+#memory {
+    border-radius:    0;
+    margin-left:      -1px;             /* [FIX] Overlap borders for seamless look. */
+}
+
+/* --- Temperature --- */
+#custom-temperature {
+    border-top-right-radius:    12px;
+    border-bottom-right-radius: 12px;
+    margin-right:               4px;
+    margin-left:                -1px;   /* [FIX] Overlap borders. */
+}
+
+/* ┌────────────────────────────────────────────────────────────────────────────┐ */
+/* │                               BATTERY MODULE                               │ */
+/* └────────────────────────────────────────────────────────────────────────────┘ */
+
+#battery {
+    color: @subtext1;                   /* [INFO] Default discharging color. */
+}
+
+/* --- Charging State (The Plug) --- */
+#battery.charging,
+#battery.plugged {
+    color: @green;                      /* [INFO] Bright green confirms power connection. */
+}
+
+/* --- Warning State (Low Battery) --- */
+#battery.warning:not(.charging) {
+    color: @peach;                      /* [INFO] Orange warning. */
+}
+
+/* --- Critical State (Panic Mode) --- */
+#battery.critical:not(.charging) {
+    color: @red;
+    border-color: @red;                 /* [INFO] Red border for extra visibility. */
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+/* --- Animation Definition --- */
+@keyframes blink {
+    to {
+        background-color: @red;         /* [INFO] Flash red background. */
+        color: @base;                   /* [INFO] Text turns dark for contrast. */
+    }
 }
 
 /* ┌────────────────────────────────────────────────────────────────────────────┐ */
 /* │                             MODULE ICON COLORS                             │ */
 /* └────────────────────────────────────────────────────────────────────────────┘ */
-#custom-updates     { color: @flamingo; }
-#custom-clock       { color: @lavender; }
-#network            { color: @yellow; }
-#custom-language    { color: @green; }
-#custom-dunst       { color: @peach; }
-#pulseaudio         { color: @maroon; }
-#pulseaudio.muted   { color: @overlay0; opacity: 0.6; }        /* [INFO] Muted state visually distinct */
-#battery            { color: @green; }
-#battery.critical   { color: @red; opacity: 0.8; }             /* [INFO] Critical battery highlight */
-#custom-mediaplayer { color: @mauve; }
+
+#custom-updates         { color: @flamingo; }
+#clock                  { color: @lavender; }
+
+/* --- Hardware Group --- */
+#cpu                    { color: @sapphire; }
+#memory                 { color: @yellow; }
+#custom-temperature     { color: @maroon; }
+
+/* --- Connectivity & Input --- */
+#network                { color: @sky; }
+#language               { color: @green; }
+
+/* --- Media & Sound --- */
+#mpris                  { color: @mauve; }
+#pulseaudio             { color: @maroon; }
+
+/* --- System Status --- */
+#battery                { color: @green; }
+#custom-dunst           { color: @peach; }
+
+/* --- Status Specifics --- */
+#pulseaudio.muted       { color: @overlay0; opacity: 0.6; }
+#battery.critical       { color: @red; opacity: 0.8; }
