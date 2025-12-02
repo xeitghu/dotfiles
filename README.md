@@ -21,7 +21,7 @@
 - [⚡ Overview](#-overview)
 - [🛠 Tech Stack](#-tech-stack)
 - [🔥 Key Features](#-key-features)
-  - [Metro System](#1-the-metro-system)
+  - [Metro System](#1-the-metro-system-configzsh)
   - [The Pyre Engine](#2-the-pyre-engine-configpyre)
   - [Modular Zsh](#3-modular-zsh-system-configzsh)
   - [Wallpaper Picker (WPR)](#4-wpr---wallpaper-picker-localbinwpr)
