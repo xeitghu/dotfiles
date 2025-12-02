@@ -3,53 +3,35 @@
 # │    WAYBAR - SMART WINDOW TITLE    │
 # └───────────────────────────────────┘
 
-while true; do
+update_title() {
   ACTIVE_WINDOW_INFO=$(hyprctl activewindow -j)
   WINDOW_CLASS=$(echo "$ACTIVE_WINDOW_INFO" | jq -r '.class')
 
-  # [CRITICAL] Check if a window is active. If not, output nothing and wait.
-  if [ "$WINDOW_CLASS" = "null" ]; then
-    echo "" # Outputting an empty line hides the module.
+  if [ "$WINDOW_CLASS" = "null" ] || [ -z "$WINDOW_CLASS" ]; then
+    echo ""
   else
     WINDOW_TITLE=$(echo "$ACTIVE_WINDOW_INFO" | jq -r '.title')
-    FINAL_TEXT=""
+    FINAL_TEXT="$WINDOW_TITLE"
 
-    # --- Rules List ---
-    # [CONFIG] Add your custom window titles here.
     case "$WINDOW_CLASS" in
-    "kitty")
-      FINAL_TEXT="kitty"
-      ;;
-    "obsidian")
-      FINAL_TEXT="Obsidian"
-      ;;
-    "com.ayugram.desktop")
-      FINAL_TEXT="AyuGram"
-      ;;
-    "zen")
-      FINAL_TEXT="Zen Browser"
-      ;;
-    "discord")
-      FINAL_TEXT="Discord"
-      ;;
-    "spotify")
-      FINAL_TEXT="Spicetify"
-      ;;
-    "steam")
-      FINAL_TEXT="Steam"
-      ;;
-    "thunar")
-      FINAL_TEXT="Thunar"
-      ;;
-    *)
-      FINAL_TEXT="$WINDOW_TITLE"
-      ;;
+    "kitty") FINAL_TEXT="Kitty" ;;
+    "obsidian") FINAL_TEXT="Obsidian" ;;
+    "com.ayugram.desktop") FINAL_TEXT="AyuGram" ;;
+    "zen") FINAL_TEXT="Zen Browser" ;;
+    "discord") FINAL_TEXT="Discord" ;;
+    "spotify") FINAL_TEXT="Spicetify" ;;
+    "steam") FINAL_TEXT="Steam" ;;
+    "thunar") FINAL_TEXT="Thunar" ;;
     esac
 
-    # --- JSON Output ---
     jq -n -c --arg text "$FINAL_TEXT" '{"text": $text}'
   fi
+}
 
-  # [CONFIG] This is our interval.
-  sleep 0.1
+update_title
+
+socat -U - UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock | while read -r line; do
+  if [[ "$line" == "activewindow>>"* ]]; then
+    update_title
+  fi
 done
