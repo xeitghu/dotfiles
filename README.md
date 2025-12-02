@@ -21,14 +21,14 @@
 - [⚡ Overview](#-overview)
 - [🛠 Tech Stack](#-tech-stack)
 - [🔥 Key Features](#-key-features)
-  - [The Pyre Engine](#1-the-pyre-engine-configpyre)
-  - [Modular Zsh](#2-modular-zsh-system-configzsh)
-  - [Wallpaper Picker (WPR)](#3-wpr---wallpaper-picker-localbinwpr)
+  - [Metro System](#1-the-metro-system)
+  - [The Pyre Engine](#2-the-pyre-engine-configpyre)
+  - [Modular Zsh](#3-modular-zsh-system-configzsh)
+  - [Wallpaper Picker (WPR)](#4-wpr---wallpaper-picker-localbinwpr)
 - [📂 Project Structure](#-project-structure)
 - [🚀 Installation](#-installation)
 - [⌨️ Keybindings](#️-keybindings)
 - [🎨 Customization](#-customization)
-- [🤝 Contributing](#-contributing)
 - [📄 License](#-license)
 
 ---
@@ -113,7 +113,7 @@ We abandoned the monolithic `.zshrc` file in favor of a clean, sourced structure
 *   **`05_aliases.zsh`**: A curated list of aliases (e.g., `ll`, `g` for git, `v` for nvim).
 *   **`06_functions.zsh`**: Advanced utility functions like `extract` and automatic directory creation.
 
-### 3. WPR - Wallpaper Picker (`.local/bin/wpr`)
+### 4. WPR - Wallpaper Picker (`.local/bin/wpr`)
 A custom tool written to manage aesthetics seamlessly.
 
 *   **GUI Mode**: Run `wpr` to open a visual grid of wallpapers in Wofi.
