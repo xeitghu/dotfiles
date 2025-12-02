@@ -3,17 +3,13 @@
 # │                          PYRE ENGINE - ENTRY POINT                         │
 # └────────────────────────────────────────────────────────────────────────────┘
 
-# [CRITICAL] Source the function library.
-# [INFO] All logic is contained within this file.
+# Source the function library.
 source "$HOME/.config/pyre/functions.sh"
 
-# ┌────────────────────────────────────────────────────────────────────────────┐
-# │                           SCRIPT ENTRY POINT                               │
-# └────────────────────────────────────────────────────────────────────────────┘
-# [INFO] First, check if all dependencies are met.
+# Check dependencies first
 check_dependencies
 
-# [INFO] Then, determine which action to perform based on arguments.
+# Argument handling
 case "$1" in
 theme)
   if [ -n "$2" ]; then
@@ -24,6 +20,13 @@ theme)
   ;;
 layout)
   show_layout_menu
+  ;;
+session)
+  show_session_menu
+  ;;
+reload)
+  reload_services
+  notify-send "Pyre" "System configurations reloaded." -i "system-reboot"
   ;;
 *)
   show_main_menu
