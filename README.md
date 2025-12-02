@@ -1,11 +1,7 @@
-<div align="center">
-    <img src="https://github.com/user-attachments/assets/13f42d50-fd65-4a94-a459-1e1ba803ae55" alt="Logo" width="120" />
-</div>
-
 <h1>Metro Dotfiles</h1>
 <p>
 <b>A highly modular, aesthetic, and performance-oriented Hyprland configuration in Catpuccin Mocha style.</b><br>
-Powered by the custom <i>Pyre Engine</i> for dynamic theming.
+Powered by the custom <i>Pyre Engine</i>.
 </p>
 
 ![Stars](https://img.shields.io/github/stars/xeitghu/dotfiles?style=for-the-badge&color=cba6f7)
@@ -16,7 +12,6 @@ Powered by the custom <i>Pyre Engine</i> for dynamic theming.
 
 ---
 
-<!-- ГЛАВНЫЙ СКРИНШОТ -->
 <div align="center">
 <img src="https://github.com/user-attachments/assets/7f3913fb-a640-460c-a6f0-cd8a448cdbdd" alt="Desktop Preview" width="100%" style="border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.5);" />
 </div>
