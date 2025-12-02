@@ -17,6 +17,10 @@ export ZSH="$HOME/.oh-my-zsh"
 export DOTS="$HOME/.config"
 export HYPR="$DOTS/hypr"
 
+# --- Colored Man Pages ---
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANROFFOPT="-c"
+
 # [CONFIG] Disable OMZ permission checks to speed up loading
 export ZSH_DISABLE_COMPFIX="true" 
 
