@@ -115,3 +115,9 @@
 
 # --- Security Apps ---
 .config/keepassxc/
+
+# --- Ignored Specific Configs ---
+.config/spicetify/config-xpui.ini
+.config/pyre/state
+.config/rustdesk/
+.config/autostart/steam.desktop
