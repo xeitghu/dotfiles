@@ -15,19 +15,19 @@
     "modules-left": [
         "hyprland/workspaces",
         "custom/window",
-        "custom/mediaplayer"
+        "mpris"
     ],
     "modules-center": [
-        "custom/language",
-        "custom/clock",
+        "hyprland/language",
+        "clock",
         "custom/dunst"
     ],
     "modules-right": [
+        "custom/updates",
         "cpu",
         "memory",
         "custom/temperature",
         "network",
-        "custom/updates",
         "pulseaudio",
         "battery",
         "tray"
@@ -37,20 +37,9 @@
     // │                           MODULE CONFIGURATION                             │
     // └────────────────────────────────────────────────────────────────────────────┘
 
-    // --- playerctld Media Control ---
-    "custom/mediaplayer": {
-        // [INFO] Powered by playerctld for state management.
-        "exec": "~/.config/hypr/scripts/waybar/mediaplayer.sh",
-        "return-type": "json",
-        "format": "{}  {alt}",
-        "max-length": 35,
-        "interval": 1,
-        // [CONFIG] All actions are mapped to available mouse events.
-        "on-click": "playerctl play-pause",           // [INFO] Left-click: Play/Pause
-        "on-click-right": "playerctld shift",         // [INFO] Right-click: Cycle Players
-        "on-scroll-up": "playerctl next",             // [INFO] Scroll Up: Next Track
-        "on-scroll-down": "playerctl previous"        // [INFO] Scroll Down: Previous Track
-    },
+    // ┌─────────────────────────────────────────────────┐
+    // │                    LEFT SIDE                    │
+    // └─────────────────────────────────────────────────┘
 
     // --- Hyprland Workspaces ---
     "hyprland/workspaces": {
@@ -67,7 +56,7 @@
         }
     },
 
-    // --- Custom Smart Window Title ---
+    // --- Custom Window Title ---
     "custom/window": {
         // [INFO] This module is controlled by custom script.
         "exec": "~/.config/hypr/scripts/waybar/window_title.sh",
@@ -76,85 +65,73 @@
         "max-length": 100
     },
 
-    // --- Clock Module ---
-    "custom/clock": {
-        "exec": "~/.config/hypr/scripts/waybar/clock_module.sh",
-        "return-type": "json",
-        "on-click": "~/.config/hypr/scripts/waybar/toggle_clock.sh",
-        "on-click-right": "yad --calendar --title='Calendar'",              // [INFO] Opens a calendar on right-click.
-        "interval": 1,                                                      // [INFO] Update every second for the time.
-        "signal": 10                                                        // [INFO] Listen for signal 10 for forced updates.
+    // --- Media Player ---
+    "mpris": {
+        "format": "{player_icon} {dynamic}",
+        "format-paused": "{status_icon} {dynamic}",
+        "dynamic-order": ["title", "artist"],
+        "player-icons": {
+            "default": "▶",
+            "mpv": "🎵",
+            "spotify": "",
+            "firefox": ""
+        },
+        "status-icons": {
+            "paused": "⏸"
+        },
+        "max-length": 35
     },
 
-    // --- System Monitors ---
-    "cpu": {
-        "format": " {usage}%",
-        "tooltip": true,
-        "interval": 3
-    },
-    "memory": {
-        "format": "󰍛 {used}GiB",
-        "interval": 3
-    },
-    "custom/temperature": {
-        "exec": "~/.config/hypr/scripts/waybar/temperature.sh",
-        "return-type": "json",
-        "interval": 3
-    },
-    // --- Network ---
-    "network": {
-        "format-wifi": "{essid}  ",
-        "format-ethernet": "{ifname} 󰈀",
-        "format-disconnected": "Disconnected ⚠",
-        "tooltip-format-wifi": "{ipaddr}/{cidr} @ {signalStrength}%",
-        "on-click": "nm-connection-editor"
-    },
+    // ┌───────────────────────────────────────────────────┐
+    // │                    MIDDLE SIDE                    │
+    // └───────────────────────────────────────────────────┘
 
-    // --- Keyboard Layout ---
-    "custom/language": {
-        "exec": "~/.config/hypr/scripts/waybar/get_layout.sh",
-        "interval": 1,
+    // --- Language ---
+    "hyprland/language": {
         "format": "{} ",
+        "format-en": "EN",
+        "format-ru": "RU",
         "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"
     },
 
-    // --- Dunst (Notifications) ---
+    // --- Clock Module ---
+    "clock": {
+        "interval": 1,
+        "format": " {:%H:%M:%S}",
+        "format-alt": " {:%d.%m.%Y}",
+        "tooltip-format": "<tt>{calendar}</tt>",
+        "calendar": {
+            "mode": "month",
+            "mode-mon-col": 3,
+            "weeks-pos": "right",
+            "on-scroll": 1,
+            "format": {
+                "months":     "<span color='#cba6f7'><b>{}</b></span>", // Mauve
+                "days":       "<span color='#cdd6f4'><b>{}</b></span>", // Text
+                "weeks":      "<span color='#74c7ec'><b>W{}</b></span>", // Sapphire
+                "today":      "<span color='#fab387'><b><u>{}</u></b></span>" // Peach
+            }
+        },
+        "actions": {
+            "on-click-right": "mode",
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        }
+    },
+
+    // --- Notifications ---
     "custom/dunst": {
         "format": " {}",
         "exec": "dunstctl count waiting",
-        "exec-if": "dunstctl count waiting > 0",
-        "on-click": "~/.config/hypr/scripts/utils/notif_history.sh",
-        "on-click-right": "dunstctl close-all"
+        "on-click": "kitty --class kitty-notif -e ~/.config/hypr/scripts/utils/notif_history.sh",
+        "on-click-right": "dunstctl close-all",
+        "interval": 2,
+        "tooltip": true
     },
 
-    // --- Audio ---
-    "pulseaudio": {
-        "scroll-step": 5,
-        "format": "{volume}% {icon}",
-        "format-muted": " Muted",
-        "format-icons": {
-            "default": ["", "", ""],
-            "headphone": "", "headset": ""
-        },
-        "tooltip": false,
-        "on-click": "pavucontrol"
-    },
-
-    // --- Battery ---
-    "battery": {
-        "states": { "warning": 30, "critical": 15 },
-        "format": "{capacity}% {icon}",
-        "format-charging": "{capacity}% {icon} 󰂄",
-        "format-plugged": "{capacity}% {icon} 󰚥",
-        "format-full": "{capacity}% 󰁹",
-        "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂"]
-    },
-
-    // --- System Tray ---
-    "tray": {
-        "icon-size": 18,
-        "spacing": 10
-    },
+    // ┌──────────────────────────────────────────────────┐
+    // │                    RIGHT SIDE                    │
+    // └──────────────────────────────────────────────────┘
 
     // --- Package Updates ---
     "custom/updates": {
@@ -164,5 +141,71 @@
         "format":   "{}",                                                             // [CRITICAL] Must be set to parse JSON from the exec script.
         "tooltip":  true,
         "on-click": "kitty --class kitty-update -e ~/.config/hypr/scripts/core/sysup.sh"
+    },
+
+    // --- CPU Module ---
+    "cpu": {
+        "format":   " {usage}%",
+        "interval": 3,
+        "tooltip":  true
+    },
+
+    // --- Memory Module ---
+    "memory": {
+        "format":   "󰍛 {used}GiB",
+        "interval": 3
+    },
+
+    // --- Temperature Module ---
+    "custom/temperature": {
+        // [INFO] Uses the smart detection script we wrote.
+        "exec":         "~/.config/hypr/scripts/waybar/temperature.sh",
+        "return-type":  "json",
+        "interval":     3,
+        "tooltip":      true
+    },
+
+    // --- Network ---
+    "network": {
+        "format-wifi": "{essid}  ",
+        "format-ethernet": "{ifname} 󰈀",
+        "format-disconnected": "Disconnected ⚠",
+        "tooltip-format-wifi": "{ipaddr}/{cidr} @ {signalStrength}%",
+        "on-click": "nm-connection-editor"
+    },
+
+    // --- Audio ---
+    "pulseaudio": {
+        "scroll-step": 5,
+        "format": "{icon} {volume}%",
+        "format-muted": " Muted",
+        "format-icons": {
+            "default": ["", "", ""],
+            "headphone": "", "headset": ""
+        },
+        "tooltip": false,
+        "on-click": "pavucontrol"
+    },
+
+     // --- Battery ---
+     "battery": {
+         "interval": 60,
+         "states": {
+             "warning": 30,
+             "critical": 15
+         },
+         "format-icons": ["", "", "", "", ""],
+         
+         "format": "{capacity}% {icon}",
+         "format-charging": "{capacity}% {icon}  ",  // Вилка при зарядке
+         "format-plugged": "{capacity}% {icon}  ",
+         
+         "tooltip-format": "{timeTo} ({power}W)"
+     },
+
+    // --- System Tray ---
+    "tray": {
+        "icon-size": 18,
+        "spacing": 10
     }
 }
