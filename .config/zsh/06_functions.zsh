@@ -39,6 +39,7 @@ metro_files=(
     
     # --- Kitty Module Shortcuts ---
     [kittyconf]="$DOTS/kitty/kitty.conf"
+    [kittystyle]="$DOTS/kitty/theme.conf"
 
     # --- Pyre Custom Engine ---
     [pyre]="$HOME/.local/bin/pyre"
