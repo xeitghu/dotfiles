@@ -5,7 +5,6 @@
 
 # --- Load Frameworks & Themes ---
 source "$ZSH/oh-my-zsh.sh"
-unalias g # [FIX] Oh My Zsh 'git' plugin creates a 'g' alias, we override it with our function.
 [[ -f "$HOME/.p10k.zsh" ]] && source "$HOME/.p10k.zsh"
 
 # --- Load FZF ---
