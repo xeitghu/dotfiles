@@ -35,7 +35,12 @@ alias less='bat --paging=always'
 # File Operations
 alias cp='cp -iv'                                       # Interactive copy
 alias mv='mv -iv'                                       # Interactive move
-alias rm='rm -iv'                                       # Interactive remove
+alias rm='rip'                                          # Safe delete
+alias rml='rip -s'                                      # List deleted (Seance)
+alias rmu='rip -u'                                      # Restore last (Unbury)
+alias rmd='rip -d'                                      # Empty trash (Decompose)
+alias rmr='rip -s | fzf | xargs -I{} rip -u "{}"'       # Restore via FZF
+alias rmdir='rm'
 alias x='ouch decompress'                               # Smart extract
 alias pack='ouch compress'                              # Smart compress
 alias o='xdg-open'
@@ -43,6 +48,7 @@ alias o='xdg-open'
 # Search & Info
 alias find='fd'
 alias grep='rg'
+alias ncdu='gdu'                                        # Modern replacement for ncdu
 alias df='duf'
 
 # --- 3. Git & Dotfiles --------------------------------------------------------
@@ -52,12 +58,13 @@ alias lgit='lazygit'
 
 # Dotfiles (requires 'dotgit' function in 06_functions.zsh)
 alias dstat='dotgit status'
-alias dadd='dotgit add'
-alias ddel='dotgit rm'
 alias dls='dotgit ls-files | eza --tree --icons'
+alias dadd='dotgit add'
+alias dpush='dotgit push'
+alias ddel='dotgit rm'
 alias dgcm='dotgit commit -m'
 alias dgc='dotgit commit'
-alias dpush='dotgit push'
+alias ddf='dotgit diff'
 alias dlog='dotgit log --oneline --graph --decorate'
 alias lg='lazygit --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
@@ -67,6 +74,7 @@ alias top='btop'
 alias lzd='lazydocker'
 alias sampler="sampler --config ~/.config/sampler/sampler.yml"
 alias aideupd='sudo aide-update'
+alias ping='gping'
 
 # Zellij (Terminal Multiplexer)
 alias zj='zellij'
@@ -84,9 +92,12 @@ alias soundreload='systemctl --user restart pipewire.service pipewire-pulse.serv
 alias st="systemctl --user enable --now syncthing"
 
 # Brightness Manager
-alias brighton='rm -f /tmp/auto_brightness_disabled && echo "🌞 Auto brightness re-enabled."'
-alias brightoff='touch /tmp/auto_brightness_disabled && echo "🌙 Auto brightness disabled."'
-alias brightlog='bat --style=plain ~/.cache/brightness-manager.log | tail -n 20'
+_BR_LOCK="${XDG_RUNTIME_DIR:-/tmp}/brightness_disabled"
+
+alias bon='rm -f "$_BR_LOCK" && echo "🌞 Auto brightness re-enabled."'
+alias boff='touch "$_BR_LOCK" && echo "🌙 Auto brightness disabled."'
+alias breset='~/.local/bin/brightness-manager --force'
+alias blog='journalctl --user -u brightness-manager -n 20 --no-pager'
 
 # --- 6. Installers & Scripts --------------------------------------------------
 # [INFO] One-off commands for third-party tools
