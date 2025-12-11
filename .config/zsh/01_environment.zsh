@@ -26,5 +26,3 @@ export ZSH_DISABLE_COMPFIX="true"
 
 # [CONFIG] Set your default text editor.
 export EDITOR='nvim'
-
-
