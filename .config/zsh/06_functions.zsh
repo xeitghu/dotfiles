@@ -56,6 +56,7 @@ metro_files=(
     [brightness]="$HOME/.local/bin/brightness-manager"
     [keyd]="/etc/keyd/default.conf"
     [mise]="$DOTS/mise/config.toml"
+    [lazygit]="$DOTS/lazygit/config.yml"
 
     # --- Shell & Git ---
     [gitig]="$HOME/.gitignore"
