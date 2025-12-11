@@ -15,7 +15,7 @@ source /usr/share/doc/pkgfile/command-not-found.zsh
 # --- Load Shell Integrations ---
 command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
 command -v atuin >/dev/null && eval "$(atuin init zsh)"
-command -v direnv >/dev/null && eval "$(direnv hook zsh)"
+command -v mise >/dev/null && eval "$(mise activate zsh)"
 
 # --- Custom Keybindings ---
 bindkey "^M" magic-enter

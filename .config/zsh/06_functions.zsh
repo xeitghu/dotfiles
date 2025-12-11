@@ -55,6 +55,7 @@ metro_files=(
     [nvim]="$DOTS/nvim/lua/config/lazy.lua"
     [brightness]="$HOME/.local/bin/brightness-manager"
     [keyd]="/etc/keyd/default.conf"
+    [mise]="$DOTS/mise/config.toml"
 
     # --- Shell & Git ---
     [gitig]="$HOME/.gitignore"
