@@ -197,7 +197,7 @@
          "format-icons": ["", "", "", "", ""],
          
          "format": "{capacity}% {icon}",
-         "format-charging": "{capacity}% {icon}  ",  // Вилка при зарядке
+         "format-charging": "{capacity}% {icon}  ",
          "format-plugged": "{capacity}% {icon}  ",
          
          "tooltip-format": "{timeTo} ({power}W)"
