@@ -1,61 +1,125 @@
 #!/usr/bin/env zsh
 # ┌────────────────────────────────────────────────────────────────────────────┐
-# │                            BRIGHTNESS MANAGER                              │
+# │                         HOURLY BRIGHTNESS SCHEDULE                         │
 # └────────────────────────────────────────────────────────────────────────────┘
-# [INFO] Adaptive time-based brightness controller with user override detection.
+# [INFO] Adaptive brightness controller based on hourly schedule.
+# [INFO] Features smooth transitions and smart user-override detection.
 
 # --- Configuration ---
-# [CONFIG] Set your preferred day/night brightness levels (in percent).
-BRIGHTNESS_DAY=90
-BRIGHTNESS_NIGHT=30
 
-# [INFO] Paths for the lock file and log file.
-LOCK_FILE="/tmp/auto_brightness_disabled"
-LOG_FILE="$HOME/.cache/brightness-manager.log"
+# [CONFIG] Operational thresholds and timing.
+THRESHOLD=10                            # Hysteresis threshold (percent)
+FADE_SPEED=0.5                          # Transition speed (seconds per step)
+
+# [CONFIG] Hourly brightness map (Hour=Percentage).
+# [INFO] Tailored for early winter sunsets in Estonia.
+typeset -A SCHEDULE
+SCHEDULE=(
+    [06]=20 [07]=40 [08]=70             # Morning rise
+    [09]=90 [10]=90 [11]=90             # Work hours (start)
+    [12]=90 [13]=90 [14]=90             # Work hours (mid)
+    [15]=90 [16]=80 [17]=70             # Early sunset phase
+    [18]=60 [19]=50 [20]=40             # Evening relaxation
+    [21]=30 [22]=20 [23]=10             # Pre-sleep wind down
+    [00]=10 [01]=10 [02]=10             # Deep night
+    [03]=10 [04]=10 [05]=10             # Deep night
+)
+
+# --- System Paths ---
+
+# [INFO] Runtime lock file location (aligned with XDG standards).
+LOCK_FILE="${XDG_RUNTIME_DIR:-/tmp}/brightness_disabled"
 
 # --- Helper Functions ---
-# [INFO] A standardized logging function.
-# [EXAMPLE] log "This is a message"
-log() {
-	# [INFO] Ensure the log directory exists before writing.
-	mkdir -p "$(dirname "$LOG_FILE")"
-	print -r "$(date '+%F %T') | $1" >>"$LOG_FILE"
+
+# [INFO] Smoothly transitions brightness to the target level.
+# [INFO] Aborts if user manually changes brightness during transition.
+# [EXAMPLE] fade_brightness 50 0.5
+fade_brightness() {
+    local target=$1
+    local speed=$2
+
+    integer max=$(brightnessctl m)
+    integer current_raw=$(brightnessctl g)
+    integer current_pct=$((current_raw * 100 / max))
+
+    if (( current_pct == target )); then return; fi
+
+    integer step=1
+    if (( current_pct > target )); then step=-1; fi
+
+    while (( current_pct != target )); do
+        (( current_pct += step ))
+        brightnessctl set "${current_pct}%" &>/dev/null
+        sleep $speed
+
+        # [CRITICAL] User interruption detection logic.
+        integer check_raw=$(brightnessctl g)
+        integer check_pct=$((check_raw * 100 / max))
+        
+        # Calculate absolute difference
+        integer diff=$(( check_pct > current_pct ? check_pct - current_pct : current_pct - check_pct ))
+
+        if (( diff > 2 )); then
+            echo "⚠️ User interrupted fade."
+            break
+        fi
+    done
 }
 
 # --- Core Logic ---
-# [INFO] Check for a lock file to allow the user to temporarily disable the script.
-if [[ -f "$LOCK_FILE" ]]; then
-	log "🔒 Auto brightness disabled by user (lock file present)"
-	exit 0
+
+# [INFO] Check for lock file to respect user disable command.
+if [[ -f "$LOCK_FILE" ]]; then exit 0; fi
+
+# [INFO] Determine current timeframe and targets.
+integer HOUR_NOW=$(date +%H)
+integer HOUR_PREV=$(( HOUR_NOW - 1 ))
+
+# Handle midnight wrap-around (00 -> 23)
+if (( HOUR_PREV < 0 )); then HOUR_PREV=23; fi
+
+KEY_NOW=$(printf "%02d" $HOUR_NOW)
+KEY_PREV=$(printf "%02d" $HOUR_PREV)
+
+# [INFO] Retrieve targets from schedule (default to 50 if missing).
+integer TARGET_NOW=${SCHEDULE[$KEY_NOW]:-50}
+integer TARGET_PREV=${SCHEDULE[$KEY_PREV]:-50}
+
+# [INFO] Read current system state.
+integer MAX=$(brightnessctl m 2>/dev/null) || exit 1
+integer CURRENT_RAW=$(brightnessctl g 2>/dev/null)
+integer CURRENT_PCT=$((CURRENT_RAW * 100 / MAX))
+
+# [INFO] Force Mode Check
+if [[ "$1" == "--force" ]]; then
+    echo "💪 Force mode: Resetting to schedule ($KEY_NOW: ${TARGET_NOW}%)..."
+    fade_brightness $TARGET_NOW $FADE_SPEED
+    echo "✅ Reset complete."
+    exit 0
 fi
 
-# [INFO] Determine target brightness based on the time of day.
-integer HOUR=$(date +%H)
-if ((HOUR >= 19 || HOUR < 9)); then
-	TARGET=$BRIGHTNESS_NIGHT
+# [INFO] Calculate deviation from targets.
+# diff_now:  Distance from current hour target.
+# diff_prev: Distance from previous hour target (to detect schedule adherence).
+integer diff_now=$(( CURRENT_PCT > TARGET_NOW ? CURRENT_PCT - TARGET_NOW : TARGET_NOW - CURRENT_PCT ))
+integer diff_prev=$(( CURRENT_PCT > TARGET_PREV ? CURRENT_PCT - TARGET_PREV : TARGET_PREV - CURRENT_PCT ))
+
+# [INFO] Decision Matrix.
+if (( diff_now <= 2 )); then
+    # Already on target.
+    exit 0
+elif (( diff_prev <= THRESHOLD )); then
+    # User was adhering to previous schedule -> Transition to new hour.
+    echo "⏰ Hour changed ($KEY_PREV: ${TARGET_PREV}% -> $KEY_NOW: ${TARGET_NOW}%). Adjusting..."
+    fade_brightness $TARGET_NOW $FADE_SPEED
+    echo "✅ Adjusted to ${TARGET_NOW}%"
+elif (( diff_now <= THRESHOLD )); then
+    # Minor drift correction (only if deviation is small).
+    if (( diff_now > 2 )); then
+        fade_brightness $TARGET_NOW $FADE_SPEED
+    fi
 else
-	TARGET=$BRIGHTNESS_DAY
+    # Large deviation detected -> User override active.
+    exit 0
 fi
-
-# [INFO] Get current and maximum brightness from the system.
-integer CURRENT=$(brightnessctl g 2>/dev/null)
-integer MAX=$(brightnessctl m 2>/dev/null)
-if ((MAX == 0)); then
-	log "⚠️  Failed to read max brightness. Exiting."
-	exit 1
-fi
-
-integer PERCENT=$((CURRENT * 100 / MAX))
-
-# [INFO] Calculate the difference to detect if the user has manually set brightness.
-#        The script will not override a recent manual adjustment.
-integer DIFF=$((PERCENT > TARGET ? PERCENT - TARGET : TARGET - PERCENT))
-
-if ((DIFF > 10)); then
-	log "⏭️  User override detected (current=$PERCENT%, target=$TARGET%). Skipping adjustment."
-	exit 0
-fi
-
-# [INFO] Apply the new brightness level.
-brightnessctl set "${TARGET}%" &>/dev/null
-log "🌗 Adjusted brightness to ${TARGET}% (current was ${PERCENT}%)"
