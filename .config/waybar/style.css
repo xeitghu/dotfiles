@@ -82,7 +82,7 @@ window#waybar {
 }
 
 /* ┌────────────────────────────────────────────────────────────────────────────┐ */
-/* │                       SYSTEM MONITORS (LINKED PILL)                        │ */
+/* │                              SYSTEM MONITORS                               │ */
 /* └────────────────────────────────────────────────────────────────────────────┘ */
 
 /* --- Shared Base Styles --- */
@@ -164,7 +164,7 @@ window#waybar {
 #clock                  { color: @lavender; }
 
 /* --- Hardware Group --- */
-#cpu                    { color: @sapphire; }
+#cpu                    { color: @blue; }
 #memory                 { color: @yellow; }
 #custom-temperature     { color: @maroon; }
 
