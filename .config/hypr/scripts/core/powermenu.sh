@@ -1,6 +1,6 @@
 #!/bin/bash
 # ┌──────────────────────────────────────────────────┐
-# │               Power & Session Menu (v2)            │
+# │                 Power & Session Menu             │
 # └──────────────────────────────────────────────────┘
 # [INFO] This script displays a Wofi menu for session control with
 # [INFO] a confirmation dialog for critical actions.
@@ -31,7 +31,7 @@ confirm_action() {
     --width "$confirm_menu_width" \
     --height "$confirm_menu_height")
 
-  if [ "$confirm_choice" == " Yes" ]; then
+  if [[ "$confirm_choice" == *"Yes"* ]]; then
     return 0 # Success
   else
     return 1 # Cancelled
